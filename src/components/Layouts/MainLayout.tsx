@@ -1,0 +1,27 @@
+import React, { memo } from "react"
+import { Outlet } from "react-router-dom"
+
+// import { AppSidebar } from "@/components/AppSidebar"
+// import { Header } from "@/components/Header"
+import { SidebarProvider } from "@/components/ui/sidebar"
+
+interface MainLayoutProps {
+	children?: React.ReactNode
+}
+
+const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
+	return (
+		<SidebarProvider>
+			{/* <AppSidebar /> */}
+			<main className="w-full overflow-x-hidden">
+				{/* <Header /> */}
+				<div className="relative mt-[77px] py-8 px-14 overflow-y-auto" style={{ minHeight: "calc(100vh - 77px)" }}>
+					{children}
+					<Outlet />
+				</div>
+			</main>
+		</SidebarProvider>
+	)
+}
+
+export default memo(MainLayout)
