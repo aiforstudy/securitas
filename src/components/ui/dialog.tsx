@@ -32,7 +32,7 @@ const DialogOverlay = React.forwardRef<
 			ref={ref}
 			data-slot="dialog-overlay"
 			className={cn(
-				"data-[state=open]:ezai-animate-in data-[state=closed]:ezai-animate-out data-[state=closed]:ezai-fade-out-0 data-[state=open]:ezai-fade-in-0 ezai-fixed ezai-inset-0 ezai-z-50 ezai-bg-black/50",
+				"data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50",
 				className,
 			)}
 			{...props}
@@ -55,16 +55,16 @@ const DialogContent = React.forwardRef<
 				ref={ref}
 				data-slot="dialog-content"
 				className={cn(
-					"ezai-bg-background data-[state=open]:ezai-animate-in data-[state=closed]:ezai-animate-out data-[state=closed]:ezai-fade-out-0 data-[state=open]:ezai-fade-in-0 data-[state=closed]:ezai-zoom-out-95 data-[state=open]:ezai-zoom-in-95 ezai-fixed ezai-top-[50%] ezai-left-[50%] ezai-z-50 ezai-grid ezai-w-full ezai-max-w-[calc(100%-2rem)] ezai-translate-x-[-50%] ezai-translate-y-[-50%] ezai-gap-4 ezai-rounded-lg ezai-border ezai-p-6 ezai-shadow-lg ezai-duration-200 sm:ezai-max-w-lg",
+					"bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border p-6 shadow-lg duration-200 sm:max-w-lg",
 					className,
 				)}
 				{...props}
 			>
 				{children}
 				{!hideCloseButton && !disableClose && (
-					<DialogPrimitive.Close className="ezai-ring-offset-background focus:ezai-ring-ring data-[state=open]:ezai-bg-accent data-[state=open]:ezai-text-muted-foreground ezai-absolute ezai-top-4 ezai-right-4 ezai-rounded-xs ezai-opacity-70 ezai-transition-opacity hover:ezai-opacity-100 focus:ezai-ring-2 focus:ezai-ring-offset-2 focus:ezai-outline-hidden disabled:ezai-pointer-events-none [&_svg]:ezai-pointer-events-none [&_svg]:ezai-shrink-0 [&_svg:not([class*=size-])]:ezai-size-4">
+					<DialogPrimitive.Close className="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*=size-])]:size-4">
 						<XIcon />
-						<span className="ezai-sr-only">Close</span>
+						<span className="sr-only">Close</span>
 					</DialogPrimitive.Close>
 				)}
 				{disableClose && (
@@ -85,7 +85,7 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
 	return (
 		<div
 			data-slot="dialog-header"
-			className={cn("ezai-flex ezai-flex-col ezai-gap-2 ezai-text-center sm:ezai-text-left", className)}
+			className={cn("flex flex-col gap-2 text-center sm:text-left", className)}
 			{...props}
 		/>
 	)
@@ -95,7 +95,7 @@ function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
 	return (
 		<div
 			data-slot="dialog-footer"
-			className={cn("ezai-flex ezai-flex-col-reverse ezai-gap-2 sm:ezai-flex-row sm:ezai-justify-end", className)}
+			className={cn("flex flex-col-reverse gap-2 sm:flex-row sm:justify-end", className)}
 			{...props}
 		/>
 	)
@@ -109,7 +109,7 @@ const DialogTitle = React.forwardRef<
 		<DialogPrimitive.Title
 			ref={ref}
 			data-slot="dialog-title"
-			className={cn("ezai-text-lg ezai-leading-none ezai-font-semibold", className)}
+			className={cn("text-lg leading-none font-semibold", className)}
 			{...props}
 		/>
 	)
@@ -123,7 +123,7 @@ const DialogDescription = React.forwardRef<
 		<DialogPrimitive.Description
 			ref={ref}
 			data-slot="dialog-description"
-			className={cn("ezai-text-muted-foreground ezai-text-sm", className)}
+			className={cn("text-muted-foreground text-sm", className)}
 			{...props}
 		/>
 	)

@@ -5,11 +5,11 @@ import { Outlet } from "react-router-dom"
 // import { Header } from "@/components/Header"
 import { SidebarProvider } from "@/components/ui/sidebar"
 
-interface MainLayoutProps {
+type IMainLayoutProps = {
 	children?: React.ReactNode
 }
 
-const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
+const MainLayout: React.FC<IMainLayoutProps> = ({ children }) => {
 	return (
 		<SidebarProvider>
 			{/* <AppSidebar /> */}

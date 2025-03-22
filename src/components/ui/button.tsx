@@ -1,59 +1,66 @@
 import * as React from "react"
+
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
+import { LoaderCircle } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "ezai-inline-flex ezai-items-center ezai-justify-center ezai-gap-2 ezai-whitespace-nowrap ezai-rounded-md ezai-text-sm ezai-font-medium ezai-transition-all disabled:ezai-pointer-events-none disabled:ezai-opacity-50 [&_svg]:ezai-pointer-events-none [&_svg:not([class*=size-])]:ezai-size-4 ezai-shrink-0 [&_svg]:ezai-shrink-0 ezai-outline-none focus-visible:ezai-border-ring focus-visible:ezai-ring-ring/50 focus-visible:ezai-ring-[3px] aria-invalid:ezai-ring-destructive/20 dark:aria-invalid:ezai-ring-destructive/40 aria-invalid:ezai-border-destructive",
-  {
-    variants: {
-      variant: {
-        default:
-          "ezai-bg-primary ezai-text-primary-foreground ezai-shadow-xs hover:ezai-bg-primary/90",
-        destructive:
-          "ezai-bg-destructive ezai-text-white ezai-shadow-xs hover:ezai-bg-destructive/90 focus-visible:ezai-ring-destructive/20 dark:focus-visible:ezai-ring-destructive/40 dark:ezai-bg-destructive/60",
-        outline:
-          "ezai-border ezai-bg-background ezai-shadow-xs hover:ezai-bg-accent hover:ezai-text-accent-foreground dark:ezai-bg-input/30 dark:ezai-border-input dark:hover:ezai-bg-input/50",
-        secondary:
-          "ezai-bg-secondary ezai-text-secondary-foreground ezai-shadow-xs hover:ezai-bg-secondary/80",
-        ghost:
-          "hover:ezai-bg-accent hover:ezai-text-accent-foreground dark:hover:ezai-bg-accent/50",
-        link: "ezai-text-primary ezai-underline-offset-4 hover:ezai-underline",
-      },
-      size: {
-        default: "ezai-h-9 ezai-px-4 ezai-py-2 has-[>svg]:ezai-px-3",
-        sm: "ezai-h-8 ezai-rounded-md ezai-gap-1.5 ezai-px-3 has-[>svg]:ezai-px-2.5",
-        lg: "ezai-h-10 ezai-rounded-md ezai-px-6 has-[>svg]:ezai-px-4",
-        icon: "ezai-size-9",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-      size: "default",
-    },
-  }
+	"inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-md font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*=size-])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive cursor-pointer",
+	{
+		variants: {
+			variant: {
+				default: "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90",
+				destructive:
+					"bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
+				outline:
+					"border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
+				secondary: "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80",
+				ghost: "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
+				link: "text-primary underline-offset-4 hover:underline",
+			},
+			size: {
+				xs: "h-7 gap-1 px-2 has-[>svg]:px-1.5 text-xs",
+				sm: "h-9 gap-1.5 px-3 has-[>svg]:px-2.5 text-sm",
+				md: "h-11 px-4 py-2 has-[>svg]:px-3",
+				lg: "h-13 px-6 has-[>svg]:px-4 text-lg",
+				icon: "size-9",
+			},
+		},
+		defaultVariants: {
+			variant: "default",
+			size: "md",
+		},
+	},
 )
 
 function Button({
-  className,
-  variant,
-  size,
-  asChild = false,
-  ...props
+	className,
+	variant,
+	size,
+	asChild = false,
+	loading = false,
+	disabled = false,
+	...props
 }: React.ComponentProps<"button"> &
-  VariantProps<typeof buttonVariants> & {
-    asChild?: boolean
-  }) {
-  const Comp = asChild ? Slot : "button"
+	VariantProps<typeof buttonVariants> & {
+		asChild?: boolean
+		loading?: boolean
+	}) {
+	const Comp = asChild ? Slot : "button"
 
-  return (
-    <Comp
-      data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
-      {...props}
-    />
-  )
+	return (
+		<Comp
+			disabled={loading || disabled}
+			data-slot="button"
+			className={cn(buttonVariants({ variant, size, className }))}
+			{...props}
+		>
+			{loading && <LoaderCircle className="animate-spin" />}
+			{props.children}
+		</Comp>
+	)
 }
 
 export { Button, buttonVariants }

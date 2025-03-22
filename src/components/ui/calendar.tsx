@@ -1,73 +1,57 @@
 import * as React from "react"
-import { ChevronLeft, ChevronRight } from "lucide-react"
 import { DayPicker } from "react-day-picker"
 
-import { cn } from "@/lib/utils"
-import { buttonVariants } from "@/components/ui/button"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 
-function Calendar({
-  className,
-  classNames,
-  showOutsideDays = true,
-  ...props
-}: React.ComponentProps<typeof DayPicker>) {
-  return (
-    <DayPicker
-      showOutsideDays={showOutsideDays}
-      className={cn("ezai-p-3", className)}
-      classNames={{
-        months: "ezai-flex ezai-flex-col sm:ezai-flex-row ezai-gap-2",
-        month: "ezai-flex ezai-flex-col ezai-gap-4",
-        caption: "ezai-flex ezai-justify-center ezai-pt-1 ezai-relative ezai-items-center ezai-w-full",
-        caption_label: "ezai-text-sm ezai-font-medium",
-        nav: "ezai-flex ezai-items-center ezai-gap-1",
-        nav_button: cn(
-          buttonVariants({ variant: "outline" }),
-          "ezai-size-7 ezai-bg-transparent ezai-p-0 ezai-opacity-50 hover:ezai-opacity-100"
-        ),
-        nav_button_previous: "ezai-absolute ezai-left-1",
-        nav_button_next: "ezai-absolute ezai-right-1",
-        table: "ezai-w-full ezai-border-collapse ezai-space-x-1",
-        head_row: "ezai-flex",
-        head_cell:
-          "ezai-text-muted-foreground ezai-rounded-md ezai-w-8 ezai-font-normal ezai-text-[0.8rem]",
-        row: "ezai-flex ezai-w-full ezai-mt-2",
-        cell: cn(
-          "ezai-relative ezai-p-0 ezai-text-center ezai-text-sm focus-within:ezai-relative focus-within:ezai-z-20 [&:has([aria-selected])]:ezai-bg-accent [&:has([aria-selected].day-range-end)]:ezai-rounded-r-md",
-          props.mode === "range"
-            ? "[&:has(>.day-range-end)]:ezai-rounded-r-md [&:has(>.day-range-start)]:ezai-rounded-l-md first:[&:has([aria-selected])]:ezai-rounded-l-md last:[&:has([aria-selected])]:ezai-rounded-r-md"
-            : "[&:has([aria-selected])]:ezai-rounded-md"
-        ),
-        day: cn(
-          buttonVariants({ variant: "ghost" }),
-          "ezai-size-8 ezai-p-0 ezai-font-normal aria-selected:ezai-opacity-100"
-        ),
-        day_range_start:
-          "ezai-day-range-start aria-selected:ezai-bg-primary aria-selected:ezai-text-primary-foreground",
-        day_range_end:
-          "ezai-day-range-end aria-selected:ezai-bg-primary aria-selected:ezai-text-primary-foreground",
-        day_selected:
-          "ezai-bg-primary ezai-text-primary-foreground hover:ezai-bg-primary hover:ezai-text-primary-foreground focus:ezai-bg-primary focus:ezai-text-primary-foreground",
-        day_today: "ezai-bg-accent ezai-text-accent-foreground",
-        day_outside:
-          "ezai-day-outside ezai-text-muted-foreground aria-selected:ezai-text-muted-foreground",
-        day_disabled: "ezai-text-muted-foreground ezai-opacity-50",
-        day_range_middle:
-          "aria-selected:ezai-bg-accent aria-selected:ezai-text-accent-foreground",
-        day_hidden: "ezai-invisible",
-        ...classNames,
-      }}
-      components={{
-        IconLeft: ({ className, ...props }) => (
-          <ChevronLeft className={cn("ezai-size-4", className)} {...props} />
-        ),
-        IconRight: ({ className, ...props }) => (
-          <ChevronRight className={cn("ezai-size-4", className)} {...props} />
-        ),
-      }}
-      {...props}
-    />
-  )
+import { buttonVariants } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
+
+function Calendar({ className, classNames, showOutsideDays = true, ...props }: React.ComponentProps<typeof DayPicker>) {
+	return (
+		<DayPicker
+			showOutsideDays={showOutsideDays}
+			className={cn("p-3", className)}
+			classNames={{
+				months: "flex flex-col sm:flex-row gap-2",
+				month: "flex flex-col gap-4",
+				caption: "flex justify-center pt-1 relative items-center w-full",
+				caption_label: "text-sm font-medium",
+				nav: "flex items-center gap-1",
+				nav_button: cn(
+					buttonVariants({ variant: "outline" }),
+					"size-7 bg-transparent p-0 opacity-50 hover:opacity-100",
+				),
+				nav_button_previous: "absolute left-1",
+				nav_button_next: "absolute right-1",
+				table: "w-full border-collapse space-x-1",
+				head_row: "flex",
+				head_cell: "text-muted-foreground rounded-md w-8 font-normal text-[0.8rem]",
+				row: "flex w-full mt-2",
+				cell: cn(
+					"relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-accent [&:has([aria-selected].day-range-end)]:rounded-r-md",
+					props.mode === "range"
+						? "[&:has(>.day-range-end)]:rounded-r-md [&:has(>.day-range-start)]:rounded-l-md first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md"
+						: "[&:has([aria-selected])]:rounded-md",
+				),
+				day: cn(buttonVariants({ variant: "ghost" }), "size-8 p-0 font-normal aria-selected:opacity-100"),
+				day_range_start: "day-range-start aria-selected:bg-primary aria-selected:text-primary-foreground",
+				day_range_end: "day-range-end aria-selected:bg-primary aria-selected:text-primary-foreground",
+				day_selected:
+					"bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
+				day_today: "bg-accent text-accent-foreground",
+				day_outside: "day-outside text-muted-foreground aria-selected:text-muted-foreground",
+				day_disabled: "text-muted-foreground opacity-50",
+				day_range_middle: "aria-selected:bg-accent aria-selected:text-accent-foreground",
+				day_hidden: "invisible",
+				...classNames,
+			}}
+			components={{
+				IconLeft: ({ className, ...props }) => <ChevronLeft className={cn("size-4", className)} {...props} />,
+				IconRight: ({ className, ...props }) => <ChevronRight className={cn("size-4", className)} {...props} />,
+			}}
+			{...props}
+		/>
+	)
 }
 
 export { Calendar }
