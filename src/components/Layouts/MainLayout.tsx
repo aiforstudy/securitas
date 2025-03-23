@@ -1,8 +1,8 @@
 import React, { memo } from "react"
 import { Outlet } from "react-router-dom"
 
-// import { AppSidebar } from "@/components/AppSidebar"
-// import { Header } from "@/components/Header"
+import { AppSidebar } from "@/components/AppSidebar"
+import { Header } from "@/components/Header"
 import { SidebarProvider } from "@/components/ui/sidebar"
 
 type IMainLayoutProps = {
@@ -12,10 +12,10 @@ type IMainLayoutProps = {
 const MainLayout: React.FC<IMainLayoutProps> = ({ children }) => {
 	return (
 		<SidebarProvider>
-			{/* <AppSidebar /> */}
+			<AppSidebar />
 			<main className="w-full overflow-x-hidden">
-				{/* <Header /> */}
-				<div className="relative mt-[77px] py-8 px-14 overflow-y-auto" style={{ minHeight: "calc(100vh - 77px)" }}>
+				<Header />
+				<div className="relative mt-[77px] p-4 overflow-y-auto" style={{ minHeight: "calc(100vh - 77px)" }}>
 					{children}
 					<Outlet />
 				</div>

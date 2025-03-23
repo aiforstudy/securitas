@@ -25,4 +25,10 @@ export const PATH = {
 			DETAILS: addBaseUrl("/account/account-information/details"),
 		},
 	},
+	ALERTS: {
+		ROOT: addBaseUrl("/alerts"),
+	},
+	LIVE_VIEW: {
+		ROOT: addBaseUrl("/live-view"),
+	},
 }

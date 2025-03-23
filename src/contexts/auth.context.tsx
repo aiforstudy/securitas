@@ -7,6 +7,7 @@ import { localS } from "@/utils/storage"
 
 export type ICurrentUser = {
 	id: string
+	role: string
 	name: string
 	email: string
 	token: string

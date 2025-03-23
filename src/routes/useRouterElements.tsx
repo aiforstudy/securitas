@@ -4,13 +4,15 @@ import { useRoutes } from "react-router-dom"
 import FallbackLoader from "@/components/FallbackLoader"
 import { AuthLayout, MainLayout } from "@/components/Layouts"
 import { PATH } from "@/constants/path"
-import AccountPage from "@/pages/account"
-import LoginPage from "@/pages/authentication/Login"
-import HomePage from "@/pages/home"
+import AlertsPage from "@/pages/Alerts/Alerts"
+import LoginPage from "@/pages/Authentication/Login"
+import HomePage from "@/pages/Home"
+import LiveViewPage from "@/pages/LiveView/LiveView"
 
 import GuardedProtectedRoute from "./guard/ProtectedRoute/ProtectedRoute"
 import GuardedRejectedRoute from "./guard/RejectedRoute/RejectedRoute"
-import RoleProtectedRoute from "./guard/RoleProtectedRoute"
+
+// import RoleProtectedRoute from "./guard/RoleProtectedRoute"
 
 const withSuspense = (Component: React.ComponentType) => {
 	return (
@@ -56,19 +58,24 @@ const useRouterElements = () => {
 					],
 				},
 				{
-					path: PATH.ACCOUNT.ROOT,
+					path: PATH.ALERTS.ROOT,
 					element: <MainLayout />,
 					children: [
 						{
 							index: true,
-							path: PATH.ACCOUNT.ACCOUNT_INFORMATION.ROOT,
-							element: (
-								<RoleProtectedRoute element={withSuspense(AccountPage)} allowedRoles={["ADMIN", "SUPER_ADMIN"]} />
-							),
+							path: PATH.ALERTS.ROOT,
+							element: withSuspense(AlertsPage),
 						},
+					],
+				},
+				{
+					path: PATH.LIVE_VIEW.ROOT,
+					element: <MainLayout />,
+					children: [
 						{
-							path: PATH.ACCOUNT.ACCOUNT_INFORMATION.DETAILS + "/:id",
-							element: <RoleProtectedRoute element={withSuspense(AccountPage)} allowedRoles={["SUPER_ADMIN"]} />,
+							index: true,
+							path: PATH.LIVE_VIEW.ROOT,
+							element: withSuspense(LiveViewPage),
 						},
 					],
 				},

@@ -31,6 +31,7 @@ const LoginPage: React.FC = () => {
 	const onSubmit = (data: LoginFormValues) => {
 		const mockUser: ICurrentUser = {
 			id: "1",
+			role: "ADMIN",
 			name: "John Doe",
 			email: data.email,
 			token: "1234567890",
