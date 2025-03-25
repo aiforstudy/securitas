@@ -62,7 +62,7 @@ const DialogContent = React.forwardRef<
 			>
 				{children}
 				{!hideCloseButton && !disableClose && (
-					<DialogPrimitive.Close className="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*=size-])]:size-4">
+					<DialogPrimitive.Close className="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-5 right-5 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*=size-])]:size-4">
 						<XIcon />
 						<span className="sr-only">Close</span>
 					</DialogPrimitive.Close>
@@ -71,7 +71,7 @@ const DialogContent = React.forwardRef<
 					<div
 						style={{ boxShadow: "0px 2px 4px 0px #00000026" }}
 						onClick={onIconCloseClick}
-						className="absolute right-4 top-4  opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground cursor-pointer w-6 h-6 flex items-center justify-center rounded-[5px]"
+						className="absolute right-5 top-5 opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground cursor-pointer w-6 h-6 flex items-center justify-center rounded-[5px]"
 					>
 						<XIcon className="h-5 w-5" />
 					</div>
@@ -85,7 +85,7 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
 	return (
 		<div
 			data-slot="dialog-header"
-			className={cn("flex flex-col gap-2 text-center sm:text-left", className)}
+			className={cn("flex flex-col gap-2 text-center sm:text-left absolute top-5 left-5", className)}
 			{...props}
 		/>
 	)

@@ -2,5 +2,6 @@
 	"language": {
 		"vi": "Vietnamese",
 		"en": "English"
-	}
+	},
+	"resultPerPage": "Result per page"
 }

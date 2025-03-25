@@ -15,7 +15,7 @@ const MainLayout: React.FC<IMainLayoutProps> = ({ children }) => {
 			<AppSidebar />
 			<main className="w-full overflow-x-hidden">
 				<Header />
-				<div className="relative mt-[77px] p-4 overflow-y-auto" style={{ minHeight: "calc(100vh - 77px)" }}>
+				<div className="h-[calc(100vh-77px)] min-h-[calc(100vh-77px)] relative mt-[77px] overflow-y-auto">
 					{children}
 					<Outlet />
 				</div>

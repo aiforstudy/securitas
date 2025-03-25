@@ -4,6 +4,7 @@ import { BrowserRouter as ReactRouterProvider } from "react-router-dom"
 
 import { QueryClient, QueryClientProvider as ReactQueryProvider } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
+import { APIProvider as ReactGoogleMapProvider } from "@vis.gl/react-google-maps"
 
 import ErrorBoundary from "@/components/ErrorBoundary"
 import { Toaster as SonnerToaster } from "@/components/ui/sonner"
@@ -24,21 +25,25 @@ const queryClient = new QueryClient({
 	},
 })
 
+console.log(import.meta.env.VITE_GOOGLE_MAP_API_KEY)
+
 createRoot(document.getElementById("root")!).render(
 	<StrictMode>
 		<ReactRouterProvider>
 			<ErrorBoundary>
-				<ReactQueryProvider client={queryClient}>
-					<LangProvider>
-						<AuthProvider>
-							<TooltipProvider>
-								<App />
-								<SonnerToaster position="top-right" />
-								<ReactQueryDevtools initialIsOpen={false} />
-							</TooltipProvider>
-						</AuthProvider>
-					</LangProvider>
-				</ReactQueryProvider>
+				<ReactGoogleMapProvider apiKey={import.meta.env.VITE_GOOGLE_MAP_API_KEY}>
+					<ReactQueryProvider client={queryClient}>
+						<LangProvider>
+							<AuthProvider>
+								<TooltipProvider>
+									<App />
+									<SonnerToaster position="top-right" />
+									<ReactQueryDevtools initialIsOpen={false} />
+								</TooltipProvider>
+							</AuthProvider>
+						</LangProvider>
+					</ReactQueryProvider>
+				</ReactGoogleMapProvider>
 			</ErrorBoundary>
 		</ReactRouterProvider>
 	</StrictMode>,

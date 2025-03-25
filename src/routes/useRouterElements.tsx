@@ -6,7 +6,7 @@ import { AuthLayout, MainLayout } from "@/components/Layouts"
 import { PATH } from "@/constants/path"
 import AlertsPage from "@/pages/Alerts/Alerts"
 import LoginPage from "@/pages/Authentication/Login"
-import HomePage from "@/pages/Home"
+import DashboardPage from "@/pages/Dashboard"
 import LiveViewPage from "@/pages/LiveView/LiveView"
 
 import GuardedProtectedRoute from "./guard/ProtectedRoute/ProtectedRoute"
@@ -53,7 +53,7 @@ const useRouterElements = () => {
 						{
 							path: PATH.BASE_URL,
 							index: true,
-							element: withSuspense(HomePage),
+							element: withSuspense(DashboardPage),
 						},
 					],
 				},
