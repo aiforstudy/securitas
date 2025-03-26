@@ -12,17 +12,19 @@ import { TooltipProvider } from "@/components/ui/tooltip"
 import { AuthProvider } from "@/contexts/auth.context"
 import { LangProvider } from "@/contexts/lang.context"
 
+import { client } from "./api-generated/client.gen.ts"
 import App from "./App.tsx"
 import { CONFIG } from "./constants/config.ts"
+import { STORAGE_KEYS } from "./constants/storage.ts"
 import "./i18n/i18n"
 import "./index.css"
+import { localS } from "./utils/storage.ts"
 
-const queryClient = new QueryClient({
-	defaultOptions: {
-		queries: {
-			refetchOnWindowFocus: false,
-			retry: 3,
-		},
+const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false, refetchOnWindowFocus: false } } })
+client.setConfig({
+	baseURL: CONFIG.API_URL,
+	headers: {
+		Authorization: `Bearer ${localS.get(STORAGE_KEYS.ACCESS_TOKEN)}`,
 	},
 })
 

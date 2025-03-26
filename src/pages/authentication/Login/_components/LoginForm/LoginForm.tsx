@@ -18,7 +18,7 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>
 
-export const LoginForm: React.FC = () => {
+const LoginForm: React.FC = () => {
 	const form = useForm<LoginFormValues>({
 		resolver: zodResolver(loginSchema),
 		defaultValues: {
@@ -98,3 +98,5 @@ export const LoginForm: React.FC = () => {
 		</Form>
 	)
 }
+
+export default LoginForm

@@ -3,7 +3,7 @@ import React from "react"
 import wavyLines from "@/assets/images/wavy-lines.svg"
 import { Button } from "@/components/ui/button"
 
-import { LoginForm } from "./_components/LoginForm"
+import LoginForm from "./_components/LoginForm"
 
 const LoginPage: React.FC = () => {
 	return (

@@ -143,3 +143,143 @@ html {
 ::selection {
 	@apply bg-primary text-primary-foreground;
 }
+
+.grid-item-row-start-1 {
+	grid-row-start: 1;
+}
+.grid-item-row-start-2 {
+	grid-row-start: 2;
+}
+.grid-item-row-start-3 {
+	grid-row-start: 3;
+}
+.grid-item-row-start-4 {
+	grid-row-start: 4;
+}
+.grid-item-row-start-5 {
+	grid-row-start: 5;
+}
+.grid-item-row-start-6 {
+	grid-row-start: 6;
+}
+.grid-item-row-start-7 {
+	grid-row-start: 7;
+}
+.grid-item-row-start-8 {
+	grid-row-start: 8;
+}
+.grid-item-row-start-9 {
+	grid-row-start: 9;
+}
+.grid-item-row-start-10 {
+	grid-row-start: 10;
+}
+
+.grid-item-row-end-1 {
+	grid-row-end: 1;
+}
+.grid-item-row-end-2 {
+	grid-row-end: 2;
+}
+.grid-item-row-end-3 {
+	grid-row-end: 3;
+}
+.grid-item-row-end-4 {
+	grid-row-end: 4;
+}
+.grid-item-row-end-5 {
+	grid-row-end: 5;
+}
+.grid-item-row-end-6 {
+	grid-row-end: 6;
+}
+.grid-item-row-end-7 {
+	grid-row-end: 7;
+}
+.grid-item-row-end-8 {
+	grid-row-end: 8;
+}
+.grid-item-row-end-9 {
+	grid-row-end: 9;
+}
+.grid-item-row-end-10 {
+	grid-row-end: 10;
+}
+
+.grid-item-column-start-1 {
+	grid-column-start: 1;
+}
+.grid-item-column-start-2 {
+	grid-column-start: 2;
+}
+.grid-item-column-start-3 {
+	grid-column-start: 3;
+}
+.grid-item-column-start-4 {
+	grid-column-start: 4;
+}
+.grid-item-column-start-5 {
+	grid-column-start: 5;
+}
+.grid-item-column-start-6 {
+	grid-column-start: 6;
+}
+.grid-item-column-start-7 {
+	grid-column-start: 7;
+}
+.grid-item-column-start-8 {
+	grid-column-start: 8;
+}
+.grid-item-column-start-9 {
+	grid-column-start: 9;
+}
+.grid-item-column-start-10 {
+	grid-column-start: 10;
+}
+
+.grid-item-column-end-1 {
+	grid-column-end: 1;
+}
+.grid-item-column-end-2 {
+	grid-column-end: 2;
+}
+.grid-item-column-end-3 {
+	grid-column-end: 3;
+}
+.grid-item-column-end-4 {
+	grid-column-end: 4;
+}
+.grid-item-column-end-5 {
+	grid-column-end: 5;
+}
+.grid-item-column-end-6 {
+	grid-column-end: 6;
+}
+.grid-item-column-end-7 {
+	grid-column-end: 7;
+}
+.grid-item-column-end-8 {
+	grid-column-end: 8;
+}
+.grid-item-column-end-9 {
+	grid-column-end: 9;
+}
+.grid-item-column-end-10 {
+	grid-column-end: 10;
+}
+
+.grid-item-row-start-unset {
+	grid-row-start: unset;
+}
+
+.grid-item-row-end-unset {
+	grid-row-end: unset;
+}
+
+.grid-item-column-start-unset {
+	grid-column-start: unset;
+}
+
+.grid-item-column-end-unset {
+	grid-column-end: unset;
+}

@@ -3,7 +3,7 @@ import React, { useMemo, useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { createColumnHelper, PaginationState } from "@tanstack/react-table"
 
-import AlertApi from "@/apis/alert"
+import { detectionControllerFindAllOptions } from "@/api-generated/@tanstack/react-query.gen"
 import { AppTable } from "@/components/AppTable"
 import ImagePresent from "@/components/ImagePresent"
 import ImagePreview from "@/components/ImagePreview"
@@ -23,11 +23,15 @@ const AlertsPage: React.FC = () => {
 	const [rowSelection, setRowSelection] = useState({})
 
 	const { data, isLoading } = useQuery({
-		queryFn: () => AlertApi.getAlerts({ page: pagination.pageIndex + 1, limit: pagination.pageSize }),
-		queryKey: ["alerts", pagination.pageIndex, pagination.pageSize],
+		...detectionControllerFindAllOptions({
+			query: {
+				page: pagination.pageIndex + 1,
+				limit: pagination.pageSize,
+			},
+		}),
 	})
 
-	console.log(pagination)
+	console.log("🚀 ~ AlertsPage ~ data:", data)
 
 	const columns = useMemo(
 		() => [
