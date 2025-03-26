@@ -13,6 +13,7 @@ import { AuthProvider } from "@/contexts/auth.context"
 import { LangProvider } from "@/contexts/lang.context"
 
 import App from "./App.tsx"
+import { CONFIG } from "./constants/config.ts"
 import "./i18n/i18n"
 import "./index.css"
 
@@ -25,13 +26,11 @@ const queryClient = new QueryClient({
 	},
 })
 
-console.log(import.meta.env.VITE_GOOGLE_MAP_API_KEY)
-
 createRoot(document.getElementById("root")!).render(
 	<StrictMode>
 		<ReactRouterProvider>
 			<ErrorBoundary>
-				<ReactGoogleMapProvider apiKey={import.meta.env.VITE_GOOGLE_MAP_API_KEY}>
+				<ReactGoogleMapProvider apiKey={CONFIG.GOOGLE_MAP_API_KEY}>
 					<ReactQueryProvider client={queryClient}>
 						<LangProvider>
 							<AuthProvider>

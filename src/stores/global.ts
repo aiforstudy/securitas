@@ -7,7 +7,7 @@ export type IConfirmDialogMessage = {
 	isHiddenConfirmButton?: boolean
 }
 
-export type IGlobalState = {
+export type IGlobalStore = {
 	isLoading: boolean
 	isSnackbarOpen: boolean
 	isConfirmDialogOpen: boolean
@@ -19,7 +19,7 @@ export type IGlobalState = {
 	setConfirmDialogMessage: (confirmDialogMessage?: IConfirmDialogMessage) => void
 }
 
-export const useGlobalStore = create<IGlobalState>((set) => ({
+export const useGlobalStore = create<IGlobalStore>((set) => ({
 	isLoading: false,
 	isSnackbarOpen: false,
 	isConfirmDialogOpen: false,

@@ -3,5 +3,7 @@
 		"vi": "Vietnamese",
 		"en": "English"
 	},
-	"resultPerPage": "Result per page"
+	"resultPerPage": "Result per page",
+	"loading": "Loading...",
+	"noData": "No data"
 }

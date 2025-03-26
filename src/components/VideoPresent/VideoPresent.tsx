@@ -5,6 +5,7 @@ import { Play } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 import useResizeObserver from "../../hooks/useResizeObserver"
+import { AspectRatio } from "../ui/aspect-ratio"
 
 type VideoPresentProps = React.HTMLProps<HTMLVideoElement> & {
 	src: string
@@ -28,22 +29,24 @@ const VideoPresent: React.FC<VideoPresentProps> = ({ src, width, getDuration, on
 				},
 			)}
 		>
-			{src && (
-				<video
-					ref={videoRef}
-					preload="metadata"
-					className={cn("p-0 m-0 w-full h-full object-cover", {
-						display: isLoading ? "none" : "block",
-					})}
-					onLoadedData={() => {
-						setIsLoading(false)
-						getDuration?.(videoRef?.current?.duration || 0)
-					}}
-					{...rest}
-				>
-					<source src={src} />
-				</video>
-			)}
+			<AspectRatio ratio={16 / 9}>
+				{src && (
+					<video
+						ref={videoRef}
+						preload="metadata"
+						className={cn("p-0 m-0 w-full h-full object-cover", {
+							display: isLoading ? "none" : "block",
+						})}
+						onLoadedData={() => {
+							setIsLoading(false)
+							getDuration?.(videoRef?.current?.duration || 0)
+						}}
+						{...rest}
+					>
+						<source src={src} />
+					</video>
+				)}
+			</AspectRatio>
 			{onClickPlay && (
 				<div className={`absolute w-full h-full flex justify-center items-center bg-black/50`}>
 					<Play className={`text-white w-[${dimensions.height / 3}px] h-[${dimensions.height / 3}px]`} />

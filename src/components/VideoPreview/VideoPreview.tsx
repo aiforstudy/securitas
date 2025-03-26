@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react"
 
 import { cn } from "@/lib/utils"
 
+import { AspectRatio } from "../ui/aspect-ratio"
 import { Skeleton } from "../ui/skeleton"
 
 type IVideoPreviewProps = {
@@ -19,17 +20,19 @@ const VideoPreview: React.FC<IVideoPreviewProps> = ({ url }) => {
 					<Skeleton className="w-full h-full" />
 				</div>
 			)}
-			<video
-				ref={videoRef}
-				autoPlay
-				controls
-				className={cn("p-0 m-0 w-full h-full object-cover", {
-					hidden: isLoading,
-				})}
-				onLoadedData={() => setIsLoading(false)}
-			>
-				<source src={url} type="video/mp4" />
-			</video>
+			<AspectRatio ratio={16 / 9}>
+				<video
+					ref={videoRef}
+					autoPlay
+					controls
+					className={cn("p-0 m-0 w-full h-full object-cover", {
+						hidden: isLoading,
+					})}
+					onLoadedData={() => setIsLoading(false)}
+				>
+					<source src={url} type="video/mp4" />
+				</video>
+			</AspectRatio>
 		</div>
 	)
 }

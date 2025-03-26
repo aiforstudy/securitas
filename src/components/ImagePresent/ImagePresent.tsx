@@ -3,6 +3,7 @@ import React from "react"
 import { cn } from "@/lib/utils"
 
 import useResizeObserver from "../../hooks/useResizeObserver"
+import { AspectRatio } from "../ui/aspect-ratio"
 
 type IImagePresentProps = React.HTMLProps<HTMLImageElement> & {
 	src: string
@@ -20,11 +21,13 @@ const ImagePresent: React.FC<IImagePresentProps> = ({ src, onClickPlay, width, .
 				"cursor-pointer": !!onClickPlay,
 			})}
 		>
-			{!src ? (
-				<div className="w-full h-full bg-gray-100" />
-			) : (
-				<img src={src} style={{ width: "100%", height: "100%", objectFit: "cover" }} {...rest} />
-			)}
+			<AspectRatio ratio={16 / 9}>
+				{!src ? (
+					<div className="w-full h-full bg-gray-100" />
+				) : (
+					<img src={src} style={{ width: "100%", height: "100%", objectFit: "cover" }} {...rest} />
+				)}
+			</AspectRatio>
 		</div>
 	)
 }
