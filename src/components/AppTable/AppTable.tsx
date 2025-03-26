@@ -30,6 +30,7 @@ type IAppTableProps<T> = {
 		indicator?: React.ReactNode
 	}
 	classNameTHead?: HTMLAttributes<HTMLElement>["className"]
+	classNameColumn?: HTMLAttributes<HTMLElement>["className"]
 	error?: Error
 	onRowClick?: (row: T) => void
 	tableClassName?: string
@@ -66,7 +67,7 @@ function AppTable<T>({
 		defaultColumn: { size: undefined },
 		getCoreRowModel: getCoreRowModel(),
 		getPaginationRowModel: pagination ? getPaginationRowModel() : undefined,
-		...(sorting && { manualSorting: false, getSortedRowModel: getSortedRowModel(), multipleSorting: false }),
+		...(sorting && { manualSorting: false, getSortedRowModel: getSortedRowModel() }),
 	})
 
 	const columns = table.getAllColumns()
@@ -186,13 +187,13 @@ function AppTable<T>({
 				<ScrollBar orientation="horizontal" />
 			</ScrollArea>
 			{pagination && table.getRowModel().rows?.length > 0 && (
-				// && table.getPageCount() > 1
 				<Paginator<T>
 					currentPage={table.getState().pagination.pageIndex + 1}
 					totalPages={table.getPageCount()}
 					onPageChange={(pageNumber) => table.setPageIndex(pageNumber - 1)}
 					showPreviousNext
 					table={table}
+					disabled={!!loading?.spinning}
 				/>
 			)}
 		</div>

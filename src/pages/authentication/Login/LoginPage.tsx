@@ -8,12 +8,12 @@ import { LoginForm } from "./_components/LoginForm"
 const LoginPage: React.FC = () => {
 	return (
 		<div className="relative h-full w-full overflow-hidden">
-			<div className="absolute inset-0 z-0 bg-gradient-to-br from-primary/20 to-primary/5" />
+			<div className="absolute inset-0 z-0 bg-gradient-to-br from-primary/10 to-primary/5" />
 
-			<div className="absolute -top-40 -left-40 h-80 w-80 rounded-full bg-primary/30 blur-3xl" />
-			<div className="absolute -bottom-40 -right-40 h-80 w-80 rounded-full bg-primary/20 blur-3xl" />
+			<div className="absolute -top-50 -left-50 h-100 w-100 rounded-full bg-primary/30 blur-3xl" />
+			<div className="absolute -bottom-50 -right-50 h-100 w-100 rounded-full bg-primary/20 blur-3xl" />
 
-			<div className="absolute inset-0 z-0 mix-blend-overlay">
+			<div className="absolute inset-0 z-3">
 				<img src={wavyLines} alt="Background" className="w-full h-full object-cover opacity-20" />
 			</div>
 

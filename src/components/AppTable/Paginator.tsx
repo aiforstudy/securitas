@@ -23,6 +23,7 @@ type PaginatorProps<T> = {
 	onPageChange: (pageNumber: number) => void
 	showPreviousNext: boolean
 	table: Table<T>
+	disabled?: boolean
 }
 
 const PAGINATION_BUTTONS = {
@@ -93,6 +94,7 @@ export default function Paginator<T>({
 	onPageChange,
 	showPreviousNext,
 	table,
+	disabled,
 }: PaginatorProps<T>) {
 	const { t } = useTranslation()
 
@@ -110,7 +112,7 @@ export default function Paginator<T>({
 						table.setPageSize(Number(value))
 					}}
 				>
-					<SelectTrigger className="w-20 text-sm" size="sm">
+					<SelectTrigger disabled={disabled} className="w-20 text-sm" size="sm">
 						<SelectValue placeholder="Page Size" />
 					</SelectTrigger>
 					<SelectContent>

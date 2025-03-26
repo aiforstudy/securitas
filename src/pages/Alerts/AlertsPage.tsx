@@ -6,7 +6,7 @@ import { createColumnHelper } from "@tanstack/react-table"
 import { AppTable } from "@/components/AppTable"
 import ImagePresent from "@/components/ImagePresent"
 import ImagePreview from "@/components/ImagePreview"
-import SearchBox from "@/components/SearchBox"
+import { Checkbox } from "@/components/ui/checkbox"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import VideoPresent from "@/components/VideoPresent"
 import VideoPreview from "@/components/VideoPreview"
@@ -22,15 +22,15 @@ type IAlert = {
 	updatedBy: string
 	imageUrl: string
 	videoUrl: string
+	actions: string
 }
 
 const columnHelper = createColumnHelper<IAlert>()
 
 const AlertsPage: React.FC = () => {
-	const [searchValue, setSearchValue] = useState("")
 	const [openVideo, setOpenVideo] = useState<string>("")
 	const [openImage, setOpenImage] = useState<string>("")
-	console.log("🚀 ~ Alerts.tsx:14 ~ searchValue:", searchValue)
+	const [rowSelection, setRowSelection] = useState({})
 
 	const { data } = useQuery({
 		queryKey: ["alerts"],
@@ -157,13 +157,31 @@ const AlertsPage: React.FC = () => {
 						imageUrl: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=1469&auto=format&fit=crop",
 						videoUrl: "https://samplelib.com/lib/preview/mp4/sample-30s.mp4",
 					},
-				],
+				] as IAlert[],
 			})
 		},
 	})
 
 	const columns = useMemo(
 		() => [
+			columnHelper.accessor("id", {
+				meta: {
+					disableFlexCheckbox: true,
+				},
+				cell: ({ row }) => (
+					<div className="flex items-center justify-start">
+						<Checkbox id={row.id} checked={row.getIsSelected()} onCheckedChange={row.getToggleSelectedHandler()} />
+					</div>
+				),
+				header: ({ table }) => (
+					<Checkbox
+						checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
+						onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+						aria-label="Select all"
+					/>
+				),
+				footer: (info) => info.column.id,
+			}),
 			columnHelper.accessor("videoUrl", {
 				cell: (info) => {
 					const videoUrl = info.getValue()
@@ -207,8 +225,8 @@ const AlertsPage: React.FC = () => {
 				header: () => <span>Created Date</span>,
 				footer: (info) => info.column.id,
 			}),
-			columnHelper.accessor("createdAt", {
-				cell: (info) => <div className="relative text-left">{info.getValue()}</div>,
+			columnHelper.accessor("actions", {
+				cell: () => <div className="relative text-left">Action</div>,
 				header: () => <span>Action</span>,
 				footer: (info) => info.column.id,
 			}),
@@ -220,22 +238,18 @@ const AlertsPage: React.FC = () => {
 		<div className="p-4 h-full space-y-4">
 			<div className="flex items-center justify-between">
 				<h3 className="text-xl text-dark-700 font-semibold">List of alerts</h3>
-				<div className="flex items-center gap-4">
-					<div className="w-80">
-						<SearchBox placeholder="Enter alert name" onValueChange={(value) => setSearchValue(value)} />
-					</div>
-				</div>
 			</div>
 
-			<AppTable<IAlert>
+			<AppTable<IAlert & { actions: string }>
 				options={{
-					data: (data?.data || []) as IAlert[],
-					columns: columns.filter((column) => column.id !== "actions"),
+					data: data?.data || [],
+					state: { rowSelection },
+					columns,
+					enableRowSelection: true,
+					onRowSelectionChange: setRowSelection,
 				}}
-				// loading={{ spinning: isFetching }}
-				pagination
-				// onRowClick={handleViewUser}
 				className="h-[calc(100%-44px-69px-16px)]"
+				pagination
 			/>
 
 			<Dialog open={!!openVideo} onOpenChange={() => setOpenVideo("")}>

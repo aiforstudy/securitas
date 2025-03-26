@@ -1,1 +1,1 @@
-export { default } from "./LiveView"
+export { default } from "./LiveViewPage"
