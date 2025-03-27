@@ -16,7 +16,6 @@ import {
 	companyControllerFindOne,
 	companyControllerRemove,
 	companyControllerUpdate,
-	detectionControllerCreate,
 	detectionControllerCreateIncomingDetection,
 	detectionControllerFindAll,
 	detectionControllerFindOne,
@@ -47,15 +46,14 @@ import type {
 	CompanyControllerRemoveResponse,
 	CompanyControllerUpdateData,
 	CompanyControllerUpdateResponse,
-	DetectionControllerCreateData,
 	DetectionControllerCreateIncomingDetectionData,
 	DetectionControllerCreateIncomingDetectionResponse,
-	DetectionControllerCreateResponse,
 	DetectionControllerFindAllData,
 	DetectionControllerFindAllResponse,
 	DetectionControllerFindOneData,
 	DetectionControllerGetStatisticsData,
 	DetectionControllerRemoveData,
+	DetectionControllerRemoveResponse,
 	DetectionControllerSearchDetectionsData,
 	DetectionControllerUpdateData,
 	DetectionControllerUpdateResponse,
@@ -65,6 +63,7 @@ import type {
 	EngineControllerFindAllResponse,
 	EngineControllerFindOneData,
 	EngineControllerRemoveData,
+	EngineControllerRemoveResponse,
 	EngineControllerUpdateData,
 	EngineControllerUpdateResponse,
 	MonitorControllerCreateData,
@@ -73,6 +72,7 @@ import type {
 	MonitorControllerFindAllResponse,
 	MonitorControllerFindOneData,
 	MonitorControllerRemoveData,
+	MonitorControllerRemoveResponse,
 	MonitorControllerUpdateData,
 	MonitorControllerUpdateResponse,
 } from "../types.gen"
@@ -400,7 +400,11 @@ export const engineControllerCreateMutation = (options?: Partial<Options<EngineC
 }
 
 export const engineControllerRemoveMutation = (options?: Partial<Options<EngineControllerRemoveData>>) => {
-	const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options<EngineControllerRemoveData>> = {
+	const mutationOptions: UseMutationOptions<
+		EngineControllerRemoveResponse,
+		AxiosError<DefaultError>,
+		Options<EngineControllerRemoveData>
+	> = {
 		mutationFn: async (localOptions) => {
 			const { data } = await engineControllerRemove({
 				...options,
@@ -542,7 +546,11 @@ export const monitorControllerCreateMutation = (options?: Partial<Options<Monito
 }
 
 export const monitorControllerRemoveMutation = (options?: Partial<Options<MonitorControllerRemoveData>>) => {
-	const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options<MonitorControllerRemoveData>> = {
+	const mutationOptions: UseMutationOptions<
+		MonitorControllerRemoveResponse,
+		AxiosError<DefaultError>,
+		Options<MonitorControllerRemoveData>
+	> = {
 		mutationFn: async (localOptions) => {
 			const { data } = await monitorControllerRemove({
 				...options,
@@ -581,6 +589,86 @@ export const monitorControllerUpdateMutation = (options?: Partial<Options<Monito
 	> = {
 		mutationFn: async (localOptions) => {
 			const { data } = await monitorControllerUpdate({
+				...options,
+				...localOptions,
+				throwOnError: true,
+			})
+			return data
+		},
+	}
+	return mutationOptions
+}
+
+export const detectionControllerGetStatisticsQueryKey = (options: Options<DetectionControllerGetStatisticsData>) =>
+	createQueryKey("detectionControllerGetStatistics", options)
+
+export const detectionControllerGetStatisticsOptions = (options: Options<DetectionControllerGetStatisticsData>) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await detectionControllerGetStatistics({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			})
+			return data
+		},
+		queryKey: detectionControllerGetStatisticsQueryKey(options),
+	})
+}
+
+export const detectionControllerSearchDetectionsQueryKey = (
+	options?: Options<DetectionControllerSearchDetectionsData>,
+) => createQueryKey("detectionControllerSearchDetections", options)
+
+export const detectionControllerSearchDetectionsOptions = (
+	options?: Options<DetectionControllerSearchDetectionsData>,
+) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await detectionControllerSearchDetections({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			})
+			return data
+		},
+		queryKey: detectionControllerSearchDetectionsQueryKey(options),
+	})
+}
+
+export const detectionControllerCreateIncomingDetectionQueryKey = (
+	options: Options<DetectionControllerCreateIncomingDetectionData>,
+) => createQueryKey("detectionControllerCreateIncomingDetection", options)
+
+export const detectionControllerCreateIncomingDetectionOptions = (
+	options: Options<DetectionControllerCreateIncomingDetectionData>,
+) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await detectionControllerCreateIncomingDetection({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			})
+			return data
+		},
+		queryKey: detectionControllerCreateIncomingDetectionQueryKey(options),
+	})
+}
+
+export const detectionControllerCreateIncomingDetectionMutation = (
+	options?: Partial<Options<DetectionControllerCreateIncomingDetectionData>>,
+) => {
+	const mutationOptions: UseMutationOptions<
+		DetectionControllerCreateIncomingDetectionResponse,
+		AxiosError<DefaultError>,
+		Options<DetectionControllerCreateIncomingDetectionData>
+	> = {
+		mutationFn: async (localOptions) => {
+			const { data } = await detectionControllerCreateIncomingDetection({
 				...options,
 				...localOptions,
 				throwOnError: true,
@@ -647,86 +735,9 @@ export const detectionControllerFindAllInfiniteOptions = (options?: Options<Dete
 	)
 }
 
-export const detectionControllerCreateQueryKey = (options: Options<DetectionControllerCreateData>) =>
-	createQueryKey("detectionControllerCreate", options)
-
-export const detectionControllerCreateOptions = (options: Options<DetectionControllerCreateData>) => {
-	return queryOptions({
-		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await detectionControllerCreate({
-				...options,
-				...queryKey[0],
-				signal,
-				throwOnError: true,
-			})
-			return data
-		},
-		queryKey: detectionControllerCreateQueryKey(options),
-	})
-}
-
-export const detectionControllerCreateMutation = (options?: Partial<Options<DetectionControllerCreateData>>) => {
-	const mutationOptions: UseMutationOptions<
-		DetectionControllerCreateResponse,
-		AxiosError<DefaultError>,
-		Options<DetectionControllerCreateData>
-	> = {
-		mutationFn: async (localOptions) => {
-			const { data } = await detectionControllerCreate({
-				...options,
-				...localOptions,
-				throwOnError: true,
-			})
-			return data
-		},
-	}
-	return mutationOptions
-}
-
-export const detectionControllerCreateIncomingDetectionQueryKey = (
-	options: Options<DetectionControllerCreateIncomingDetectionData>,
-) => createQueryKey("detectionControllerCreateIncomingDetection", options)
-
-export const detectionControllerCreateIncomingDetectionOptions = (
-	options: Options<DetectionControllerCreateIncomingDetectionData>,
-) => {
-	return queryOptions({
-		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await detectionControllerCreateIncomingDetection({
-				...options,
-				...queryKey[0],
-				signal,
-				throwOnError: true,
-			})
-			return data
-		},
-		queryKey: detectionControllerCreateIncomingDetectionQueryKey(options),
-	})
-}
-
-export const detectionControllerCreateIncomingDetectionMutation = (
-	options?: Partial<Options<DetectionControllerCreateIncomingDetectionData>>,
-) => {
-	const mutationOptions: UseMutationOptions<
-		DetectionControllerCreateIncomingDetectionResponse,
-		AxiosError<DefaultError>,
-		Options<DetectionControllerCreateIncomingDetectionData>
-	> = {
-		mutationFn: async (localOptions) => {
-			const { data } = await detectionControllerCreateIncomingDetection({
-				...options,
-				...localOptions,
-				throwOnError: true,
-			})
-			return data
-		},
-	}
-	return mutationOptions
-}
-
 export const detectionControllerRemoveMutation = (options?: Partial<Options<DetectionControllerRemoveData>>) => {
 	const mutationOptions: UseMutationOptions<
-		unknown,
+		DetectionControllerRemoveResponse,
 		AxiosError<DefaultError>,
 		Options<DetectionControllerRemoveData>
 	> = {
@@ -776,43 +787,4 @@ export const detectionControllerUpdateMutation = (options?: Partial<Options<Dete
 		},
 	}
 	return mutationOptions
-}
-
-export const detectionControllerGetStatisticsQueryKey = (options: Options<DetectionControllerGetStatisticsData>) =>
-	createQueryKey("detectionControllerGetStatistics", options)
-
-export const detectionControllerGetStatisticsOptions = (options: Options<DetectionControllerGetStatisticsData>) => {
-	return queryOptions({
-		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await detectionControllerGetStatistics({
-				...options,
-				...queryKey[0],
-				signal,
-				throwOnError: true,
-			})
-			return data
-		},
-		queryKey: detectionControllerGetStatisticsQueryKey(options),
-	})
-}
-
-export const detectionControllerSearchDetectionsQueryKey = (
-	options?: Options<DetectionControllerSearchDetectionsData>,
-) => createQueryKey("detectionControllerSearchDetections", options)
-
-export const detectionControllerSearchDetectionsOptions = (
-	options?: Options<DetectionControllerSearchDetectionsData>,
-) => {
-	return queryOptions({
-		queryFn: async ({ queryKey, signal }) => {
-			const { data } = await detectionControllerSearchDetections({
-				...options,
-				...queryKey[0],
-				signal,
-				throwOnError: true,
-			})
-			return data
-		},
-		queryKey: detectionControllerSearchDetectionsQueryKey(options),
-	})
 }

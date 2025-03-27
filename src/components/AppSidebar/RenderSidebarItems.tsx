@@ -17,9 +17,9 @@ const RenderSidebarItems: React.FC<IRenderSidebarItemsProps> = ({ items }) => {
 				const hasChildren = item.children && item.children.length > 0
 				const canRender = !item.roles || item.roles.some((role) => currentRoles.includes(role))
 				return canRender ? (
-					<SidebarGroup className="border-none py-2 px-4" key={`sidebar-group-${item.label}`}>
+					<SidebarGroup className="border-none py-1 px-5" key={`sidebar-group-${item.label}`}>
 						{!hasChildren && (
-							<div className="pr-1">
+							<div className="">
 								<RenderButton label={item.label} justify="start" icon={item.icon} path={item.path} />
 							</div>
 						)}

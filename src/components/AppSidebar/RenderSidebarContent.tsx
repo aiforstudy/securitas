@@ -11,7 +11,7 @@ type IRenderSidebarContentProps = {
 
 const RenderSidebarContent: React.FC<IRenderSidebarContentProps> = ({ items }) => {
 	return (
-		<SidebarContent className="py-4">
+		<SidebarContent className="py-5">
 			<ScrollArea>
 				<RenderSidebarItems items={items} />
 			</ScrollArea>

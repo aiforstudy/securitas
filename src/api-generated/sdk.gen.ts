@@ -14,10 +14,8 @@ import type {
 	CompanyControllerRemoveResponse,
 	CompanyControllerUpdateData,
 	CompanyControllerUpdateResponse,
-	DetectionControllerCreateData,
 	DetectionControllerCreateIncomingDetectionData,
 	DetectionControllerCreateIncomingDetectionResponse,
-	DetectionControllerCreateResponse,
 	DetectionControllerFindAllData,
 	DetectionControllerFindAllResponse,
 	DetectionControllerFindOneData,
@@ -25,6 +23,7 @@ import type {
 	DetectionControllerGetStatisticsData,
 	DetectionControllerGetStatisticsResponse,
 	DetectionControllerRemoveData,
+	DetectionControllerRemoveResponse,
 	DetectionControllerSearchDetectionsData,
 	DetectionControllerSearchDetectionsResponse,
 	DetectionControllerUpdateData,
@@ -36,6 +35,7 @@ import type {
 	EngineControllerFindOneData,
 	EngineControllerFindOneResponse,
 	EngineControllerRemoveData,
+	EngineControllerRemoveResponse,
 	EngineControllerUpdateData,
 	EngineControllerUpdateResponse,
 	MonitorControllerCreateData,
@@ -45,6 +45,7 @@ import type {
 	MonitorControllerFindOneData,
 	MonitorControllerFindOneResponse,
 	MonitorControllerRemoveData,
+	MonitorControllerRemoveResponse,
 	MonitorControllerUpdateData,
 	MonitorControllerUpdateResponse,
 } from "./types.gen"
@@ -110,19 +111,19 @@ export const companyControllerRemove = <ThrowOnError extends boolean = false>(
 	options: Options<CompanyControllerRemoveData, ThrowOnError>,
 ) => {
 	return (options.client ?? _heyApiClient).delete<CompanyControllerRemoveResponse, unknown, ThrowOnError>({
-		url: "/companies/{id}",
+		url: "/companies/{code}",
 		...options,
 	})
 }
 
 /**
- * Get a company by id
+ * Get a company by code
  */
 export const companyControllerFindOne = <ThrowOnError extends boolean = false>(
 	options: Options<CompanyControllerFindOneData, ThrowOnError>,
 ) => {
 	return (options.client ?? _heyApiClient).get<CompanyControllerFindOneResponse, unknown, ThrowOnError>({
-		url: "/companies/{id}",
+		url: "/companies/{code}",
 		...options,
 	})
 }
@@ -134,7 +135,7 @@ export const companyControllerUpdate = <ThrowOnError extends boolean = false>(
 	options: Options<CompanyControllerUpdateData, ThrowOnError>,
 ) => {
 	return (options.client ?? _heyApiClient).patch<CompanyControllerUpdateResponse, unknown, ThrowOnError>({
-		url: "/companies/{id}",
+		url: "/companies/{code}",
 		...options,
 		headers: {
 			"Content-Type": "application/json",
@@ -177,7 +178,7 @@ export const engineControllerCreate = <ThrowOnError extends boolean = false>(
 export const engineControllerRemove = <ThrowOnError extends boolean = false>(
 	options: Options<EngineControllerRemoveData, ThrowOnError>,
 ) => {
-	return (options.client ?? _heyApiClient).delete<unknown, unknown, ThrowOnError>({
+	return (options.client ?? _heyApiClient).delete<EngineControllerRemoveResponse, unknown, ThrowOnError>({
 		url: "/engines/{id}",
 		...options,
 	})
@@ -245,7 +246,7 @@ export const monitorControllerCreate = <ThrowOnError extends boolean = false>(
 export const monitorControllerRemove = <ThrowOnError extends boolean = false>(
 	options: Options<MonitorControllerRemoveData, ThrowOnError>,
 ) => {
-	return (options.client ?? _heyApiClient).delete<unknown, unknown, ThrowOnError>({
+	return (options.client ?? _heyApiClient).delete<MonitorControllerRemoveResponse, unknown, ThrowOnError>({
 		url: "/monitors/{id}",
 		...options,
 	})
@@ -280,30 +281,26 @@ export const monitorControllerUpdate = <ThrowOnError extends boolean = false>(
 }
 
 /**
- * Get all detections
+ * Get detection statistics by engine
  */
-export const detectionControllerFindAll = <ThrowOnError extends boolean = false>(
-	options?: Options<DetectionControllerFindAllData, ThrowOnError>,
+export const detectionControllerGetStatistics = <ThrowOnError extends boolean = false>(
+	options: Options<DetectionControllerGetStatisticsData, ThrowOnError>,
 ) => {
-	return (options?.client ?? _heyApiClient).get<DetectionControllerFindAllResponse, unknown, ThrowOnError>({
-		url: "/detections",
+	return (options.client ?? _heyApiClient).get<DetectionControllerGetStatisticsResponse, unknown, ThrowOnError>({
+		url: "/detections/statistics",
 		...options,
 	})
 }
 
 /**
- * Create a new detection
+ * Search detections with advanced filters
  */
-export const detectionControllerCreate = <ThrowOnError extends boolean = false>(
-	options: Options<DetectionControllerCreateData, ThrowOnError>,
+export const detectionControllerSearchDetections = <ThrowOnError extends boolean = false>(
+	options?: Options<DetectionControllerSearchDetectionsData, ThrowOnError>,
 ) => {
-	return (options.client ?? _heyApiClient).post<DetectionControllerCreateResponse, unknown, ThrowOnError>({
-		url: "/detections",
+	return (options?.client ?? _heyApiClient).get<DetectionControllerSearchDetectionsResponse, unknown, ThrowOnError>({
+		url: "/detections/search",
 		...options,
-		headers: {
-			"Content-Type": "application/json",
-			...options?.headers,
-		},
 	})
 }
 
@@ -328,12 +325,24 @@ export const detectionControllerCreateIncomingDetection = <ThrowOnError extends 
 }
 
 /**
+ * Get all detections
+ */
+export const detectionControllerFindAll = <ThrowOnError extends boolean = false>(
+	options?: Options<DetectionControllerFindAllData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).get<DetectionControllerFindAllResponse, unknown, ThrowOnError>({
+		url: "/detections",
+		...options,
+	})
+}
+
+/**
  * Delete a detection
  */
 export const detectionControllerRemove = <ThrowOnError extends boolean = false>(
 	options: Options<DetectionControllerRemoveData, ThrowOnError>,
 ) => {
-	return (options.client ?? _heyApiClient).delete<unknown, unknown, ThrowOnError>({
+	return (options.client ?? _heyApiClient).delete<DetectionControllerRemoveResponse, unknown, ThrowOnError>({
 		url: "/detections/{id}",
 		...options,
 	})
@@ -364,29 +373,5 @@ export const detectionControllerUpdate = <ThrowOnError extends boolean = false>(
 			"Content-Type": "application/json",
 			...options?.headers,
 		},
-	})
-}
-
-/**
- * Get detection statistics by engine
- */
-export const detectionControllerGetStatistics = <ThrowOnError extends boolean = false>(
-	options: Options<DetectionControllerGetStatisticsData, ThrowOnError>,
-) => {
-	return (options.client ?? _heyApiClient).get<DetectionControllerGetStatisticsResponse, unknown, ThrowOnError>({
-		url: "/detections/statistics",
-		...options,
-	})
-}
-
-/**
- * Search detections with advanced filters
- */
-export const detectionControllerSearchDetections = <ThrowOnError extends boolean = false>(
-	options?: Options<DetectionControllerSearchDetectionsData, ThrowOnError>,
-) => {
-	return (options?.client ?? _heyApiClient).get<DetectionControllerSearchDetectionsResponse, unknown, ThrowOnError>({
-		url: "/detections/search",
-		...options,
 	})
 }

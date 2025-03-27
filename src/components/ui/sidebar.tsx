@@ -17,7 +17,7 @@ export const SIDEBAR_COOKIE_NAME = "sidebar_state"
 export const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
 export const SIDEBAR_WIDTH = "300px"
 export const SIDEBAR_WIDTH_MOBILE = "300px"
-export const SIDEBAR_WIDTH_ICON = "32px"
+export const SIDEBAR_WIDTH_ICON = "90px"
 export const SIDEBAR_KEYBOARD_SHORTCUT = "b"
 
 type SidebarContextProps = {
@@ -136,7 +136,7 @@ function SidebarProvider({
 function Sidebar({
 	side = "left",
 	variant = "sidebar",
-	collapsible = "offcanvas",
+	collapsible = "icon",
 	className,
 	children,
 	...props

@@ -2,6 +2,10 @@
 
 export type CreateCompanyDto = {
 	/**
+	 * Company ID (UUID)
+	 */
+	id?: string
+	/**
 	 * The name of the company
 	 */
 	name: string
@@ -147,26 +151,6 @@ export type CreateEngineDto = {
 	 */
 	name: string
 	/**
-	 * Whether to enable SMS notifications
-	 */
-	sms?: boolean
-	/**
-	 * Whether to enable email notifications
-	 */
-	email?: boolean
-	/**
-	 * Whether approval is required
-	 */
-	require_approval?: boolean
-	/**
-	 * Sequence number format
-	 */
-	seq_no_format?: string
-	/**
-	 * Whether to show on home page
-	 */
-	show_on_home?: boolean
-	/**
 	 * Engine title
 	 */
 	title?: string
@@ -178,18 +162,6 @@ export type CreateEngineDto = {
 	 * Engine icon URL
 	 */
 	icon?: string
-	/**
-	 * Whether the engine is enabled
-	 */
-	enable?: boolean
-	/**
-	 * Learn more URL
-	 */
-	learn_more_url?: string
-	/**
-	 * Engine weight for sorting
-	 */
-	weight?: number
 	/**
 	 * Engine color in hex format
 	 */
@@ -221,6 +193,14 @@ export type Engine = {
 	 * The status of the engine
 	 */
 	status: string
+	/**
+	 * The icon of the engine
+	 */
+	icon: string
+	/**
+	 * The color of the engine
+	 */
+	color: string
 	/**
 	 * The timestamp when the engine was created
 	 */
@@ -264,26 +244,6 @@ export type UpdateEngineDto = {
 	 */
 	name?: string
 	/**
-	 * Whether to enable SMS notifications
-	 */
-	sms?: boolean
-	/**
-	 * Whether to enable email notifications
-	 */
-	email?: boolean
-	/**
-	 * Whether approval is required
-	 */
-	require_approval?: boolean
-	/**
-	 * Sequence number format
-	 */
-	seq_no_format?: string
-	/**
-	 * Whether to show on home page
-	 */
-	show_on_home?: boolean
-	/**
 	 * Engine title
 	 */
 	title?: string
@@ -295,18 +255,6 @@ export type UpdateEngineDto = {
 	 * Engine icon URL
 	 */
 	icon?: string
-	/**
-	 * Whether the engine is enabled
-	 */
-	enable?: boolean
-	/**
-	 * Learn more URL
-	 */
-	learn_more_url?: string
-	/**
-	 * Engine weight for sorting
-	 */
-	weight?: number
 	/**
 	 * Engine color in hex format
 	 */
@@ -517,6 +465,15 @@ export type CreateMonitorDto = {
 	zabbix_host_id: string
 }
 
+/**
+ * The status of the monitor
+ */
+export enum MonitorStatus {
+	CONNECTED = "CONNECTED",
+	DISCONNECTED = "DISCONNECTED",
+	UNAVAILABLE = "UNAVAILABLE",
+}
+
 export type Monitor = {
 	/**
 	 * The unique identifier of the monitor
@@ -678,10 +635,7 @@ export type Monitor = {
 	 * The color
 	 */
 	color: string
-	/**
-	 * The status of the monitor
-	 */
-	status: "CONNECTED" | "DISCONNECTED" | "UNAVAILABLE"
+	status: MonitorStatus
 	/**
 	 * The serial number
 	 */
@@ -942,10 +896,120 @@ export type UpdateMonitorDto = {
 	zabbix_host_id?: string
 }
 
+export type DetectionStatisticsDataDto = {
+	/**
+	 * Timestamp of the statistics
+	 */
+	timestamp: string
+}
+
+export type DetectionStatisticsResponseDto = {
+	/**
+	 * Array of statistics data by timestamp
+	 */
+	data: Array<DetectionStatisticsDataDto>
+	/**
+	 * Engine details for each engine
+	 */
+	engines: {
+		[key: string]: Engine
+	}
+}
+
+/**
+ * The status of the detection
+ */
+export enum DetectionStatus {
+	PENDING = "PENDING",
+	APPROVED = "APPROVED",
+	REJECTED = "REJECTED",
+	COMPLETED = "COMPLETED",
+}
+
 /**
  * The feedback status of the detection
  */
 export enum FeedbackStatus {
+	UNMARK = "UNMARK",
+	APPROVED = "APPROVED",
+	REJECTED = "REJECTED",
+}
+
+export type Detection = {
+	/**
+	 * The unique identifier of the detection
+	 */
+	id: string
+	/**
+	 * The timestamp of the detection
+	 */
+	timestamp: string
+	/**
+	 * The monitor ID
+	 */
+	monitor_id: string
+	/**
+	 * The approved status
+	 */
+	approved?: string
+	/**
+	 * The approved by
+	 */
+	approved_by?: string
+	/**
+	 * The zone ID
+	 */
+	zone?: string
+	/**
+	 * The engine ID
+	 */
+	engine: string
+	status: DetectionStatus
+	feedback_status: FeedbackStatus
+	/**
+	 * Whether the detection is an alert
+	 */
+	alert: boolean
+	/**
+	 * Whether the detection is unread
+	 */
+	unread: boolean
+	/**
+	 * The district where the detection occurred
+	 */
+	district: string
+	/**
+	 * The suspected offense
+	 */
+	suspected_offense: string
+	/**
+	 * The type of vehicle
+	 */
+	vehicle_type: string
+	/**
+	 * The license plate number
+	 */
+	license_plate: string
+	/**
+	 * Additional metadata about the detection
+	 */
+	metadata: {
+		[key: string]: unknown
+	}
+	/**
+	 * The timestamp when the detection was created
+	 */
+	created_at: string
+	/**
+	 * The timestamp when the detection was last updated
+	 */
+	updated_at: string
+}
+
+/**
+ * The feedback status of the detection
+ */
+export enum FeedbackStatus2 {
 	UNMARK = "UNMARK",
 	APPROVED = "APPROVED",
 	REJECTED = "REJECTED",
@@ -1010,79 +1074,14 @@ export type CreateDetectionDto = {
 	metadata: {
 		[key: string]: unknown
 	}
-}
-
-export type Detection = {
 	/**
-	 * The unique identifier of the detection
+	 * URL to the detection image
 	 */
-	id: string
+	image_url?: string
 	/**
-	 * The timestamp of the detection
+	 * URL to the detection video
 	 */
-	timestamp: string
-	/**
-	 * The monitor ID
-	 */
-	monitor_id: string
-	/**
-	 * The approved status
-	 */
-	approved?: string
-	/**
-	 * The zone ID
-	 */
-	zone?: string
-	/**
-	 * The engine ID
-	 */
-	engine: string
-	/**
-	 * The status of the detection
-	 */
-	status: "PENDING" | "APPROVED" | "REJECTED" | "COMPLETED"
-	/**
-	 * The feedback status of the detection
-	 */
-	feedback_status: "UNMARK" | "APPROVED" | "REJECTED"
-	/**
-	 * Whether the detection is an alert
-	 */
-	alert: boolean
-	/**
-	 * Whether the detection is unread
-	 */
-	unread: boolean
-	/**
-	 * The district where the detection occurred
-	 */
-	district: string
-	/**
-	 * The suspected offense
-	 */
-	suspected_offense: string
-	/**
-	 * The type of vehicle
-	 */
-	vehicle_type: string
-	/**
-	 * The license plate number
-	 */
-	license_plate: string
-	/**
-	 * Additional metadata about the detection
-	 */
-	metadata: {
-		[key: string]: unknown
-	}
-	/**
-	 * The timestamp when the detection was created
-	 */
-	created_at: string
-	/**
-	 * The timestamp when the detection was last updated
-	 */
-	updated_at: string
+	video_url?: string
 }
 
 export type PaginatedDetectionDto = {
@@ -1118,50 +1117,17 @@ export type UpdateDetectionDto = {
 	 */
 	feedback_status?: "UNMARK" | "APPROVED" | "REJECTED"
 	/**
-	 * Whether the detection is an alert
-	 */
-	alert?: boolean
-	/**
 	 * Whether the detection is unread
 	 */
 	unread?: boolean
 	/**
-	 * The district where the detection occurred
+	 * The approved status
 	 */
-	district?: string
+	approved?: string
 	/**
-	 * The suspected offense
+	 * The approved by
 	 */
-	suspected_offense?: string
-	/**
-	 * The type of vehicle detected
-	 */
-	vehicle_type?: string
-	/**
-	 * The license plate of the vehicle
-	 */
-	license_plate?: string
-	/**
-	 * Additional metadata for the detection
-	 */
-	metadata?: {
-		[key: string]: unknown
-	}
-}
-
-export type DetectionStatisticsResponseDto = {
-	/**
-	 * Engine name
-	 */
-	engine: string
-	/**
-	 * Timestamp of the statistics
-	 */
-	timestamp: string
-	/**
-	 * Number of detections
-	 */
-	count: number
+	approved_by?: string
 }
 
 export type AppControllerGetHelloData = {
@@ -1220,10 +1186,10 @@ export type CompanyControllerCreateResponse = CompanyControllerCreateResponses[k
 export type CompanyControllerRemoveData = {
 	body?: never
 	path: {
-		id: string
+		code: string
 	}
 	query?: never
-	url: "/companies/{id}"
+	url: "/companies/{code}"
 }
 
 export type CompanyControllerRemoveErrors = {
@@ -1245,10 +1211,10 @@ export type CompanyControllerRemoveResponse = CompanyControllerRemoveResponses[k
 export type CompanyControllerFindOneData = {
 	body?: never
 	path: {
-		id: string
+		code: string
 	}
 	query?: never
-	url: "/companies/{id}"
+	url: "/companies/{code}"
 }
 
 export type CompanyControllerFindOneErrors = {
@@ -1271,10 +1237,10 @@ export type CompanyControllerFindOneResponse =
 export type CompanyControllerUpdateData = {
 	body: UpdateCompanyDto
 	path: {
-		id: string
+		code: string
 	}
 	query?: never
-	url: "/companies/{id}"
+	url: "/companies/{code}"
 }
 
 export type CompanyControllerUpdateErrors = {
@@ -1301,14 +1267,6 @@ export type EngineControllerFindAllData = {
 		 * Engine name to search for
 		 */
 		name?: string
-		/**
-		 * Whether to show on home page
-		 */
-		show_on_home?: boolean
-		/**
-		 * Whether the engine is enabled
-		 */
-		enable?: boolean
 		/**
 		 * Page number
 		 */
@@ -1366,8 +1324,10 @@ export type EngineControllerRemoveResponses = {
 	/**
 	 * The engine has been successfully deleted.
 	 */
-	200: unknown
+	204: void
 }
+
+export type EngineControllerRemoveResponse = EngineControllerRemoveResponses[keyof EngineControllerRemoveResponses]
 
 export type EngineControllerFindOneData = {
 	body?: never
@@ -1493,8 +1453,10 @@ export type MonitorControllerRemoveResponses = {
 	/**
 	 * The monitor has been successfully deleted.
 	 */
-	200: unknown
+	204: void
 }
+
+export type MonitorControllerRemoveResponse = MonitorControllerRemoveResponses[keyof MonitorControllerRemoveResponses]
 
 export type MonitorControllerFindOneData = {
 	body?: never
@@ -1547,195 +1509,6 @@ export type MonitorControllerUpdateResponses = {
 
 export type MonitorControllerUpdateResponse = MonitorControllerUpdateResponses[keyof MonitorControllerUpdateResponses]
 
-export type DetectionControllerFindAllData = {
-	body?: never
-	path?: never
-	query?: {
-		/**
-		 * The page number
-		 */
-		page?: number
-		/**
-		 * The number of items per page
-		 */
-		limit?: number
-		/**
-		 * The monitor ID to filter by
-		 */
-		monitor_id?: string
-		/**
-		 * The engine to filter by
-		 */
-		engine?: string
-		/**
-		 * The status to filter by
-		 */
-		status?: "PENDING" | "APPROVED" | "REJECTED" | "COMPLETED"
-		/**
-		 * The feedback status to filter by
-		 */
-		feedback_status?: "UNMARK" | "APPROVED" | "REJECTED"
-		/**
-		 * Filter by alert status
-		 */
-		alert?: boolean
-		/**
-		 * Filter by unread status
-		 */
-		unread?: boolean
-		/**
-		 * The start date to filter by
-		 */
-		start_date?: string
-		/**
-		 * The end date to filter by
-		 */
-		end_date?: string
-		/**
-		 * The district to filter by
-		 */
-		district?: string
-		/**
-		 * The suspected offense to filter by
-		 */
-		suspected_offense?: string
-		/**
-		 * The vehicle type to filter by
-		 */
-		vehicle_type?: string
-		/**
-		 * The license plate to filter by
-		 */
-		license_plate?: string
-	}
-	url: "/detections"
-}
-
-export type DetectionControllerFindAllResponses = {
-	/**
-	 * Return all detections.
-	 */
-	200: PaginatedDetectionDto
-}
-
-export type DetectionControllerFindAllResponse =
-	DetectionControllerFindAllResponses[keyof DetectionControllerFindAllResponses]
-
-export type DetectionControllerCreateData = {
-	body: CreateDetectionDto
-	path?: never
-	query?: never
-	url: "/detections"
-}
-
-export type DetectionControllerCreateResponses = {
-	/**
-	 * The detection has been successfully created.
-	 */
-	201: Detection
-}
-
-export type DetectionControllerCreateResponse =
-	DetectionControllerCreateResponses[keyof DetectionControllerCreateResponses]
-
-export type DetectionControllerCreateIncomingDetectionData = {
-	body: CreateDetectionDto
-	path?: never
-	query?: never
-	url: "/detections/incoming"
-}
-
-export type DetectionControllerCreateIncomingDetectionResponses = {
-	/**
-	 * The detection has been successfully created.
-	 */
-	201: Detection
-}
-
-export type DetectionControllerCreateIncomingDetectionResponse =
-	DetectionControllerCreateIncomingDetectionResponses[keyof DetectionControllerCreateIncomingDetectionResponses]
-
-export type DetectionControllerRemoveData = {
-	body?: never
-	path: {
-		id: string
-	}
-	query: {
-		timestamp: string
-	}
-	url: "/detections/{id}"
-}
-
-export type DetectionControllerRemoveErrors = {
-	/**
-	 * Detection not found.
-	 */
-	404: unknown
-}
-
-export type DetectionControllerRemoveResponses = {
-	/**
-	 * The detection has been successfully deleted.
-	 */
-	200: unknown
-}
-
-export type DetectionControllerFindOneData = {
-	body?: never
-	path: {
-		id: string
-	}
-	query: {
-		timestamp: string
-	}
-	url: "/detections/{id}"
-}
-
-export type DetectionControllerFindOneErrors = {
-	/**
-	 * Detection not found.
-	 */
-	404: unknown
-}
-
-export type DetectionControllerFindOneResponses = {
-	/**
-	 * Return the detection.
-	 */
-	200: Detection
-}
-
-export type DetectionControllerFindOneResponse =
-	DetectionControllerFindOneResponses[keyof DetectionControllerFindOneResponses]
-
-export type DetectionControllerUpdateData = {
-	body: UpdateDetectionDto
-	path: {
-		id: string
-	}
-	query: {
-		timestamp: string
-	}
-	url: "/detections/{id}"
-}
-
-export type DetectionControllerUpdateErrors = {
-	/**
-	 * Detection not found.
-	 */
-	404: unknown
-}
-
-export type DetectionControllerUpdateResponses = {
-	/**
-	 * The detection has been successfully updated.
-	 */
-	200: Detection
-}
-
-export type DetectionControllerUpdateResponse =
-	DetectionControllerUpdateResponses[keyof DetectionControllerUpdateResponses]
-
 /**
  * Group by day or hour
  */
@@ -1772,7 +1545,7 @@ export type DetectionControllerGetStatisticsResponses = {
 	/**
 	 * Return detection statistics grouped by engine and time.
 	 */
-	200: Array<DetectionStatisticsResponseDto>
+	200: DetectionStatisticsResponseDto
 }
 
 export type DetectionControllerGetStatisticsResponse =
@@ -1824,6 +1597,172 @@ export type DetectionControllerSearchDetectionsResponses = {
 
 export type DetectionControllerSearchDetectionsResponse =
 	DetectionControllerSearchDetectionsResponses[keyof DetectionControllerSearchDetectionsResponses]
+
+export type DetectionControllerCreateIncomingDetectionData = {
+	body: CreateDetectionDto
+	path?: never
+	query?: never
+	url: "/detections/incoming"
+}
+
+export type DetectionControllerCreateIncomingDetectionResponses = {
+	/**
+	 * The detection has been successfully created.
+	 */
+	201: Detection
+}
+
+export type DetectionControllerCreateIncomingDetectionResponse =
+	DetectionControllerCreateIncomingDetectionResponses[keyof DetectionControllerCreateIncomingDetectionResponses]
+
+/**
+ * Filter by approved status
+ */
+export enum Approved {
+	YES = "yes",
+	NO = "no",
+	EXPIRED = "expired",
+}
+
+export type DetectionControllerFindAllData = {
+	body?: never
+	path?: never
+	query?: {
+		/**
+		 * The page number
+		 */
+		page?: number
+		/**
+		 * The number of items per page
+		 */
+		limit?: number
+		/**
+		 * The monitor ID to filter by
+		 */
+		monitor_id?: string
+		/**
+		 * The engine to filter by
+		 */
+		engine?: string
+		/**
+		 * The status to filter by
+		 */
+		status?: "PENDING" | "APPROVED" | "REJECTED" | "COMPLETED"
+		/**
+		 * The feedback status to filter by
+		 */
+		feedback_status?: "UNMARK" | "APPROVED" | "REJECTED"
+		/**
+		 * Filter by alert status
+		 */
+		alert?: boolean
+		/**
+		 * Filter by unread status
+		 */
+		unread?: boolean
+		/**
+		 * The start date to filter by
+		 */
+		start_date?: string
+		/**
+		 * The end date to filter by
+		 */
+		end_date?: string
+		/**
+		 * Filter by approved status
+		 */
+		approved?: "yes" | "no" | "expired"
+	}
+	url: "/detections"
+}
+
+export type DetectionControllerFindAllResponses = {
+	/**
+	 * Return all detections.
+	 */
+	200: PaginatedDetectionDto
+}
+
+export type DetectionControllerFindAllResponse =
+	DetectionControllerFindAllResponses[keyof DetectionControllerFindAllResponses]
+
+export type DetectionControllerRemoveData = {
+	body?: never
+	path: {
+		id: string
+	}
+	query?: never
+	url: "/detections/{id}"
+}
+
+export type DetectionControllerRemoveErrors = {
+	/**
+	 * Detection not found.
+	 */
+	404: unknown
+}
+
+export type DetectionControllerRemoveResponses = {
+	/**
+	 * The detection has been successfully deleted.
+	 */
+	204: void
+}
+
+export type DetectionControllerRemoveResponse =
+	DetectionControllerRemoveResponses[keyof DetectionControllerRemoveResponses]
+
+export type DetectionControllerFindOneData = {
+	body?: never
+	path: {
+		id: string
+	}
+	query?: never
+	url: "/detections/{id}"
+}
+
+export type DetectionControllerFindOneErrors = {
+	/**
+	 * Detection not found.
+	 */
+	404: unknown
+}
+
+export type DetectionControllerFindOneResponses = {
+	/**
+	 * Return the detection.
+	 */
+	200: Detection
+}
+
+export type DetectionControllerFindOneResponse =
+	DetectionControllerFindOneResponses[keyof DetectionControllerFindOneResponses]
+
+export type DetectionControllerUpdateData = {
+	body: UpdateDetectionDto
+	path: {
+		id: string
+	}
+	query?: never
+	url: "/detections/{id}"
+}
+
+export type DetectionControllerUpdateErrors = {
+	/**
+	 * Detection not found.
+	 */
+	404: unknown
+}
+
+export type DetectionControllerUpdateResponses = {
+	/**
+	 * The detection has been successfully updated.
+	 */
+	200: Detection
+}
+
+export type DetectionControllerUpdateResponse =
+	DetectionControllerUpdateResponses[keyof DetectionControllerUpdateResponses]
 
 export type ClientOptions = {
 	baseURL: string

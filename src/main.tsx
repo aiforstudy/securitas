@@ -39,7 +39,7 @@ createRoot(document.getElementById("root")!).render(
 								<TooltipProvider>
 									<App />
 									<SonnerToaster position="top-right" />
-									<ReactQueryDevtools position="left" initialIsOpen={false} buttonPosition="bottom-left" />
+									<ReactQueryDevtools position="left" initialIsOpen={false} buttonPosition="relative" />
 								</TooltipProvider>
 							</AuthProvider>
 						</LangProvider>

@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom"
 import { cn } from "@/lib/utils"
 
 import { Button } from "../ui/button"
+import { useSidebar } from "../ui/sidebar"
 
 const RenderButton: React.FC<{
 	label: string
@@ -14,6 +15,8 @@ const RenderButton: React.FC<{
 	const navigate = useNavigate()
 	const { pathname } = useLocation()
 	const isActive = pathname === path
+	const { open } = useSidebar()
+	const onlyIcon = open ? justify : "center"
 
 	const handleClick = () => {
 		if (path) navigate(path)
@@ -24,15 +27,15 @@ const RenderButton: React.FC<{
 			variant="ghost"
 			onClick={handleClick}
 			className={cn("justify-start w-full cursor-pointer hover:bg-gray-200", {
-				"justify-start": justify === "start",
-				"justify-center": justify === "center",
-				"justify-end": justify === "end",
-				"justify-between": justify === "between",
+				"justify-start": onlyIcon === "start",
+				"justify-center": onlyIcon === "center",
+				"justify-end": onlyIcon === "end",
+				"justify-between": onlyIcon === "between",
 				"bg-gray-200 text-accent-foreground": isActive,
 			})}
 		>
 			{icon && justifyIcon === "start" && icon}
-			{label}
+			{open && label}
 			{icon && justifyIcon === "end" && icon}
 		</Button>
 	)

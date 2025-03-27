@@ -1,4 +1,4 @@
-import React, { memo } from "react"
+import React from "react"
 import { Outlet } from "react-router-dom"
 
 import { AppSidebar } from "@/components/AppSidebar"
@@ -24,4 +24,4 @@ const MainLayout: React.FC<IMainLayoutProps> = ({ children }) => {
 	)
 }
 
-export default memo(MainLayout)
+export default MainLayout
