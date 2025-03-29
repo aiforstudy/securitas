@@ -53,7 +53,7 @@ export type ILiveViewPositionCamera = {
 		company_code: string
 		connection_uri: string
 	}
-	has_monitor: true
+	has_monitor: boolean
 	grid_settings: {
 		col: number
 	}
@@ -61,7 +61,7 @@ export type ILiveViewPositionCamera = {
 
 export type IStreamingCamera = {
 	url: string | null
-	streamID: string | null
 	snapshot: string | null
-	streamName: string | null
+	cameraId: string | null
+	cameraName: string | null
 }

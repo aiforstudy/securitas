@@ -16,10 +16,10 @@ export const useStreaming = () => {
 	const [videoPlayer, setVideoPlayer] = useState<HTMLVideoElement | null>(null)
 	const [loadStreamError, setLoadStreamError] = useState(false)
 
-	const startPlayHLS = async (link: string) => {
-		setLoadStreamError(false)
+	const startPlayHLS = async (id: string, link: string) => {
 		setLoading(true)
-		const streamRequestHash = await sha256Hash(link)
+		setLoadStreamError(false)
+		const streamRequestHash = id ?? (await sha256Hash(link))
 		if (videoPlayer) {
 			const url = `${CONFIG.HSL_STREAM_URL}/${streamRequestHash}/index.m3u8`
 			const CancelToken = Axios.CancelToken
@@ -30,9 +30,12 @@ export const useStreaming = () => {
 				if (res.data) {
 					loadVideoSource(videoPlayer, url)
 				}
+				console.log("🚀 ~ useStreaming.ts:33 ~ res:", res)
 			} catch (e) {
 				console.log("🚀 ~ useStreaming.ts:34 ~ e:", e)
-				addStream(streamRequestHash, link)
+				// addStream(streamRequestHash, link)
+			} finally {
+				// setLoading(false)
 			}
 		}
 	}
@@ -49,7 +52,7 @@ export const useStreaming = () => {
 				JSON.stringify({ source: url }),
 			)
 			if (res.data) {
-				startPlayHLS(url)
+				startPlayHLS(streamRequestHash, url)
 			}
 		} catch {
 			setLoadStreamError(true)
@@ -77,12 +80,16 @@ export const useStreaming = () => {
 			videoPlayer.addEventListener("loadeddata", () => {
 				setLoading(false)
 			})
+			videoPlayer.addEventListener("error", () => {
+				setLoadStreamError(true)
+				setLoading(false)
+			})
 		}
 	}
 
 	const retry = (monitoring: IStreamingCamera) => {
 		if (videoPlayer && monitoring.url) {
-			startPlayHLS(monitoring.url)
+			startPlayHLS(monitoring.cameraId ?? "", monitoring.url)
 		}
 	}
 

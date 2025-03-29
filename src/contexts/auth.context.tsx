@@ -11,7 +11,7 @@ export type ICurrentUser = {
 	name: string
 	email: string
 	token: string
-	company_id: string
+	company_code: string
 }
 
 export type IAuthContext = {
@@ -36,7 +36,7 @@ const useAuthProvider = () => {
 	const login = useCallback((user: ICurrentUser, isSaveLocal: boolean = true) => {
 		if (isEmpty(user)) return
 		if (isSaveLocal) {
-			localS.set(STORAGE_KEYS.COMPANY_ID, user?.company_id)
+			localS.set(STORAGE_KEYS.COMPANY_CODE, user?.company_code)
 			localS.set(STORAGE_KEYS.CURRENT_USER, user)
 			localS.set(STORAGE_KEYS.ACCESS_TOKEN, user?.token)
 		}

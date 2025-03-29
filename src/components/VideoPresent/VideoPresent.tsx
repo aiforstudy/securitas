@@ -23,7 +23,7 @@ const VideoPresent: React.FC<VideoPresentProps> = ({ src, width, getDuration, on
 			ref={ref}
 			onClick={onClickPlay}
 			className={cn(
-				`relative w-[${width}px] h-[${(dimensions.width * 6) / 9}px] bg-[rgba(0,0,0,0.1)] flex justify-center items-center`,
+				`relative w-[${width}px] h-[${(dimensions.width * 6) / 9}px] bg-[rgba(0,0,0,0.05)] flex justify-center items-center`,
 				{
 					"cursor-pointer": !!onClickPlay,
 				},
@@ -48,7 +48,7 @@ const VideoPresent: React.FC<VideoPresentProps> = ({ src, width, getDuration, on
 				)}
 			</AspectRatio>
 			{onClickPlay && (
-				<div className={`absolute w-full h-full flex justify-center items-center bg-black/50`}>
+				<div className={`absolute w-full h-full flex justify-center items-center bg-black/25`}>
 					<Play className={`text-white w-[${dimensions.height / 3}px] h-[${dimensions.height / 3}px]`} />
 				</div>
 			)}

@@ -18,16 +18,9 @@ import { CONFIG } from "./constants/config.ts"
 import { STORAGE_KEYS } from "./constants/storage.ts"
 import "./i18n/i18n"
 import "./index.css"
+import queryClient from "./utils/query.ts"
 import { localS } from "./utils/storage.ts"
 
-const queryClient = new QueryClient({
-	defaultOptions: {
-		queries: {
-			retry: false,
-			refetchOnWindowFocus: false,
-		},
-	},
-})
 client.setConfig({
 	baseURL: CONFIG.API_URL,
 	headers: {

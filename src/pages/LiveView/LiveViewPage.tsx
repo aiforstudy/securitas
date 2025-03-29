@@ -1,13 +1,14 @@
 import React, { memo, useEffect, useRef, useState } from "react"
 
 import { useQuery } from "@tanstack/react-query"
-import { EllipsisVertical, Maximize, Minimize } from "lucide-react"
+import { EllipsisVertical, Loader2, Maximize, Minimize } from "lucide-react"
 
 import { monitorControllerFindAllOptions } from "@/api-generated/@tanstack/react-query.gen"
 import { Button } from "@/components/ui/button"
 import { DEFAULT_STREAM } from "@/constants/stream"
 import { cn } from "@/lib/utils"
 import LiveViewApi from "@/pages/LiveView/mocks/liveView"
+import { useGlobalStore } from "@/stores/global"
 import { ILiveViewGridCol, ILiveViewTemplate } from "@/types/liveView"
 import { getGridItemClasses } from "@/utils/grid"
 
@@ -17,6 +18,7 @@ import LayoutSelection from "./_components/LayoutSelection"
 import StreamingCamera from "./_components/StreamingCamera"
 
 const LiveViewPage: React.FC = () => {
+	const { selectedCompany } = useGlobalStore()
 	const { data } = useQuery({
 		queryFn: () => LiveViewApi.getLiveViewTemplates(),
 		queryKey: ["live-view-templates"],
@@ -25,9 +27,12 @@ const LiveViewPage: React.FC = () => {
 		queryFn: () => LiveViewApi.getLiveViewLayouts(),
 		queryKey: ["live-view-layouts"],
 	})
-
-	const { data: cameras } = useQuery({ ...monitorControllerFindAllOptions({ query: { page: 1, limit: 10 } }) })
-	console.log("🚀 ~ LiveViewPage.tsx:25 ~ cameras:", cameras)
+	const { data: monitors } = useQuery({
+		...monitorControllerFindAllOptions({
+			query: { page: 1, limit: 1000, company_code: selectedCompany?.company_code },
+		}),
+		enabled: !!selectedCompany?.company_code,
+	})
 	const containerRef = useRef<HTMLDivElement>(null)
 	const [layout, setLayout] = useState("")
 	const [isFullscreen, setIsFullscreen] = useState(false)
@@ -36,7 +41,7 @@ const LiveViewPage: React.FC = () => {
 	const [selectedTemplate, setSelectedTemplate] = useState<ILiveViewTemplate | null>(null)
 
 	const { data: detailLayout } = useQuery({
-		queryFn: () => LiveViewApi.getLiveViewDetailLayout(layout),
+		queryFn: () => LiveViewApi.getLiveViewLayoutById(layout),
 		queryKey: ["live-view-detail-layout"],
 		enabled: !!layout,
 	})
@@ -63,11 +68,10 @@ const LiveViewPage: React.FC = () => {
 		const camera = detailLayout?.layout?.positions?.find((e) => e?.grid_settings?.col === col?.col && e?.has_monitor)
 		if (camera) {
 			return {
-				snapshot: camera?.monitor?.snapshot,
-				streamID: camera?.monitor?.id,
-				streamName: camera?.monitor?.name,
 				url: camera?.monitor?.connection_uri,
-				isLocal: camera?.monitor?.is_local,
+				snapshot: camera?.monitor?.snapshot,
+				cameraId: camera?.monitor?.id,
+				cameraName: camera?.monitor?.name,
 			}
 		}
 		return DEFAULT_STREAM
@@ -84,16 +88,18 @@ const LiveViewPage: React.FC = () => {
 			)}
 			{!isFullscreen && (
 				<div className="flex items-center justify-between">
-					<LayoutSelection
-						layouts={layouts || []}
-						selected={layout}
-						isLoading={isLoadingLayouts}
-						onSelect={(layoutId) => (layoutId === "add-new-layout" ? setOpenAddNewLayout(true) : setLayout(layoutId))}
-					/>
+					<div className="flex flex-1">
+						<LayoutSelection
+							layouts={layouts || []}
+							selected={layout}
+							isLoading={isLoadingLayouts}
+							onSelect={(layoutId) => (layoutId === "add-new-layout" ? setOpenAddNewLayout(true) : setLayout(layoutId))}
+						/>
+					</div>
 
 					<h3 className="text-xl text-dark-700 font-semibold">Live View</h3>
 
-					<div className="flex items-center gap-4">
+					<div className="flex flex-1 items-center gap-4 justify-end">
 						<Button variant="outline" size="icon">
 							<EllipsisVertical className="size-5 text-dark-700" />
 						</Button>
@@ -103,7 +109,11 @@ const LiveViewPage: React.FC = () => {
 					</div>
 				</div>
 			)}
-
+			{isLoadingLayouts && (
+				<div className="w-full h-full flex items-center justify-center">
+					<Loader2 className="size-5 text-dark-700 animate-spin" />
+				</div>
+			)}
 			{selectedTemplate && (
 				<div
 					style={{ gridTemplateColumns: `repeat(${selectedTemplate?.total_columns}, 1fr)` }}
@@ -125,7 +135,7 @@ const LiveViewPage: React.FC = () => {
 				</div>
 			)}
 
-			<AddCameraDialog open={openAddNewCamera} cameras={cameras?.data || []} onOpenChange={setOpenAddNewCamera} />
+			<AddCameraDialog open={openAddNewCamera} cameras={monitors?.data || []} onOpenChange={setOpenAddNewCamera} />
 			<AddLayoutDialog open={openAddNewLayout} templates={data || []} onOpenChange={setOpenAddNewLayout} />
 		</div>
 	)

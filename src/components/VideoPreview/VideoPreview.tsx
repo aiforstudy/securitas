@@ -1,9 +1,11 @@
 import React, { useRef, useState } from "react"
 
+import { Download } from "lucide-react"
+
 import { cn } from "@/lib/utils"
 
 import { AspectRatio } from "../ui/aspect-ratio"
-import { Skeleton } from "../ui/skeleton"
+import { Button } from "../ui/button"
 
 type IVideoPreviewProps = {
 	url: string
@@ -15,24 +17,25 @@ const VideoPreview: React.FC<IVideoPreviewProps> = ({ url }) => {
 
 	return (
 		<div className="min-w-[400px] min-h-[400px] max-w-[60vw] max-h-[60vh]">
-			{isLoading && (
-				<div className="h-full w-full aspect-video">
-					<Skeleton className="w-full h-full" />
-				</div>
-			)}
 			<AspectRatio ratio={16 / 9}>
 				<video
 					ref={videoRef}
 					autoPlay
 					controls
-					className={cn("p-0 m-0 w-full h-full object-cover", {
-						hidden: isLoading,
-					})}
+					className={cn("p-0 m-0 w-full h-full object-cover", { hidden: isLoading })}
 					onLoadedData={() => setIsLoading(false)}
 				>
 					<source src={url} type="video/mp4" />
 				</video>
 			</AspectRatio>
+			<div className="flex justify-end">
+				<Button variant="link" color="primary" className="mt-4">
+					<Download />
+					<a style={{ textDecoration: "none !important" }} href={url} target="_blank" rel="noopener noreferrer">
+						Download
+					</a>
+				</Button>
+			</div>
 		</div>
 	)
 }

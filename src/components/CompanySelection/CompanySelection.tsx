@@ -6,8 +6,10 @@ import { LoaderCircle } from "lucide-react"
 
 import { companyControllerFindAllOptions } from "@/api-generated/@tanstack/react-query.gen"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { STORAGE_KEYS } from "@/constants/storage"
 import { useAuth } from "@/contexts/auth.context"
 import { useGlobalStore } from "@/stores/global"
+import { localS } from "@/utils/storage"
 
 type ICompanySelectionProps = {
 	className?: HTMLAttributes<HTMLDivElement>["className"]
@@ -24,7 +26,9 @@ const CompanySelection: React.FC<ICompanySelectionProps> = () => {
 
 	useEffect(() => {
 		if (data?.data?.length) {
-			setSelectedCompany(data?.data[0])
+			const companyCode = localS.get(STORAGE_KEYS.COMPANY_CODE)
+			const found = data?.data?.find((_) => _.company_code === companyCode)
+			if (found) setSelectedCompany(found)
 		}
 	}, [data?.data, setSelectedCompany])
 

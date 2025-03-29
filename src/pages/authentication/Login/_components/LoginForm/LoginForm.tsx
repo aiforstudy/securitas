@@ -37,7 +37,7 @@ const LoginForm: React.FC = () => {
 				name: "Root",
 				email: data.email,
 				token: "1234567890",
-				company_id: "1",
+				company_code: "demo",
 			}
 			loginContext(mockUser)
 		} else {

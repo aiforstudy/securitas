@@ -1,12 +1,12 @@
 export enum EFeedbackStatus {
-	APPROVE = "approve",
-	REJECT = "reject",
-	UNMARK = "unmark",
+	APPROVE = "APPROVE",
+	REJECT = "REJECT",
+	UNMARK = "UNMARK",
 }
 
 export enum EUserFeedbackStatus {
-	PENDING = "pending",
-	DISMISS = "dismiss",
-	INVALID = "invalid",
-	ACKNOWLEDGED = "acknowledged",
+	PENDING = "PENDING",
+	DISMISS = "DISMISS",
+	INVALID = "INVALID",
+	ACKNOWLEDGED = "ACKNOWLEDGED",
 }
