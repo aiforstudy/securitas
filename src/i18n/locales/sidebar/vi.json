@@ -5,5 +5,18 @@
 	"alertsManagement": "Quản lý cảnh báo",
 	"liveView": "Xem trực tiếp",
 	"settings": "Cài đặt",
-	"systemSettings": "Cài đặt hệ thống"
+	"systemSettings": "Cài đặt hệ thống",
+	"monitoring": "Giám sát",
+	"analytics": "Phân tích",
+	"devices": "Thiết bị",
+	"cameras": "Camera",
+	"operations": "Hoạt động",
+	"mapConfiguration": "Cấu hình bản đồ",
+	"deviceStatus": "Trạng thái thiết bị",
+	"detections": "Phát hiện",
+	"logs": "Nhật ký",
+	"knowledgeBase": "Cơ sở kiến thức",
+	"administration": "Quản trị",
+	"roleSettings": "Cài đặt vai trò",
+	"system": "Hệ thống"
 }

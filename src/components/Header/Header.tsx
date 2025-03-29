@@ -5,6 +5,7 @@ import { PanelLeftClose, PanelLeftOpen } from "lucide-react"
 import { SIDEBAR_WIDTH, SIDEBAR_WIDTH_ICON, useSidebar } from "@/components/ui/sidebar"
 import { cn } from "@/lib/utils"
 
+import CompanySelection from "../CompanySelection"
 import { Language } from "../Language"
 import { Button } from "../ui/button"
 import Account from "./Account"
@@ -25,7 +26,7 @@ const Header: React.FC = () => {
 				<Button variant="ghost" size="icon" onClick={toggleSidebar}>
 					{open ? <PanelLeftClose className="!w-5 !h-5" /> : <PanelLeftOpen className="!w-5 !h-5" />}
 				</Button>
-				<Language isHiddenText className="w-[36px] h-[36px] rounded-md" />
+				<CompanySelection />
 			</div>
 			<div className="px-5">
 				<BackButton />

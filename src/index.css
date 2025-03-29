@@ -44,7 +44,7 @@
 	--sidebar-foreground: #1f1534;
 	--sidebar-primary: #2d2250;
 	--sidebar-primary-foreground: #fbfaff;
-	--sidebar-accent: #f7f5ff;
+	--sidebar-accent: var(--color-gray-200);
 	--sidebar-accent-foreground: #2d2250;
 	--sidebar-border: #eeeaf9;
 	--sidebar-ring: #a78bfa;

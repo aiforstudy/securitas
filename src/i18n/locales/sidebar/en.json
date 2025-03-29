@@ -5,5 +5,18 @@
 	"alertsManagement": "Alerts Management",
 	"liveView": "Live View",
 	"settings": "Settings",
-	"systemSettings": "System Settings"
+	"systemSettings": "System Settings",
+	"monitoring": "Monitoring",
+	"analytics": "Analytics",
+	"devices": "Devices",
+	"cameras": "Cameras",
+	"operations": "Operations",
+	"mapConfiguration": "Map Configuration",
+	"deviceStatus": "Device Status",
+	"detections": "Detections",
+	"logs": "Logs",
+	"knowledgeBase": "Knowledge Base",
+	"administration": "Administration",
+	"roleSettings": "Role Settings",
+	"system": "System"
 }

@@ -12,7 +12,7 @@ const RenderSidebarLabel: React.FC<ISidebarItem> = ({ label, icon, path, prefixP
 		<SidebarGroupLabel
 			id={prefixPath ? prefixPath.split("/")[1] : ""}
 			onClick={handleClick}
-			className="pl-3 text-base mb-1 border-none"
+			className="pl-3 text-base mb-1 border-none gap-2"
 		>
 			{icon}
 			<span className="text-[16px] font-semibold">{label}</span>

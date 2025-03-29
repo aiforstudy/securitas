@@ -18,17 +18,31 @@ export const PATH = {
 		RESET_PASSWORD: addBaseUrl("/reset-password"),
 		VERIFY_EMAIL: addBaseUrl("/verify-email"),
 	},
-	ACCOUNT: {
-		ROOT: addBaseUrl("/account"),
-		ACCOUNT_INFORMATION: {
-			ROOT: addBaseUrl("/account/account-information"),
-			DETAILS: addBaseUrl("/account/account-information/details"),
+	MONITORING: {
+		ROOT: addBaseUrl("/monitoring"),
+		DASHBOARD: addBaseUrl("/monitoring/dashboard"),
+		ANALYTICS: addBaseUrl("/monitoring/analytics"),
+		LIVE_VIEW: addBaseUrl("/monitoring/live-view"),
+	},
+	DEVICES: {
+		ROOT: addBaseUrl("/devices"),
+		CAMERAS: {
+			ROOT: addBaseUrl("/devices/cameras"),
+			ADD: addBaseUrl("/devices/cameras/add"),
+			EDIT: addBaseUrl("/devices/cameras/edit"),
 		},
 	},
-	ALERTS: {
-		ROOT: addBaseUrl("/alerts"),
+	OPERATIONS: {
+		ROOT: addBaseUrl("/operations"),
+		MAP_CONFIGURATION: addBaseUrl("/operations/map-configuration"),
+		DEVICE_STATUS: addBaseUrl("/operations/device-status"),
+		DETECTIONS: addBaseUrl("/operations/detections"),
+		LOGS: addBaseUrl("/operations/logs"),
+		KNOWLEDGE_BASE: addBaseUrl("/operations/knowledge-base"),
 	},
-	LIVE_VIEW: {
-		ROOT: addBaseUrl("/live-view"),
+	SYSTEM: {
+		ROOT: addBaseUrl("/system"),
+		ADMINISTRATION: addBaseUrl("/system/administration"),
+		ROLE_SETTINGS: addBaseUrl("/system/role-settings"),
 	},
 }

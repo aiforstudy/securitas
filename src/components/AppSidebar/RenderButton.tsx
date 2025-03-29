@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils"
 
 import { Button } from "../ui/button"
 import { useSidebar } from "../ui/sidebar"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip"
 
 const RenderButton: React.FC<{
 	label: string
@@ -11,11 +12,12 @@ const RenderButton: React.FC<{
 	icon?: React.ReactNode
 	justifyIcon?: "start" | "end"
 	path?: string
-}> = ({ label, justify = "center", icon, justifyIcon = "start", path }) => {
+	rightIcon?: React.ReactNode
+}> = ({ label, justify = "center", icon, justifyIcon = "start", path, rightIcon }) => {
 	const navigate = useNavigate()
 	const { pathname } = useLocation()
 	const isActive = pathname === path
-	const { open } = useSidebar()
+	const { open, state, isMobile } = useSidebar()
 	const onlyIcon = open ? justify : "center"
 
 	const handleClick = () => {
@@ -23,21 +25,31 @@ const RenderButton: React.FC<{
 	}
 
 	return (
-		<Button
-			variant="ghost"
-			onClick={handleClick}
-			className={cn("justify-start w-full cursor-pointer hover:bg-gray-200", {
-				"justify-start": onlyIcon === "start",
-				"justify-center": onlyIcon === "center",
-				"justify-end": onlyIcon === "end",
-				"justify-between": onlyIcon === "between",
-				"bg-gray-200 text-accent-foreground": isActive,
-			})}
-		>
-			{icon && justifyIcon === "start" && icon}
-			{open && label}
-			{icon && justifyIcon === "end" && icon}
-		</Button>
+		<TooltipProvider>
+			<Tooltip>
+				<TooltipTrigger asChild>
+					<Button
+						variant="ghost"
+						onClick={handleClick}
+						className={cn("justify-start w-full cursor-pointer hover:bg-gray-200 !font-medium", {
+							"justify-start": onlyIcon === "start",
+							"justify-center": onlyIcon === "center",
+							"justify-end": onlyIcon === "end",
+							"justify-between": onlyIcon === "between",
+							"bg-gray-200 text-accent-foreground": isActive,
+						})}
+					>
+						{icon && justifyIcon === "start" && icon}
+						{open && label}
+						{icon && justifyIcon === "end" && icon}
+						{rightIcon && rightIcon}
+					</Button>
+				</TooltipTrigger>
+				<TooltipContent side="right" align="center" hidden={state !== "collapsed" || isMobile}>
+					{label}
+				</TooltipContent>
+			</Tooltip>
+		</TooltipProvider>
 	)
 }
 

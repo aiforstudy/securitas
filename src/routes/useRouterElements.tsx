@@ -1,12 +1,13 @@
 import React from "react"
-import { useRoutes } from "react-router-dom"
+import { Navigate, useRoutes } from "react-router-dom"
 
 import FallbackLoader from "@/components/FallbackLoader"
 import { AuthLayout, MainLayout } from "@/components/Layouts"
 import { PATH } from "@/constants/path"
-import AlertsPage from "@/pages/Alerts/AlertsPage"
 import LoginPage from "@/pages/Authentication/Login"
+import ComingSoonPage from "@/pages/ComingSoon/ComingSoonPage"
 import DashboardPage from "@/pages/Dashboard"
+import DetectionsPage from "@/pages/Detections/DetectionsPage"
 import LiveViewPage from "@/pages/LiveView/LiveViewPage"
 
 import GuardedProtectedRoute from "./guard/ProtectedRoute/ProtectedRoute"
@@ -53,29 +54,72 @@ const useRouterElements = () => {
 						{
 							path: PATH.BASE_URL,
 							index: true,
-							element: withSuspense(DashboardPage),
+							element: <Navigate to={PATH.MONITORING.DASHBOARD} replace />,
 						},
-					],
-				},
-				{
-					path: PATH.ALERTS.ROOT,
-					element: <MainLayout />,
-					children: [
 						{
-							index: true,
-							path: PATH.ALERTS.ROOT,
-							element: withSuspense(AlertsPage),
+							path: PATH.MONITORING.ROOT,
+							children: [
+								{
+									path: PATH.MONITORING.DASHBOARD,
+									index: true,
+									element: withSuspense(DashboardPage),
+								},
+								{
+									path: PATH.MONITORING.ANALYTICS,
+									element: withSuspense(ComingSoonPage),
+								},
+								{
+									path: PATH.MONITORING.LIVE_VIEW,
+									element: withSuspense(LiveViewPage),
+								},
+							],
 						},
-					],
-				},
-				{
-					path: PATH.LIVE_VIEW.ROOT,
-					element: <MainLayout />,
-					children: [
 						{
-							index: true,
-							path: PATH.LIVE_VIEW.ROOT,
-							element: withSuspense(LiveViewPage),
+							path: PATH.DEVICES.ROOT,
+							children: [
+								{
+									path: PATH.DEVICES.CAMERAS.ROOT,
+									element: withSuspense(ComingSoonPage),
+								},
+							],
+						},
+						{
+							path: PATH.OPERATIONS.ROOT,
+							children: [
+								{
+									path: PATH.OPERATIONS.MAP_CONFIGURATION,
+									element: withSuspense(ComingSoonPage),
+								},
+								{
+									path: PATH.OPERATIONS.DEVICE_STATUS,
+									element: withSuspense(ComingSoonPage),
+								},
+								{
+									path: PATH.OPERATIONS.DETECTIONS,
+									element: withSuspense(DetectionsPage),
+								},
+								{
+									path: PATH.OPERATIONS.LOGS,
+									element: withSuspense(ComingSoonPage),
+								},
+								{
+									path: PATH.OPERATIONS.KNOWLEDGE_BASE,
+									element: withSuspense(ComingSoonPage),
+								},
+							],
+						},
+						{
+							path: PATH.SYSTEM.ROOT,
+							children: [
+								{
+									path: PATH.SYSTEM.ADMINISTRATION,
+									element: withSuspense(ComingSoonPage),
+								},
+								{
+									path: PATH.SYSTEM.ROLE_SETTINGS,
+									element: withSuspense(ComingSoonPage),
+								},
+							],
 						},
 					],
 				},

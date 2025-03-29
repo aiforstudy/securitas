@@ -13,7 +13,7 @@ import { getGridItemClasses } from "@/utils/grid"
 
 import AddCameraDialog from "./_components/AddCameraDialog"
 import AddLayoutDialog from "./_components/AddLayoutDialog"
-import SelectLayout from "./_components/SelectLayout"
+import LayoutSelection from "./_components/LayoutSelection"
 import StreamingCamera from "./_components/StreamingCamera"
 
 const LiveViewPage: React.FC = () => {
@@ -84,7 +84,7 @@ const LiveViewPage: React.FC = () => {
 			)}
 			{!isFullscreen && (
 				<div className="flex items-center justify-between">
-					<SelectLayout
+					<LayoutSelection
 						layouts={layouts || []}
 						selected={layout}
 						isLoading={isLoadingLayouts}

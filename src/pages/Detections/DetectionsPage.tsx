@@ -16,7 +16,7 @@ import { IAlert } from "@/types/alert"
 
 const columnHelper = createColumnHelper<IAlert>()
 
-const AlertsPage: React.FC = () => {
+const DetectionsPage: React.FC = () => {
 	const [openVideo, setOpenVideo] = useState<string>("")
 	const [openImage, setOpenImage] = useState<string>("")
 	const [pagination, setPagination] = useState<PaginationState>(DEFAULT_PAGINATION)
@@ -31,7 +31,7 @@ const AlertsPage: React.FC = () => {
 		}),
 	})
 
-	console.log("🚀 ~ AlertsPage ~ data:", data)
+	console.log("🚀 ~ DetectionsPage ~ data:", data)
 
 	const columns = useMemo(
 		() => [
@@ -155,4 +155,4 @@ const AlertsPage: React.FC = () => {
 	)
 }
 
-export default AlertsPage
+export default DetectionsPage

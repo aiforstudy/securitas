@@ -3,14 +3,14 @@ import { LoaderCircle } from "lucide-react"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ILiveViewLayout } from "@/types/liveView"
 
-type ISelectLayoutProps = {
+type ILayoutSelectionProps = {
 	layouts: ILiveViewLayout[]
 	selected: string
 	onSelect: (layoutId: string) => void
 	isLoading: boolean
 }
 
-const SelectLayout: React.FC<ISelectLayoutProps> = ({ selected, layouts, isLoading, onSelect }) => {
+const LayoutSelection: React.FC<ILayoutSelectionProps> = ({ selected, layouts, isLoading, onSelect }) => {
 	return (
 		<Select value={selected} disabled={isLoading} onValueChange={(value) => onSelect(value)}>
 			<SelectTrigger className="w-10 min-w-[140px] h-10 text-sm px-2">
@@ -41,4 +41,4 @@ const SelectLayout: React.FC<ISelectLayoutProps> = ({ selected, layouts, isLoadi
 	)
 }
 
-export default SelectLayout
+export default LayoutSelection
