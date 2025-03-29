@@ -133,7 +133,7 @@ const DetectionsPage: React.FC = () => {
 		<div className="p-5 h-full space-y-4">
 			<div className="w-full flex gap-4 items-center">
 				<h3 className="text-xl text-dark-700 font-semibold">List of alerts</h3>
-				<div>
+				<div className="w-[200px]">
 					<DatePicker id="range" mode="range" selected={range} onSelect={setRange} />
 				</div>
 			</div>

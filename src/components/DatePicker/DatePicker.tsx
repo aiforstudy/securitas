@@ -55,7 +55,7 @@ const DatePicker: React.FC<DatePickerProps> = React.memo(
 		}, [currentLang])
 
 		const dateView = React.useMemo(() => {
-			if (!selected) return <span>{placeholder || t("date.datePlaceholder")}</span>
+			if (!selected) return <span>{placeholder || t("Select date")}</span>
 
 			if (props.mode === "single" && selected instanceof Date) {
 				setCalendarOpen(false)
