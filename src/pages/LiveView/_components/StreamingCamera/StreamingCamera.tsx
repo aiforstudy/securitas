@@ -63,7 +63,7 @@ const StreamingCamera: React.FC<IStreamingCameraProps> = ({ viewOnly, onAddCamer
 				</div>
 			)}
 			{streamingInfo.cameraId && (
-				<div className="flex w-full h-full relative items-center justify-center p-2">
+				<div className="flex w-full h-full relative items-center justify-center">
 					{loadStreamError && !loading && (
 						<div className="bg-gray-300 flex flex-col justify-center w-full h-full absolute top-0 left-0 z-20">
 							<div className="flex flex-col items-center">

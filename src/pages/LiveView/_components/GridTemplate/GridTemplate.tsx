@@ -16,7 +16,7 @@ const GridTemplate: React.FC<IGridTemplateProps> = ({ template, selected, onSele
 			<div
 				className={cn(
 					"p-2 grid grid-cols-1 h-[150px] items-center justify-center",
-					selected && "border-2 border-primary",
+					selected && "border-2 border-primary rounded-md",
 				)}
 			>
 				<div
