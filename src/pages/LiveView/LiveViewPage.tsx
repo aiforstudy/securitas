@@ -1,9 +1,12 @@
 import React, { memo, useEffect, useRef, useState } from "react"
 
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import { EllipsisVertical, Loader2, Maximize, Minimize } from "lucide-react"
 
-import { monitorControllerFindAllOptions } from "@/api-generated/@tanstack/react-query.gen"
+import {
+	monitorControllerFindAllOptions,
+	monitorControllerStartStreamMutation,
+} from "@/api-generated/@tanstack/react-query.gen"
 import { Button } from "@/components/ui/button"
 import { DEFAULT_STREAM } from "@/constants/stream"
 import { cn } from "@/lib/utils"
@@ -45,6 +48,9 @@ const LiveViewPage: React.FC = () => {
 		queryKey: ["live-view-detail-layout"],
 		enabled: !!layout,
 	})
+	const { mutateAsync: startStream } = useMutation({
+		...monitorControllerStartStreamMutation(),
+	})
 
 	useEffect(() => {
 		if (layouts?.length && !layout) {
@@ -53,6 +59,15 @@ const LiveViewPage: React.FC = () => {
 			setSelectedTemplate(template || null)
 		}
 	}, [layouts, layout, data])
+
+	useEffect(() => {
+		if (detailLayout) {
+			const cameraIds = detailLayout.layout.positions
+				.map((e) => e.has_monitor && e.monitor?.id)
+				.filter(Boolean) as string[]
+			startStream({ body: { monitor_ids: cameraIds } })
+		}
+	}, [detailLayout, startStream])
 
 	const handleFullscreen = () => {
 		if (isFullscreen) {

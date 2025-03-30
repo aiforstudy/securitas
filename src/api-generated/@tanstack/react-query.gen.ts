@@ -32,6 +32,7 @@ import {
 	monitorControllerFindAll,
 	monitorControllerFindOne,
 	monitorControllerRemove,
+	monitorControllerStartStream,
 	monitorControllerUpdate,
 	type Options,
 } from "../sdk.gen"
@@ -74,6 +75,7 @@ import type {
 	MonitorControllerFindOneData,
 	MonitorControllerRemoveData,
 	MonitorControllerRemoveResponse,
+	MonitorControllerStartStreamData,
 	MonitorControllerUpdateData,
 	MonitorControllerUpdateResponse,
 } from "../types.gen"
@@ -590,6 +592,42 @@ export const monitorControllerUpdateMutation = (options?: Partial<Options<Monito
 	> = {
 		mutationFn: async (localOptions) => {
 			const { data } = await monitorControllerUpdate({
+				...options,
+				...localOptions,
+				throwOnError: true,
+			})
+			return data
+		},
+	}
+	return mutationOptions
+}
+
+export const monitorControllerStartStreamQueryKey = (options: Options<MonitorControllerStartStreamData>) =>
+	createQueryKey("monitorControllerStartStream", options)
+
+export const monitorControllerStartStreamOptions = (options: Options<MonitorControllerStartStreamData>) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await monitorControllerStartStream({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			})
+			return data
+		},
+		queryKey: monitorControllerStartStreamQueryKey(options),
+	})
+}
+
+export const monitorControllerStartStreamMutation = (options?: Partial<Options<MonitorControllerStartStreamData>>) => {
+	const mutationOptions: UseMutationOptions<
+		unknown,
+		AxiosError<DefaultError>,
+		Options<MonitorControllerStartStreamData>
+	> = {
+		mutationFn: async (localOptions) => {
+			const { data } = await monitorControllerStartStream({
 				...options,
 				...localOptions,
 				throwOnError: true,

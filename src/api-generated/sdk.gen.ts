@@ -46,6 +46,7 @@ import type {
 	MonitorControllerFindOneResponse,
 	MonitorControllerRemoveData,
 	MonitorControllerRemoveResponse,
+	MonitorControllerStartStreamData,
 	MonitorControllerUpdateData,
 	MonitorControllerUpdateResponse,
 } from "./types.gen"
@@ -272,6 +273,22 @@ export const monitorControllerUpdate = <ThrowOnError extends boolean = false>(
 ) => {
 	return (options.client ?? _heyApiClient).patch<MonitorControllerUpdateResponse, unknown, ThrowOnError>({
 		url: "/monitors/{id}",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options?.headers,
+		},
+	})
+}
+
+/**
+ * Start streaming for multiple camera monitors
+ */
+export const monitorControllerStartStream = <ThrowOnError extends boolean = false>(
+	options: Options<MonitorControllerStartStreamData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).post<unknown, unknown, ThrowOnError>({
+		url: "/monitors/start-stream",
 		...options,
 		headers: {
 			"Content-Type": "application/json",

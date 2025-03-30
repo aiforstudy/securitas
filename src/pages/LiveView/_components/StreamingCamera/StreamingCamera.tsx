@@ -46,6 +46,7 @@ const StreamingCamera: React.FC<IStreamingCameraProps> = ({ viewOnly, onAddCamer
 				hlsPlayer.destroy()
 			}
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [streamingInfo.cameraId, streamingInfo.url, videoPlayer])
 
 	return (

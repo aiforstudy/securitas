@@ -27,10 +27,7 @@ export const useStreaming = () => {
 			cancelSourceRef.current = source
 			try {
 				const res = await Axios.get(url, { cancelToken: source.token })
-				if (res.data) {
-					loadVideoSource(videoPlayer, url)
-				}
-				console.log("🚀 ~ useStreaming.ts:33 ~ res:", res)
+				if (res.data) loadVideoSource(videoPlayer, url)
 			} catch (e) {
 				console.log("🚀 ~ useStreaming.ts:34 ~ e:", e)
 				// addStream(streamRequestHash, link)

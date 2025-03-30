@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react"
 
-import { AdvancedMarker, Map } from "@vis.gl/react-google-maps"
+import { Map } from "@vis.gl/react-google-maps"
 
 import { EMapTypeId } from "@/enums/map"
 
@@ -10,7 +10,7 @@ import SwitchMapType from "./_components/SwitchMapType"
 
 const DashboardPage: React.FC = () => {
 	const containerRef = useRef<HTMLDivElement>(null)
-	const position = { lat: 10.762622, lng: 106.660172 }
+	const position = { lat: 10.8300923, lng: 106.6291799 }
 	const [mapType, setMapType] = useState<EMapTypeId>(EMapTypeId.ROADMAP)
 	const [isFullscreen, setIsFullscreen] = useState(false)
 
@@ -27,15 +27,13 @@ const DashboardPage: React.FC = () => {
 	return (
 		<div ref={containerRef} className="w-full h-full relative overflow-hidden">
 			<Map
-				mapId="49ae42fed52588c3"
+				mapId="DEMO_MAP_ID"
 				mapTypeId={mapType}
-				defaultZoom={15}
+				defaultZoom={12}
 				defaultCenter={position}
 				cameraControl
 				disableDefaultUI
-			>
-				<AdvancedMarker position={position} />
-			</Map>
+			></Map>
 			<GroupCardsLeft />
 			<GroupButtonsRight isFullscreen={isFullscreen} toggleFullscreen={handleFullscreen} />
 			<div className="absolute bottom-20 right-[10px]">

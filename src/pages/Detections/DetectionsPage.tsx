@@ -1,40 +1,50 @@
 import React, { useMemo, useState } from "react"
 import { DateRange } from "react-day-picker"
 
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import { createColumnHelper, PaginationState } from "@tanstack/react-table"
+import { Loader2, Trash2 } from "lucide-react"
 import moment from "moment"
-
-// import { toast } from "sonner"
+import { toast } from "sonner"
 
 import { Detection } from "@/api-generated"
 import {
+	detectionControllerRemoveMutation,
 	detectionControllerSearchDetectionsOptions,
-	// detectionControllerSearchDetectionsQueryKey,
-	// detectionControllerUpdateMutation,
+	detectionControllerSearchDetectionsQueryKey,
 } from "@/api-generated/@tanstack/react-query.gen"
 import { AppTable } from "@/components/AppTable"
 import { DatePicker } from "@/components/DatePicker"
 import ImagePresent from "@/components/ImagePresent"
 import ImagePreview from "@/components/ImagePreview"
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import VideoPresent from "@/components/VideoPresent"
 import VideoPreview from "@/components/VideoPreview"
 import { DEFAULT_PAGINATION } from "@/constants/table"
-
-// import queryClient from "@/utils/query"
-
-// import StatusSelection from "./_component/StatusSelection"
+import queryClient from "@/utils/query"
 
 const columnHelper = createColumnHelper<Detection>()
 
 const DetectionsPage: React.FC = () => {
+	const [range, setRange] = useState<DateRange | undefined>(undefined)
 	const [openVideo, setOpenVideo] = useState("")
 	const [openImage, setOpenImage] = useState("")
 	const [pagination, setPagination] = useState<PaginationState>(DEFAULT_PAGINATION)
 	const [rowSelection, setRowSelection] = useState({})
-	const [range, setRange] = useState<DateRange | undefined>(undefined)
+	const [selectedDetection, setSelectedDetection] = useState<Detection | null>(null)
+
 	const { data, isLoading } = useQuery({
 		...detectionControllerSearchDetectionsOptions({
 			query: {
@@ -44,18 +54,27 @@ const DetectionsPage: React.FC = () => {
 				to: range?.to ? moment(range.to).toISOString() : undefined,
 			},
 		}),
-		refetchInterval: 5000,
+		refetchInterval: 10000,
 	})
-	// const { mutateAsync: updateDetection, isPending: isUpdating } = useMutation({
-	// 	...detectionControllerUpdateMutation(),
-	// 	onSuccess: () => {
-	// 		queryClient.invalidateQueries({ queryKey: detectionControllerSearchDetectionsQueryKey() })
-	// 		toast.success("Update status successfully")
-	// 	},
-	// 	onError: () => {
-	// 		toast.error("Update status failed")
-	// 	},
-	// })
+	const { mutateAsync: deleteDetection, isPending: isDeleting } = useMutation({
+		...detectionControllerRemoveMutation(),
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: detectionControllerSearchDetectionsQueryKey({
+					query: {
+						page: pagination.pageIndex + 1,
+						limit: pagination.pageSize,
+						from: range?.from ? moment(range.from).toISOString() : undefined,
+						to: range?.to ? moment(range.to).toISOString() : undefined,
+					},
+				}),
+			})
+			toast.success("Delete detection successfully")
+		},
+		onError: () => {
+			toast.error("Delete detection failed")
+		},
+	})
 
 	const columns = useMemo(
 		() => [
@@ -128,6 +147,21 @@ const DetectionsPage: React.FC = () => {
 				header: () => <span>Created Date</span>,
 				footer: (info) => info.column.id,
 			}),
+			columnHelper.accessor("created_at", {
+				cell: (info) => (
+					<div className="relative text-right">
+						<Button size="icon" onClick={() => setSelectedDetection(info.row.original)} variant="outline">
+							<Trash2 />
+						</Button>
+					</div>
+				),
+				header: () => (
+					<div className="relative text-right">
+						<span>Action</span>
+					</div>
+				),
+				footer: (info) => info.column.id,
+			}),
 		],
 		[],
 	)
@@ -181,6 +215,28 @@ const DetectionsPage: React.FC = () => {
 					</div>
 				</DialogContent>
 			</Dialog>
+
+			<AlertDialog open={!!selectedDetection} onOpenChange={() => setSelectedDetection(null)}>
+				<AlertDialogContent>
+					<AlertDialogHeader>
+						<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+						<AlertDialogDescription>
+							This action cannot be undone. This will permanently delete your account and remove your data from our
+							servers.
+						</AlertDialogDescription>
+					</AlertDialogHeader>
+					<AlertDialogFooter>
+						<AlertDialogCancel className="h-10">Cancel</AlertDialogCancel>
+						<AlertDialogAction
+							onClick={() => deleteDetection({ path: { id: selectedDetection?.id || "" } })}
+							disabled={isDeleting}
+							className="bg-red-500 hover:bg-red-600 h-10"
+						>
+							{isDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : "Delete"}
+						</AlertDialogAction>
+					</AlertDialogFooter>
+				</AlertDialogContent>
+			</AlertDialog>
 		</div>
 	)
 }

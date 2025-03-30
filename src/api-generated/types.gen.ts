@@ -896,6 +896,13 @@ export type UpdateMonitorDto = {
 	zabbix_host_id?: string
 }
 
+export type StartStreamDto = {
+	/**
+	 * List of monitor IDs to start streaming
+	 */
+	monitor_ids: Array<string>
+}
+
 export type DetectionStatisticsDataDto = {
 	/**
 	 * Timestamp of the statistics entry in ISO 8601 format
@@ -1022,6 +1029,29 @@ export type Detection = {
 	video_url?: string
 }
 
+export type PaginatedDetectionDto = {
+	/**
+	 * The list of detections
+	 */
+	data: Array<Detection>
+	/**
+	 * The current page number
+	 */
+	page: number
+	/**
+	 * The number of items per page
+	 */
+	limit: number
+	/**
+	 * The total number of items
+	 */
+	total: number
+	/**
+	 * The total number of pages
+	 */
+	total_pages: number
+}
+
 /**
  * The feedback status of the detection
  */
@@ -1090,29 +1120,6 @@ export type CreateDetectionDto = {
 	 * URL to the detection video
 	 */
 	video_url?: string
-}
-
-export type PaginatedDetectionDto = {
-	/**
-	 * The list of detections
-	 */
-	data: Array<Detection>
-	/**
-	 * The current page number
-	 */
-	page: number
-	/**
-	 * The number of items per page
-	 */
-	limit: number
-	/**
-	 * The total number of items
-	 */
-	total: number
-	/**
-	 * The total number of pages
-	 */
-	total_pages: number
 }
 
 export type UpdateDetectionDto = {
@@ -1517,6 +1524,20 @@ export type MonitorControllerUpdateResponses = {
 
 export type MonitorControllerUpdateResponse = MonitorControllerUpdateResponses[keyof MonitorControllerUpdateResponses]
 
+export type MonitorControllerStartStreamData = {
+	body: StartStreamDto
+	path?: never
+	query?: never
+	url: "/monitors/start-stream"
+}
+
+export type MonitorControllerStartStreamResponses = {
+	/**
+	 * Streams have been successfully started.
+	 */
+	200: unknown
+}
+
 /**
  * Group by time unit
  */
@@ -1624,7 +1645,7 @@ export type DetectionControllerSearchDetectionsResponses = {
 	/**
 	 * Return filtered detections sorted by timestamp.
 	 */
-	200: Array<Detection>
+	200: PaginatedDetectionDto
 }
 
 export type DetectionControllerSearchDetectionsResponse =
