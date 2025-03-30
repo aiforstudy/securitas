@@ -55,6 +55,7 @@ import type {
 	DetectionControllerRemoveData,
 	DetectionControllerRemoveResponse,
 	DetectionControllerSearchDetectionsData,
+	DetectionControllerSearchDetectionsResponse,
 	DetectionControllerUpdateData,
 	DetectionControllerUpdateResponse,
 	EngineControllerCreateData,
@@ -636,6 +637,50 @@ export const detectionControllerSearchDetectionsOptions = (
 		},
 		queryKey: detectionControllerSearchDetectionsQueryKey(options),
 	})
+}
+
+export const detectionControllerSearchDetectionsInfiniteQueryKey = (
+	options?: Options<DetectionControllerSearchDetectionsData>,
+): QueryKey<Options<DetectionControllerSearchDetectionsData>> =>
+	createQueryKey("detectionControllerSearchDetections", options, true)
+
+export const detectionControllerSearchDetectionsInfiniteOptions = (
+	options?: Options<DetectionControllerSearchDetectionsData>,
+) => {
+	return infiniteQueryOptions<
+		DetectionControllerSearchDetectionsResponse,
+		AxiosError<DefaultError>,
+		InfiniteData<DetectionControllerSearchDetectionsResponse>,
+		QueryKey<Options<DetectionControllerSearchDetectionsData>>,
+		number | Pick<QueryKey<Options<DetectionControllerSearchDetectionsData>>[0], "body" | "headers" | "path" | "query">
+	>(
+		// @ts-ignore
+		{
+			queryFn: async ({ pageParam, queryKey, signal }) => {
+				// @ts-ignore
+				const page: Pick<
+					QueryKey<Options<DetectionControllerSearchDetectionsData>>[0],
+					"body" | "headers" | "path" | "query"
+				> =
+					typeof pageParam === "object"
+						? pageParam
+						: {
+								query: {
+									page: pageParam,
+								},
+							}
+				const params = createInfiniteParams(queryKey, page)
+				const { data } = await detectionControllerSearchDetections({
+					...options,
+					...params,
+					signal,
+					throwOnError: true,
+				})
+				return data
+			},
+			queryKey: detectionControllerSearchDetectionsInfiniteQueryKey(options),
+		},
+	)
 }
 
 export const detectionControllerCreateIncomingDetectionQueryKey = (

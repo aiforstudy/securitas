@@ -75,7 +75,7 @@ const DetectionsPage: React.FC = () => {
 			columnHelper.accessor("video_url", {
 				cell: (info) => {
 					const videoUrl = info.getValue()
-					const imageUrl = info.row.original.image_url
+					const imageUrl = info.row.original.image_url || ""
 					if (videoUrl) {
 						return <VideoPresent src={videoUrl} width={100} onClickPlay={() => setOpenVideo(videoUrl)} />
 					}
@@ -94,7 +94,7 @@ const DetectionsPage: React.FC = () => {
 					const engine = info.row.original.engineDetail
 					return (
 						<div className="relative flex">
-							<div className="ml-2">{engine.name}</div>
+							<div className="ml-2">{engine?.name || "N/A"}</div>
 						</div>
 					)
 				},

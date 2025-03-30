@@ -1,6 +1,6 @@
-import React from "react"
+"use client"
 
-import { Label, Pie, PieChart } from "recharts"
+import { Label, PolarRadiusAxis, RadialBar, RadialBarChart } from "recharts"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import {
@@ -12,53 +12,40 @@ import {
 	ChartTooltipContent,
 } from "@/components/ui/chart"
 
-const chartData = [
-	{ browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
-	{ browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-	{ browser: "firefox", visitors: 287, fill: "var(--color-firefox)" },
-	{ browser: "edge", visitors: 173, fill: "var(--color-edge)" },
-	{ browser: "other", visitors: 190, fill: "var(--color-other)" },
-]
+const chartData = [{ engine1: 1260, engine2: 570, engine3: 1000, engine4: 800 }]
+
 const chartConfig = {
-	visitors: {
-		label: "Visitors",
-	},
-	chrome: {
-		label: "Chrome",
+	engine1: {
+		label: "Engine 1",
 		color: "var(--chart-1)",
 	},
-	safari: {
-		label: "Safari",
+	engine2: {
+		label: "Engine 2",
 		color: "var(--chart-2)",
 	},
-	firefox: {
-		label: "Firefox",
+	engine3: {
+		label: "Engine 3",
 		color: "var(--chart-3)",
 	},
-	edge: {
-		label: "Edge",
+	engine4: {
+		label: "Engine 4",
 		color: "var(--chart-4)",
-	},
-	other: {
-		label: "Other",
-		color: "var(--chart-5)",
 	},
 } satisfies ChartConfig
 
-const AlertsChartCard: React.FC = () => {
-	const totalVisitors = React.useMemo(() => {
-		return chartData.reduce((acc, curr) => acc + curr.visitors, 0)
-	}, [])
+const AlertsChartCard = () => {
+	const totalVisitors = chartData[0].engine1 + chartData[0].engine2 + chartData[0].engine3 + chartData[0].engine4
 
 	return (
-		<Card className="flex flex-col">
-			<CardHeader className="flex justify-between items-center pb-0">
+		<Card className="flex gap-2 py-2 flex-col">
+			<CardHeader className="p-2 pr-4 items-center flex justify-between">
 				<CardTitle>Alerts</CardTitle>
-				<CardDescription>January - June 2024</CardDescription>
+				<CardDescription></CardDescription>
 			</CardHeader>
-			<CardContent className="flex flex-1 items-center pb-0">
-				<ChartContainer config={chartConfig} className="mx-auto aspect-square w-full max-w-[250px]">
-					{/* <RadialBarChart data={chartData} endAngle={180} innerRadius={80} outerRadius={130}>
+			<CardContent className="p-2 pr-4 w-[400px] max-h-[300px]">
+				<ChartContainer config={chartConfig} className="mx-auto aspect-square w-full h-[250px]">
+					<RadialBarChart data={chartData} endAngle={180} innerRadius={80} outerRadius={130}>
+						<ChartLegend content={<ChartLegendContent nameKey="engine1" />} />
 						<ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
 						<PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
 							<Label
@@ -79,43 +66,30 @@ const AlertsChartCard: React.FC = () => {
 							/>
 						</PolarRadiusAxis>
 						<RadialBar
-							dataKey="desktop"
+							dataKey="engine1"
 							stackId="a"
-							cornerRadius={5}
-							fill="var(--color-desktop)"
+							fill="var(--color-chart-1)"
 							className="stroke-transparent stroke-2"
 						/>
 						<RadialBar
-							dataKey="mobile"
-							fill="var(--color-mobile)"
+							dataKey="engine2"
+							fill="var(--color-chart-2)"
 							stackId="a"
-							cornerRadius={5}
 							className="stroke-transparent stroke-2"
 						/>
-						<ChartLegend content={<ChartLegendContent nameKey="browser" />} />
-					</RadialBarChart> */}
-					<PieChart>
-						<ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
-						<ChartLegend content={<ChartLegendContent />} />
-						<Pie data={chartData} dataKey="visitors" nameKey="browser" innerRadius={60} strokeWidth={5}>
-							<Label
-								content={({ viewBox }) => {
-									if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-										return (
-											<text x={viewBox.cx} y={viewBox.cy} textAnchor="middle" dominantBaseline="middle">
-												<tspan x={viewBox.cx} y={viewBox.cy} className="fill-foreground text-3xl font-bold">
-													{totalVisitors.toLocaleString()}
-												</tspan>
-												<tspan x={viewBox.cx} y={(viewBox.cy || 0) + 24} className="fill-muted-foreground">
-													Visitors
-												</tspan>
-											</text>
-										)
-									}
-								}}
-							/>
-						</Pie>
-					</PieChart>
+						<RadialBar
+							dataKey="engine3"
+							fill="var(--color-chart-3)"
+							stackId="a"
+							className="stroke-transparent stroke-2"
+						/>
+						<RadialBar
+							dataKey="engine4"
+							fill="var(--color-chart-4)"
+							stackId="a"
+							className="stroke-transparent stroke-2"
+						/>
+					</RadialBarChart>
 				</ChartContainer>
 			</CardContent>
 		</Card>

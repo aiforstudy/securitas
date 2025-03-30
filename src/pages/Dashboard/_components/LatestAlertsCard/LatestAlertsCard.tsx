@@ -1,75 +1,109 @@
-"use client"
+import { useMemo, useState } from "react"
+import { useNavigate } from "react-router-dom"
 
-import { Bar, BarChart, XAxis, YAxis } from "recharts"
+import { createColumnHelper } from "@tanstack/react-table"
+import { Image, Play } from "lucide-react"
+import moment from "moment"
 
+import { Detection } from "@/api-generated/types.gen"
+import { AppTable } from "@/components/AppTable"
+import ImagePreview from "@/components/ImagePreview"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import { Dialog, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { DialogContent } from "@/components/ui/dialog"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import VideoPreview from "@/components/VideoPreview"
+import { PATH } from "@/constants/path"
 
-const chartData = [
-	{ browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
-	{ browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-	{ browser: "firefox", visitors: 187, fill: "var(--color-firefox)" },
-	{ browser: "edge", visitors: 173, fill: "var(--color-edge)" },
-	{ browser: "other", visitors: 90, fill: "var(--color-other)" },
-]
+const columnHelper = createColumnHelper<Detection>()
 
-const chartConfig = {
-	visitors: {
-		label: "Visitors",
-	},
-	chrome: {
-		label: "Chrome",
-		color: "var(--chart-1)",
-	},
-	safari: {
-		label: "Safari",
-		color: "var(--chart-2)",
-	},
-	firefox: {
-		label: "Firefox",
-		color: "var(--chart-3)",
-	},
-	edge: {
-		label: "Edge",
-		color: "var(--chart-4)",
-	},
-	other: {
-		label: "Other",
-		color: "var(--chart-5)",
-	},
-} satisfies ChartConfig
+const LatestAlertsCard: React.FC<{ data: Detection[]; isLoading: boolean }> = ({ data, isLoading }) => {
+	const navigate = useNavigate()
+	const [openVideo, setOpenVideo] = useState("")
+	const [openImage, setOpenImage] = useState("")
 
-const LatestAlertsCard: React.FC = () => {
+	const columns = useMemo(
+		() => [
+			columnHelper.accessor("engineDetail.name", {
+				cell: (info) => <div className="w-[50px] whitespace-normal">{info.getValue()}</div>,
+				header: () => <span>Engine</span>,
+				footer: (info) => info.column.id,
+			}),
+			columnHelper.accessor("monitor.name", {
+				cell: (info) => <div className="w-[50px] whitespace-normal">{info.getValue()}</div>,
+				header: () => <span>Camera</span>,
+				footer: (info) => info.column.id,
+			}),
+			columnHelper.accessor("created_at", {
+				cell: (info) => (
+					<div className="w-[50px] whitespace-normal">{moment(info.getValue()).format("DD/MM/YYYY HH:mm")}</div>
+				),
+				header: () => <span>Date</span>,
+				footer: (info) => info.column.id,
+			}),
+			columnHelper.accessor("video_url", {
+				cell: (info) => (
+					<div className="max-w-[25px]">
+						<Play className="w-4 h-4 cursor-pointer" onClick={() => setOpenVideo(info.getValue() as string)} />
+					</div>
+				),
+				header: () => <span></span>,
+				footer: (info) => info.column.id,
+			}),
+			columnHelper.accessor("image_url", {
+				cell: (info) => (
+					<div className="max-w-[25px]">
+						<Image className="w-4 h-4 cursor-pointer" onClick={() => setOpenImage(info.getValue() as string)} />
+					</div>
+				),
+				header: () => <span></span>,
+				footer: (info) => info.column.id,
+			}),
+		],
+		[],
+	)
+
 	return (
-		<Card className="flex flex-col">
-			<CardHeader className="items-center pb-0 flex justify-between">
+		<Card className="flex gap-3 py-3 flex-col">
+			<CardHeader className="p-3 pr-4 items-center pb-0 flex justify-between">
 				<CardTitle>Latest Alerts</CardTitle>
-				<CardDescription>January - June 2024</CardDescription>
-			</CardHeader>
-			<CardContent>
-				<ChartContainer config={chartConfig} className="aspect-square w-full max-w-[250px]">
-					<BarChart
-						accessibilityLayer
-						data={chartData}
-						layout="vertical"
-						margin={{
-							left: 0,
-						}}
+				<CardDescription>
+					<div
+						onClick={() => navigate(PATH.OPERATIONS.DETECTIONS)}
+						className="text-primary font-normal text-sm ml-4 cursor-pointer underline"
 					>
-						<YAxis
-							dataKey="browser"
-							type="category"
-							tickLine={false}
-							tickMargin={10}
-							axisLine={false}
-							tickFormatter={(value) => chartConfig[value as keyof typeof chartConfig]?.label}
-						/>
-						<XAxis dataKey="visitors" type="number" hide />
-						<ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
-						<Bar dataKey="visitors" layout="vertical" radius={5} />
-					</BarChart>
-				</ChartContainer>
-			</CardContent>
+						View all
+					</div>
+				</CardDescription>
+			</CardHeader>
+			<ScrollArea className="h-full">
+				<CardContent className="p-3 pr-4 w-[400px] max-h-[300px]">
+					<AppTable<Detection> options={{ data, columns }} loading={{ spinning: isLoading }} pagination={false} />
+
+					<Dialog open={!!openVideo} onOpenChange={() => setOpenVideo("")}>
+						<DialogContent className="pt-12 !max-w-[800px]">
+							<DialogHeader>
+								<DialogTitle>Video Preview</DialogTitle>
+							</DialogHeader>
+							<div className="mt-5">
+								<VideoPreview url={openVideo} />
+							</div>
+						</DialogContent>
+					</Dialog>
+
+					<Dialog open={!!openImage} onOpenChange={() => setOpenImage("")}>
+						<DialogContent className="pt-12 !max-w-[800px]">
+							<DialogHeader>
+								<DialogTitle>Image Preview</DialogTitle>
+							</DialogHeader>
+							<div className="mt-5">
+								<ImagePreview url={openImage} />
+							</div>
+						</DialogContent>
+					</Dialog>
+				</CardContent>
+				<ScrollBar orientation="vertical" />
+			</ScrollArea>
 		</Card>
 	)
 }

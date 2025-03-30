@@ -34,13 +34,13 @@ const chartConfig = {
 
 const OverviewChartCard: React.FC = () => {
 	return (
-		<Card className="flex flex-col">
-			<CardHeader className="items-center pb-0 flex justify-between">
+		<Card className="flex gap-2 py-3 flex-col">
+			<CardHeader className="p-3 pr-4 items-center pb-0 flex justify-between">
 				<CardTitle>Overview</CardTitle>
-				<CardDescription>January - June 2024</CardDescription>
+				<CardDescription></CardDescription>
 			</CardHeader>
-			<CardContent>
-				<ChartContainer config={chartConfig} className="mx-auto aspect-square w-full max-w-[250px]">
+			<CardContent className="p-3 pr-4 w-[400px] max-h-[300px]">
+				<ChartContainer config={chartConfig} className="mx-auto aspect-square w-full max-w-[400px] max-h-[250px]">
 					<BarChart accessibilityLayer data={chartData}>
 						<CartesianGrid vertical={false} />
 						<XAxis

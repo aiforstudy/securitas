@@ -898,21 +898,21 @@ export type UpdateMonitorDto = {
 
 export type DetectionStatisticsDataDto = {
 	/**
-	 * Timestamp of the statistics
+	 * Timestamp of the statistics entry in ISO 8601 format
 	 */
 	timestamp: string
 }
 
 export type DetectionStatisticsResponseDto = {
 	/**
-	 * Array of statistics data by timestamp
+	 * Array of statistics data
 	 */
 	data: Array<DetectionStatisticsDataDto>
 	/**
-	 * Engine details for each engine
+	 * Map of engine details
 	 */
 	engines: {
-		[key: string]: Engine
+		[key: string]: unknown
 	}
 }
 
@@ -961,9 +961,17 @@ export type Detection = {
 	 */
 	zone?: string
 	/**
+	 * The monitor details
+	 */
+	monitor?: Monitor
+	/**
 	 * The engine ID
 	 */
 	engine: string
+	/**
+	 * The engine details
+	 */
+	engineDetail?: Engine
 	status: DetectionStatus
 	feedback_status: FeedbackStatus
 	/**
@@ -1004,6 +1012,14 @@ export type Detection = {
 	 * The timestamp when the detection was last updated
 	 */
 	updated_at: string
+	/**
+	 * The image URL of the detection
+	 */
+	image_url?: string
+	/**
+	 * The video URL of the detection
+	 */
+	video_url?: string
 }
 
 /**
@@ -1033,10 +1049,6 @@ export type CreateDetectionDto = {
 	 */
 	engine: string
 	/**
-	 * The zone ID
-	 */
-	zone: string
-	/**
 	 * The status of the detection
 	 */
 	status: "PENDING" | "APPROVED" | "REJECTED" | "COMPLETED"
@@ -1047,11 +1059,7 @@ export type CreateDetectionDto = {
 	/**
 	 * Whether the detection is an alert
 	 */
-	alert: boolean
-	/**
-	 * Whether the detection is unread
-	 */
-	unread: boolean
+	alert: string
 	/**
 	 * The district where the detection occurred
 	 */
@@ -1510,7 +1518,7 @@ export type MonitorControllerUpdateResponses = {
 export type MonitorControllerUpdateResponse = MonitorControllerUpdateResponses[keyof MonitorControllerUpdateResponses]
 
 /**
- * Group by day or hour
+ * Group by time unit
  */
 export enum GroupBy {
 	DAY = "day",
@@ -1522,6 +1530,10 @@ export type DetectionControllerGetStatisticsData = {
 	path?: never
 	query: {
 		/**
+		 * The company code
+		 */
+		company_code: string
+		/**
 		 * Start date for statistics
 		 */
 		from: string
@@ -1530,11 +1542,11 @@ export type DetectionControllerGetStatisticsData = {
 		 */
 		to: string
 		/**
-		 * Timezone string (e.g., Asia/Ho_Chi_Minh)
+		 * Timezone for date formatting
 		 */
 		timezone: string
 		/**
-		 * Group by day or hour
+		 * Group by time unit
 		 */
 		group_by: "day" | "hour"
 	}
@@ -1554,7 +1566,7 @@ export type DetectionControllerGetStatisticsResponse =
 /**
  * Approval status to filter by
  */
-export enum ApprovalStatus {
+export enum Approved {
 	YES = "yes",
 	NO = "no",
 	EXPIRED = "expired",
@@ -1573,6 +1585,10 @@ export type DetectionControllerSearchDetectionsData = {
 		 */
 		company_name?: string
 		/**
+		 * Company code to search for
+		 */
+		company_code?: string
+		/**
 		 * Detection ID to search for
 		 */
 		detection_id?: string
@@ -1583,7 +1599,23 @@ export type DetectionControllerSearchDetectionsData = {
 		/**
 		 * Approval status to filter by
 		 */
-		approval_status?: "yes" | "no" | "expired"
+		approved?: "yes" | "no" | "expired"
+		/**
+		 * From date to filter by (ISO 8601 format)
+		 */
+		from?: string
+		/**
+		 * To date to filter by (ISO 8601 format)
+		 */
+		to?: string
+		/**
+		 * Page number to filter by
+		 */
+		page?: number
+		/**
+		 * Limit number to filter by
+		 */
+		limit?: number
 	}
 	url: "/detections/search"
 }
@@ -1614,15 +1646,6 @@ export type DetectionControllerCreateIncomingDetectionResponses = {
 
 export type DetectionControllerCreateIncomingDetectionResponse =
 	DetectionControllerCreateIncomingDetectionResponses[keyof DetectionControllerCreateIncomingDetectionResponses]
-
-/**
- * Filter by approved status
- */
-export enum Approved {
-	YES = "yes",
-	NO = "no",
-	EXPIRED = "expired",
-}
 
 export type DetectionControllerFindAllData = {
 	body?: never
