@@ -1,16 +1,17 @@
 import React, { useMemo, useState } from "react"
 import { DateRange } from "react-day-picker"
 
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query"
 import { createColumnHelper, PaginationState } from "@tanstack/react-table"
 import moment from "moment"
-import { toast } from "sonner"
+
+// import { toast } from "sonner"
 
 import { Detection } from "@/api-generated"
 import {
 	detectionControllerSearchDetectionsOptions,
-	detectionControllerSearchDetectionsQueryKey,
-	detectionControllerUpdateMutation,
+	// detectionControllerSearchDetectionsQueryKey,
+	// detectionControllerUpdateMutation,
 } from "@/api-generated/@tanstack/react-query.gen"
 import { AppTable } from "@/components/AppTable"
 import { DatePicker } from "@/components/DatePicker"
@@ -21,9 +22,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import VideoPresent from "@/components/VideoPresent"
 import VideoPreview from "@/components/VideoPreview"
 import { DEFAULT_PAGINATION } from "@/constants/table"
-import queryClient from "@/utils/query"
 
-import StatusSelection from "./_component/StatusSelection"
+// import queryClient from "@/utils/query"
+
+// import StatusSelection from "./_component/StatusSelection"
 
 const columnHelper = createColumnHelper<Detection>()
 
@@ -42,17 +44,18 @@ const DetectionsPage: React.FC = () => {
 				to: range?.to ? moment(range.to).toISOString() : undefined,
 			},
 		}),
+		refetchInterval: 5000,
 	})
-	const { mutateAsync: updateDetection, isPending: isUpdating } = useMutation({
-		...detectionControllerUpdateMutation(),
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: detectionControllerSearchDetectionsQueryKey() })
-			toast.success("Update status successfully")
-		},
-		onError: () => {
-			toast.error("Update status failed")
-		},
-	})
+	// const { mutateAsync: updateDetection, isPending: isUpdating } = useMutation({
+	// 	...detectionControllerUpdateMutation(),
+	// 	onSuccess: () => {
+	// 		queryClient.invalidateQueries({ queryKey: detectionControllerSearchDetectionsQueryKey() })
+	// 		toast.success("Update status successfully")
+	// 	},
+	// 	onError: () => {
+	// 		toast.error("Update status failed")
+	// 	},
+	// })
 
 	const columns = useMemo(
 		() => [
@@ -101,17 +104,18 @@ const DetectionsPage: React.FC = () => {
 				header: () => <span>Engine</span>,
 				footer: (info) => info.column.id,
 			}),
-			columnHelper.accessor("status", {
+			columnHelper.accessor("approved", {
 				cell: (info) => (
-					<div className="flex">
-						<StatusSelection
+					<div className="flex capitalize">
+						{info.getValue()}
+						{/* <StatusSelection
 							loading={isUpdating}
 							selectedStatus={info.getValue()}
 							setSelectedStatus={(status) => updateDetection({ body: { status }, path: { id: info.row.original.id } })}
-						/>
+						/> */}
 					</div>
 				),
-				header: () => <span>Status</span>,
+				header: () => <span>Approved</span>,
 				footer: (info) => info.column.id,
 			}),
 			columnHelper.accessor("approved_by", {
@@ -125,7 +129,7 @@ const DetectionsPage: React.FC = () => {
 				footer: (info) => info.column.id,
 			}),
 		],
-		[isUpdating, updateDetection],
+		[],
 	)
 
 	return (
