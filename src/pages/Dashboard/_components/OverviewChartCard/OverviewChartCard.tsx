@@ -1,7 +1,6 @@
-"use client"
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis } from "recharts"
 
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
-
+import { DetectionStatisticsResponseDto } from "@/api-generated"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import {
 	ChartConfig,
@@ -11,28 +10,25 @@ import {
 	ChartTooltip,
 	ChartTooltipContent,
 } from "@/components/ui/chart"
+import { Skeleton } from "@/components/ui/skeleton"
 
-const chartData = [
-	{ month: "January", desktop: 186, mobile: 80 },
-	{ month: "February", desktop: 305, mobile: 200 },
-	{ month: "March", desktop: 237, mobile: 120 },
-	{ month: "April", desktop: 73, mobile: 190 },
-	{ month: "May", desktop: 209, mobile: 130 },
-	{ month: "June", desktop: 214, mobile: 140 },
-]
+type OverviewChartCardProps = {
+	data?: DetectionStatisticsResponseDto
+	isLoading: boolean
+}
 
-const chartConfig = {
-	desktop: {
-		label: "Desktop",
-		color: "var(--chart-1)",
-	},
-	mobile: {
-		label: "Mobile",
-		color: "var(--chart-2)",
-	},
-} satisfies ChartConfig
+const OverviewChartCard: React.FC<OverviewChartCardProps> = ({ data, isLoading }) => {
+	const config: Record<string, { label: string; color: string }> = {} satisfies ChartConfig
+	Object.keys(data?.engines || {}).forEach((key, index) => {
+		const engine = data?.engines[key] as { name: string } | undefined
+		config[key] = {
+			label: engine?.name || key,
+			color: `var(--chart-${index + 1})`,
+		}
+	})
 
-const OverviewChartCard: React.FC = () => {
+	console.log(config)
+
 	return (
 		<Card className="flex gap-2 py-3 flex-col">
 			<CardHeader className="p-3 pr-4 items-center pb-0 flex justify-between">
@@ -40,22 +36,24 @@ const OverviewChartCard: React.FC = () => {
 				<CardDescription></CardDescription>
 			</CardHeader>
 			<CardContent className="p-3 pr-4 w-[400px] max-h-[300px]">
-				<ChartContainer config={chartConfig} className="mx-auto aspect-square w-full max-w-[400px] max-h-[250px]">
-					<BarChart accessibilityLayer data={chartData}>
-						<CartesianGrid vertical={false} />
-						<XAxis
-							dataKey="month"
-							tickLine={false}
-							tickMargin={10}
-							axisLine={false}
-							tickFormatter={(value) => value.slice(0, 3)}
-						/>
-						<ChartTooltip content={<ChartTooltipContent hideLabel />} />
-						<ChartLegend content={<ChartLegendContent />} />
-						<Bar dataKey="desktop" stackId="a" fill="var(--color-desktop)" radius={[0, 0, 4, 4]} />
-						<Bar dataKey="mobile" stackId="a" fill="var(--color-mobile)" radius={[4, 4, 0, 0]} />
-					</BarChart>
-				</ChartContainer>
+				{isLoading ? (
+					<Skeleton className="w-full h-[250px]" />
+				) : (
+					<ChartContainer config={config} className="mx-auto w-full h-[250px]">
+						<ResponsiveContainer width="100%" height="100%">
+							<BarChart data={data?.data || []} margin={{ left: -25 }} accessibilityLayer>
+								<XAxis dataKey="timestamp" axisLine={false} tickLine={false} />
+								<CartesianGrid vertical={false} />
+								<YAxis axisLine={false} tickLine={false} />
+								<ChartLegend content={<ChartLegendContent />} />
+								<ChartTooltip content={<ChartTooltipContent className="w-[180px]" />} />
+								{Object.keys(config).map((key) => (
+									<Bar key={key} dataKey={key} stackId="a" fill={config[key].color} radius={[4, 4, 0, 0]} />
+								))}
+							</BarChart>
+						</ResponsiveContainer>
+					</ChartContainer>
+				)}
 			</CardContent>
 		</Card>
 	)

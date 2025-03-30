@@ -2,7 +2,7 @@ import { defineConfig } from "@hey-api/openapi-ts"
 
 export default defineConfig({
 	logs: { level: "debug" },
-	input: "http://13.210.250.61/api-docs-json/",
+	input: "http://13.210.250.61:3000/api-docs-json/",
 	output: {
 		path: "./src/api-generated",
 		lint: "eslint",

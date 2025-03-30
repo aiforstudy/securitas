@@ -32,8 +32,6 @@ const AlertsChartCard: React.FC<AlertsChartCardProps> = ({ data, isLoading }) =>
 
 		return { ...engine, key, total: byEngine || 0, [key]: byEngine || 0 }
 	})
-	console.log("🚀 ~ AlertsChartCard.tsx:54 ~ config:", config)
-
 	const totalAlerts = allData.reduce((sum, item) => sum + item.total, 0)
 
 	return (
@@ -46,10 +44,8 @@ const AlertsChartCard: React.FC<AlertsChartCardProps> = ({ data, isLoading }) =>
 				{isLoading ? (
 					<Skeleton className="w-full h-[250px]" />
 				) : (
-					<ChartContainer config={config} className="mx-auto aspect-square w-full h-[250px]">
+					<ChartContainer config={config} className="mx-auto aspect-square h-[250px] w-full">
 						<RadialBarChart data={allData} endAngle={180} innerRadius={60} outerRadius={150}>
-							<ChartLegend key={JSON.stringify(config)} content={<ChartLegendContent nameKey="key" />} align="right" />
-							<ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
 							<PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
 								<Label
 									content={({ viewBox }) => {
@@ -83,6 +79,8 @@ const AlertsChartCard: React.FC<AlertsChartCardProps> = ({ data, isLoading }) =>
 									/>
 								)
 							})}
+							<ChartLegend content={<ChartLegendContent nameKey="key" />} />
+							<ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel className="w-[180px]" />} />
 						</RadialBarChart>
 					</ChartContainer>
 				)}

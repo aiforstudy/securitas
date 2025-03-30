@@ -18,7 +18,7 @@ import OverviewChartCard from "../OverviewChartCard"
 const GroupCardsLeft: React.FC = () => {
 	const { selectedCompany } = useGlobalStore()
 	const [filters] = useState<DetectionControllerGetStatisticsData["query"]>({
-		from: moment().subtract(1, "day").toISOString(),
+		from: moment().subtract(7, "day").toISOString(),
 		to: moment().toISOString(),
 		group_by: "day",
 		timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -31,7 +31,9 @@ const GroupCardsLeft: React.FC = () => {
 		enabled: !!selectedCompany?.company_code,
 	})
 	const { data: statistics, isLoading: isLoadingStatistics } = useQuery({
-		...detectionControllerGetStatisticsOptions({ query: filters }),
+		...detectionControllerGetStatisticsOptions({
+			query: { ...filters, company_code: selectedCompany?.company_code || "" },
+		}),
 		enabled: !!selectedCompany?.company_code,
 	})
 
@@ -44,7 +46,7 @@ const GroupCardsLeft: React.FC = () => {
 						data={(alerts as unknown as PaginatedDetectionDto)?.data || []}
 						isLoading={isLoadingAlerts}
 					/>
-					<OverviewChartCard />
+					<OverviewChartCard data={statistics} isLoading={isLoadingStatistics} />
 				</div>
 				<ScrollBar orientation="vertical" />
 			</ScrollArea>

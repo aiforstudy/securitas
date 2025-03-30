@@ -8,8 +8,8 @@ import { toast } from "sonner"
 
 import { Detection } from "@/api-generated"
 import {
-	detectionControllerFindAllOptions,
-	detectionControllerFindAllQueryKey,
+	detectionControllerSearchDetectionsOptions,
+	detectionControllerSearchDetectionsQueryKey,
 	detectionControllerUpdateMutation,
 } from "@/api-generated/@tanstack/react-query.gen"
 import { AppTable } from "@/components/AppTable"
@@ -34,19 +34,19 @@ const DetectionsPage: React.FC = () => {
 	const [rowSelection, setRowSelection] = useState({})
 	const [range, setRange] = useState<DateRange | undefined>(undefined)
 	const { data, isLoading } = useQuery({
-		...detectionControllerFindAllOptions({
+		...detectionControllerSearchDetectionsOptions({
 			query: {
 				page: pagination.pageIndex + 1,
 				limit: pagination.pageSize,
-				start_date: range?.from ? moment(range.from).toISOString() : undefined,
-				end_date: range?.to ? moment(range.to).toISOString() : undefined,
+				from: range?.from ? moment(range.from).toISOString() : undefined,
+				to: range?.to ? moment(range.to).toISOString() : undefined,
 			},
 		}),
 	})
 	const { mutateAsync: updateDetection, isPending: isUpdating } = useMutation({
 		...detectionControllerUpdateMutation(),
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: detectionControllerFindAllQueryKey() })
+			queryClient.invalidateQueries({ queryKey: detectionControllerSearchDetectionsQueryKey() })
 			toast.success("Update status successfully")
 		},
 		onError: () => {
@@ -119,7 +119,7 @@ const DetectionsPage: React.FC = () => {
 				header: () => <span>Approved By</span>,
 				footer: (info) => info.column.id,
 			}),
-			columnHelper.accessor("created_at", {
+			columnHelper.accessor("timestamp", {
 				cell: (info) => <div className="relative text-left">{moment(info.getValue()).format("DD/MM/YYYY HH:mm")}</div>,
 				header: () => <span>Created Date</span>,
 				footer: (info) => info.column.id,
