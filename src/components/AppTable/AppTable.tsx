@@ -6,6 +6,7 @@ import {
 	getPaginationRowModel,
 	getSortedRowModel,
 	PartialKeys,
+	ColumnMeta as ReactTableColumnMeta,
 	Row,
 	TableOptions,
 	useReactTable,
@@ -19,6 +20,14 @@ import ErrorMessage from "../ErrorMessage"
 import LoadingIndicator from "../LoadingIndicator"
 import { ScrollArea, ScrollBar } from "../ui/scroll-area"
 import Paginator from "./Paginator"
+
+// Extend the ColumnMeta type to include our custom properties
+type CustomColumnMeta<T> = ReactTableColumnMeta<T, unknown> & {
+	align?: "left" | "right" | "center"
+	classNameCell?: string
+	disableFlexCheckbox?: boolean
+	onClick?: React.MouseEventHandler
+}
 
 type IAppTableProps<T> = {
 	className?: string
@@ -135,6 +144,7 @@ function AppTable<T>({
 															})}
 														>
 															{row.getVisibleCells().map((cell) => {
+																const meta = cell.column.columnDef.meta as CustomColumnMeta<T> | undefined
 																return (
 																	<TableCell
 																		key={cell.id}
@@ -143,12 +153,12 @@ function AppTable<T>({
 																		}
 																		className={cn(
 																			"font-normal p-4",
-																			alignments(cell.column.columnDef.meta?.align),
-																			cell.column.columnDef.meta?.classNameCell ?? "",
+																			alignments(meta?.align),
+																			meta?.classNameCell ?? "",
 																		)}
-																		disableFlexCheckbox={cell.column.columnDef.meta?.disableFlexCheckbox}
-																		{...(cell.column.columnDef.meta?.onClick && {
-																			onClick: cell.column.columnDef.meta?.onClick,
+																		disableFlexCheckbox={meta?.disableFlexCheckbox}
+																		{...(meta?.onClick && {
+																			onClick: meta.onClick,
 																		})}
 																	>
 																		{flexRender(cell.column.columnDef.cell, cell.getContext())}

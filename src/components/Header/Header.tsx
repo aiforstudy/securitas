@@ -9,7 +9,6 @@ import CompanySelection from "../CompanySelection"
 import { Language } from "../Language"
 import { Button } from "../ui/button"
 import Account from "./Account"
-import BackButton from "./BackButton"
 import Notification from "./Notification"
 import Settings from "./Settings"
 
@@ -30,7 +29,6 @@ const Header: React.FC = () => {
 				<CompanySelection />
 			</div>
 			<div className="px-5">
-				<BackButton />
 				<div className="flex items-center gap-4">
 					<Language isHiddenText className="w-[36px] h-[36px] rounded-md" />
 					<Notification />

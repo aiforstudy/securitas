@@ -2,7 +2,7 @@ import { StrictMode } from "react"
 import { createRoot } from "react-dom/client"
 import { BrowserRouter as ReactRouterProvider } from "react-router-dom"
 
-import { QueryClient, QueryClientProvider as ReactQueryProvider } from "@tanstack/react-query"
+import { QueryClientProvider as ReactQueryProvider } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import { APIProvider as ReactGoogleMapProvider } from "@vis.gl/react-google-maps"
 
