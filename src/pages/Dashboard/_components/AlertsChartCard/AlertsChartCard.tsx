@@ -1,7 +1,6 @@
-"use client"
-
 import { Label, PolarRadiusAxis, RadialBar, RadialBarChart } from "recharts"
 
+import { DetectionStatisticsResponseDto } from "@/api-generated"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import {
 	ChartConfig,
@@ -11,30 +10,31 @@ import {
 	ChartTooltip,
 	ChartTooltipContent,
 } from "@/components/ui/chart"
+import { Skeleton } from "@/components/ui/skeleton"
 
-const chartData = [{ engine1: 1260, engine2: 570, engine3: 1000, engine4: 800 }]
+type AlertsChartCardProps = {
+	data?: DetectionStatisticsResponseDto
+	isLoading: boolean
+}
+const AlertsChartCard: React.FC<AlertsChartCardProps> = ({ data, isLoading }) => {
+	const config: Record<string, { label: string; color: string }> = {} satisfies ChartConfig
+	const allData = Object.keys(data?.engines || {}).map((key, index) => {
+		const engine = data?.engines[key] as { name: string } | undefined
+		const byEngine = data?.data?.reduce((acc, item) => {
+			const value = item[key as keyof typeof item]
+			return acc + (typeof value === "number" ? value : 0)
+		}, 0)
 
-const chartConfig = {
-	engine1: {
-		label: "Engine 1",
-		color: "var(--chart-1)",
-	},
-	engine2: {
-		label: "Engine 2",
-		color: "var(--chart-2)",
-	},
-	engine3: {
-		label: "Engine 3",
-		color: "var(--chart-3)",
-	},
-	engine4: {
-		label: "Engine 4",
-		color: "var(--chart-4)",
-	},
-} satisfies ChartConfig
+		config[key as string] = {
+			label: engine?.name || key,
+			color: `var(--chart-${index + 1})`,
+		}
 
-const AlertsChartCard = () => {
-	const totalVisitors = chartData[0].engine1 + chartData[0].engine2 + chartData[0].engine3 + chartData[0].engine4
+		return { ...engine, key, total: byEngine || 0, [key]: byEngine || 0 }
+	})
+	console.log("🚀 ~ AlertsChartCard.tsx:54 ~ config:", config)
+
+	const totalAlerts = allData.reduce((sum, item) => sum + item.total, 0)
 
 	return (
 		<Card className="flex gap-2 py-2 flex-col">
@@ -43,54 +43,49 @@ const AlertsChartCard = () => {
 				<CardDescription></CardDescription>
 			</CardHeader>
 			<CardContent className="p-2 pr-4 w-[400px] max-h-[300px]">
-				<ChartContainer config={chartConfig} className="mx-auto aspect-square w-full h-[250px]">
-					<RadialBarChart data={chartData} endAngle={180} innerRadius={80} outerRadius={130}>
-						<ChartLegend content={<ChartLegendContent nameKey="engine1" />} />
-						<ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
-						<PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
-							<Label
-								content={({ viewBox }) => {
-									if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-										return (
-											<text x={viewBox.cx} y={viewBox.cy} textAnchor="middle">
-												<tspan x={viewBox.cx} y={(viewBox.cy || 0) - 16} className="fill-foreground text-2xl font-bold">
-													{totalVisitors.toLocaleString()}
-												</tspan>
-												<tspan x={viewBox.cx} y={(viewBox.cy || 0) + 4} className="fill-muted-foreground">
-													Alerts
-												</tspan>
-											</text>
-										)
-									}
-								}}
-							/>
-						</PolarRadiusAxis>
-						<RadialBar
-							dataKey="engine1"
-							stackId="a"
-							fill="var(--color-chart-1)"
-							className="stroke-transparent stroke-2"
-						/>
-						<RadialBar
-							dataKey="engine2"
-							fill="var(--color-chart-2)"
-							stackId="a"
-							className="stroke-transparent stroke-2"
-						/>
-						<RadialBar
-							dataKey="engine3"
-							fill="var(--color-chart-3)"
-							stackId="a"
-							className="stroke-transparent stroke-2"
-						/>
-						<RadialBar
-							dataKey="engine4"
-							fill="var(--color-chart-4)"
-							stackId="a"
-							className="stroke-transparent stroke-2"
-						/>
-					</RadialBarChart>
-				</ChartContainer>
+				{isLoading ? (
+					<Skeleton className="w-full h-[250px]" />
+				) : (
+					<ChartContainer config={config} className="mx-auto aspect-square w-full h-[250px]">
+						<RadialBarChart data={allData} endAngle={180} innerRadius={60} outerRadius={150}>
+							<ChartLegend key={JSON.stringify(config)} content={<ChartLegendContent nameKey="key" />} align="right" />
+							<ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+							<PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
+								<Label
+									content={({ viewBox }) => {
+										if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+											return (
+												<text x={viewBox.cx} y={viewBox.cy} textAnchor="middle">
+													<tspan
+														x={viewBox.cx}
+														y={(viewBox.cy || 0) - 16}
+														className="fill-foreground text-2xl font-bold"
+													>
+														{totalAlerts.toLocaleString()}
+													</tspan>
+													<tspan x={viewBox.cx} y={(viewBox.cy || 0) + 4} className="fill-muted-foreground">
+														Alerts
+													</tspan>
+												</text>
+											)
+										}
+									}}
+								/>
+							</PolarRadiusAxis>
+							{allData.map((item, index) => {
+								return (
+									<RadialBar
+										key={index}
+										fill={`var(--color-${item.key})`}
+										dataKey={item.key}
+										stackId="a"
+										className="stroke-transparent stroke-2"
+									/>
+								)
+							})}
+						</RadialBarChart>
+					</ChartContainer>
+				)}
 			</CardContent>
 		</Card>
 	)
