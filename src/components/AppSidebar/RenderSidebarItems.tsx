@@ -25,7 +25,7 @@ const RenderSidebarItems: React.FC<IRenderSidebarItemsProps> = ({ items }) => {
 	const { open } = useSidebar()
 
 	return (
-		<SidebarGroup className="py-1 px-5">
+		<SidebarGroup className="py-5 px-5">
 			<SidebarMenu>
 				{items.map((item) => {
 					const canRender = !item.roles || item.roles.some((role) => currentRoles.includes(role))
