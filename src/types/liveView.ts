@@ -48,7 +48,6 @@ export type ILiveViewPositionCamera = {
 		id: string
 		name: string
 		snapshot: string
-		is_local: boolean
 		rtmp_uri: null | string
 		company_code: string
 		connection_uri: string

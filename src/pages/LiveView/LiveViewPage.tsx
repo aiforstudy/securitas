@@ -12,7 +12,7 @@ import { DEFAULT_STREAM } from "@/constants/stream"
 import { cn } from "@/lib/utils"
 import LiveViewApi from "@/pages/LiveView/mocks/liveView"
 import { useGlobalStore } from "@/stores/global"
-import { ILiveViewGridCol, ILiveViewTemplate } from "@/types/liveView"
+import { ILiveViewDetailLayout, ILiveViewGridCol, ILiveViewTemplate } from "@/types/liveView"
 import { getGridItemClasses } from "@/utils/grid"
 
 import AddCameraDialog from "./_components/AddCameraDialog"
@@ -39,18 +39,41 @@ const LiveViewPage: React.FC = () => {
 	const containerRef = useRef<HTMLDivElement>(null)
 	const [layout, setLayout] = useState("")
 	const [isFullscreen, setIsFullscreen] = useState(false)
+	const [detailLayout, setDetailLayout] = useState<ILiveViewDetailLayout | null>(null)
 	const [openAddNewCamera, setOpenAddNewCamera] = useState(false)
 	const [openAddNewLayout, setOpenAddNewLayout] = useState(false)
 	const [selectedTemplate, setSelectedTemplate] = useState<ILiveViewTemplate | null>(null)
-
-	const { data: detailLayout } = useQuery({
-		queryFn: () => LiveViewApi.getLiveViewLayoutById(layout),
-		queryKey: ["live-view-detail-layout"],
-		enabled: !!layout,
-	})
 	const { mutateAsync: startStream } = useMutation({
 		...monitorControllerStartStreamMutation(),
 	})
+
+	useEffect(() => {
+		if (monitors?.data?.length) {
+			LiveViewApi.getLiveViewLayoutById(layout).then((res) => {
+				setDetailLayout({
+					...res,
+					layout: {
+						...res.layout,
+						positions: res.layout.positions.map((e, index) => {
+							const monitor = monitors?.data[index]
+							return {
+								...e,
+								monitor: {
+									id: monitor?.id,
+									name: monitor?.name,
+									rtmp_uri: monitor?.rtmp_uri,
+									snapshot: monitor?.snapshot,
+									company_code: monitor?.company_code,
+									connection_uri: monitor?.connection_uri,
+								},
+								has_monitor: !!monitor,
+							}
+						}),
+					},
+				})
+			})
+		}
+	}, [layout, monitors])
 
 	useEffect(() => {
 		if (layouts?.length && !layout) {

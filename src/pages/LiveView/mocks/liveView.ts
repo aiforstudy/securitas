@@ -120,7 +120,6 @@ export default class LiveViewApi {
 							name: "Main Entrance Camera",
 							snapshot:
 								"https://upload-file-service-viact-ai.s3.ap-southeast-1.amazonaws.com/7b2f8a25-5fbb-4ef0-9fb1-aa56f628ac5e-images2267-62270f110e752.jpeg",
-							is_local: false,
 							rtmp_uri: "rtmp://13.210.250.61:1935/67744c97-8008-4004-ad92-aca2a7234f89",
 							company_code: "demo",
 							connection_uri: "rtsp://admin:Viact123@210.3.19.86:20111/cam/realmonitor?channel=1&subtype=0",
@@ -135,7 +134,6 @@ export default class LiveViewApi {
 							name: "Main Entrance Camera 2",
 							snapshot:
 								"https://upload-file-service-viact-ai.s3.ap-southeast-1.amazonaws.com/7b2f8a25-5fbb-4ef0-9fb1-aa56f628ac5e-images2267-62270f110e752.jpeg",
-							is_local: false,
 							rtmp_uri: "rtmp://13.210.250.61:1935/9877b46f-1939-4b73-9864-e8a4af0a36f8",
 							company_code: "demo",
 							connection_uri: "rtsp://admin:Viact123@210.3.19.86:20111/cam/realmonitor?channel=1&subtype=0",
