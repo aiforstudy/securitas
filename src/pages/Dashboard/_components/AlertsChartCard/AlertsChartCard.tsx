@@ -51,12 +51,12 @@ const AlertsChartCard: React.FC<AlertsChartCardProps> = ({ data, isLoading }) =>
 	const totalAlerts = Object.values(chartData).reduce((acc, value) => acc + value, 0)
 
 	return (
-		<Card className="flex gap-2 py-2 flex-col">
-			<CardHeader className="p-2 pr-4 items-center flex justify-between">
+		<Card className="flex gap-2 py-3 flex-col">
+			<CardHeader className="p-3 pr-4 items-center flex justify-between">
 				<CardTitle>Alerts</CardTitle>
 				<CardDescription></CardDescription>
 			</CardHeader>
-			<CardContent className="p-2 pr-0 w-[400px] max-h-[300px] overflow-hidden">
+			<CardContent className="p-3 pr-0 w-[400px] max-h-[300px] overflow-hidden">
 				{isLoading ? (
 					<Skeleton className="w-full h-[250px]" />
 				) : (
@@ -106,7 +106,7 @@ const AlertsChartCard: React.FC<AlertsChartCardProps> = ({ data, isLoading }) =>
 										<div key={key} className="flex gap-2 items-center justify-between pr-4">
 											<div className="flex items-center gap-2">
 												<div style={{ background: chartConfig[key].color }} className={`w-2 h-2`} />
-												<div className="w-[130px] truncate">{chartConfig[key].label} asdasdasdas</div>
+												<div className="w-[130px] text-sm truncate">{chartConfig[key].label} asdasdasdas</div>
 											</div>
 											<p className="text-sm">{chartData[key]}</p>
 										</div>

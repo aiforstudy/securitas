@@ -50,8 +50,8 @@ const DetectionsPage: React.FC = () => {
 			query: {
 				page: pagination.pageIndex + 1,
 				limit: pagination.pageSize,
-				from: range?.from ? moment(range.from).toISOString() : undefined,
-				to: range?.to ? moment(range.to).toISOString() : undefined,
+				from: range?.from ? moment(range.from).startOf("day").toISOString() : undefined,
+				to: range?.to ? moment(range.to).endOf("day").toISOString() : undefined,
 			},
 		}),
 		refetchInterval: 10000,

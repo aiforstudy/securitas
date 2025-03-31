@@ -20,8 +20,8 @@ const GroupCardsLeft: React.FC = () => {
 	const previousDataCountRef = useRef<number>(0)
 	const { selectedCompany } = useGlobalStore()
 	const [filters] = useState<DetectionControllerGetStatisticsData["query"]>({
-		from: moment().subtract(7, "day").toISOString(),
-		to: moment().toISOString(),
+		from: moment().subtract(7, "day").startOf("day").toISOString(),
+		to: moment().endOf("day").toISOString(),
 		group_by: "day",
 		timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
 		company_code: selectedCompany?.company_code || "",
