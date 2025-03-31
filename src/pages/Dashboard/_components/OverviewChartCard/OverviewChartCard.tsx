@@ -48,7 +48,7 @@ const OverviewChartCard: React.FC<OverviewChartCardProps> = ({ data, isLoading }
 								<ChartLegend content={<ChartLegendContent />} />
 								<ChartTooltip content={<ChartTooltipContent className="w-[180px]" />} />
 								{Object.keys(config).map((key) => (
-									<Bar key={key} dataKey={key} stackId="a" fill={config[key].color} radius={[4, 4, 0, 0]} />
+									<Bar key={key} dataKey={key} stackId="a" fill={config[key].color} />
 								))}
 							</BarChart>
 						</ResponsiveContainer>

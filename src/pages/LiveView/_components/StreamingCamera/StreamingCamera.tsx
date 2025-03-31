@@ -52,7 +52,7 @@ const StreamingCamera: React.FC<IStreamingCameraProps> = ({ viewOnly, onAddCamer
 	return (
 		<div className="w-full h-full flex items-center justify-center relative">
 			{streamingInfo.cameraId && !viewOnly && (
-				<Button variant="outline" size="xs" className="absolute top-0 right-0">
+				<Button variant="outline" size="xs" className="z-1 absolute top-0 right-0">
 					<X className="w-5 h-5" />
 				</Button>
 			)}

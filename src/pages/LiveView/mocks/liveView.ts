@@ -3,9 +3,6 @@ import instance from "@/utils/axios"
 
 export default class LiveViewApi {
 	static async getLiveViewTemplates(): Promise<ILiveViewTemplate[]> {
-		// const response = await instance.get("/api/live-view/templates")
-		// return response.data || []
-
 		await new Promise((resolve) => setTimeout(resolve, 1000))
 		const mockData: ILiveViewTemplate[] = [
 			{
@@ -92,8 +89,6 @@ export default class LiveViewApi {
 	}
 
 	static async getLiveViewLayouts(): Promise<ILiveViewLayout[]> {
-		// const response = await instance.get("/api/live-view/layouts")
-		// return response.data
 		await new Promise((resolve) => setTimeout(resolve, 1000))
 		const mockData: ILiveViewLayout[] = [
 			{
@@ -110,8 +105,6 @@ export default class LiveViewApi {
 	}
 
 	static async getLiveViewLayoutById(id: string): Promise<ILiveViewDetailLayout> {
-		// const response = await instance.get(`/api/live-view/layouts/${id}`)
-		// return response.data
 		await new Promise((resolve) => setTimeout(resolve, 1000))
 		const mockData: ILiveViewDetailLayout = {
 			id,
