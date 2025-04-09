@@ -4,6 +4,10 @@ import type { Client, Options as ClientOptions, TDataShape } from "@hey-api/clie
 import { client as _heyApiClient } from "./client.gen"
 import type {
 	AppControllerGetHelloData,
+	AuthControllerGetPermissionsData,
+	AuthControllerGetPermissionsResponse,
+	AuthControllerLoginData,
+	AuthControllerRegisterData,
 	CompanyControllerCreateData,
 	CompanyControllerCreateResponse,
 	CompanyControllerFindAllData,
@@ -14,6 +18,10 @@ import type {
 	CompanyControllerRemoveResponse,
 	CompanyControllerUpdateData,
 	CompanyControllerUpdateResponse,
+	DetectionControllerApproveDetectionData,
+	DetectionControllerApproveDetectionResponse,
+	DetectionControllerBulkApproveDetectionsData,
+	DetectionControllerBulkApproveDetectionsResponse,
 	DetectionControllerCreateIncomingDetectionData,
 	DetectionControllerCreateIncomingDetectionResponse,
 	DetectionControllerFindAllData,
@@ -390,5 +398,87 @@ export const detectionControllerUpdate = <ThrowOnError extends boolean = false>(
 			"Content-Type": "application/json",
 			...options?.headers,
 		},
+	})
+}
+
+/**
+ * Approve a detection
+ */
+export const detectionControllerApproveDetection = <ThrowOnError extends boolean = false>(
+	options: Options<DetectionControllerApproveDetectionData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).patch<DetectionControllerApproveDetectionResponse, unknown, ThrowOnError>({
+		url: "/detections/{id}/approve",
+		...options,
+	})
+}
+
+/**
+ * Approve multiple detections at once
+ */
+export const detectionControllerBulkApproveDetections = <ThrowOnError extends boolean = false>(
+	options: Options<DetectionControllerBulkApproveDetectionsData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).post<
+		DetectionControllerBulkApproveDetectionsResponse,
+		unknown,
+		ThrowOnError
+	>({
+		url: "/detections/approve/bulk",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options?.headers,
+		},
+	})
+}
+
+/**
+ * Login user
+ */
+export const authControllerLogin = <ThrowOnError extends boolean = false>(
+	options: Options<AuthControllerLoginData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).post<unknown, unknown, ThrowOnError>({
+		url: "/auth/login",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options?.headers,
+		},
+	})
+}
+
+/**
+ * Register new user
+ */
+export const authControllerRegister = <ThrowOnError extends boolean = false>(
+	options: Options<AuthControllerRegisterData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).post<unknown, unknown, ThrowOnError>({
+		url: "/auth/register",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options?.headers,
+		},
+	})
+}
+
+/**
+ * Get user permissions
+ */
+export const authControllerGetPermissions = <ThrowOnError extends boolean = false>(
+	options?: Options<AuthControllerGetPermissionsData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).get<AuthControllerGetPermissionsResponse, unknown, ThrowOnError>({
+		security: [
+			{
+				scheme: "bearer",
+				type: "http",
+			},
+		],
+		url: "/auth/permissions",
+		...options,
 	})
 }

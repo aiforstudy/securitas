@@ -11,11 +11,16 @@ import type { AxiosError } from "axios"
 import { client as _heyApiClient } from "../client.gen"
 import {
 	appControllerGetHello,
+	authControllerGetPermissions,
+	authControllerLogin,
+	authControllerRegister,
 	companyControllerCreate,
 	companyControllerFindAll,
 	companyControllerFindOne,
 	companyControllerRemove,
 	companyControllerUpdate,
+	detectionControllerApproveDetection,
+	detectionControllerBulkApproveDetections,
 	detectionControllerCreateIncomingDetection,
 	detectionControllerFindAll,
 	detectionControllerFindOne,
@@ -38,6 +43,9 @@ import {
 } from "../sdk.gen"
 import type {
 	AppControllerGetHelloData,
+	AuthControllerGetPermissionsData,
+	AuthControllerLoginData,
+	AuthControllerRegisterData,
 	CompanyControllerCreateData,
 	CompanyControllerCreateResponse,
 	CompanyControllerFindAllData,
@@ -47,6 +55,10 @@ import type {
 	CompanyControllerRemoveResponse,
 	CompanyControllerUpdateData,
 	CompanyControllerUpdateResponse,
+	DetectionControllerApproveDetectionData,
+	DetectionControllerApproveDetectionResponse,
+	DetectionControllerBulkApproveDetectionsData,
+	DetectionControllerBulkApproveDetectionsResponse,
 	DetectionControllerCreateIncomingDetectionData,
 	DetectionControllerCreateIncomingDetectionResponse,
 	DetectionControllerFindAllData,
@@ -870,4 +882,147 @@ export const detectionControllerUpdateMutation = (options?: Partial<Options<Dete
 		},
 	}
 	return mutationOptions
+}
+
+export const detectionControllerApproveDetectionMutation = (
+	options?: Partial<Options<DetectionControllerApproveDetectionData>>,
+) => {
+	const mutationOptions: UseMutationOptions<
+		DetectionControllerApproveDetectionResponse,
+		AxiosError<DefaultError>,
+		Options<DetectionControllerApproveDetectionData>
+	> = {
+		mutationFn: async (localOptions) => {
+			const { data } = await detectionControllerApproveDetection({
+				...options,
+				...localOptions,
+				throwOnError: true,
+			})
+			return data
+		},
+	}
+	return mutationOptions
+}
+
+export const detectionControllerBulkApproveDetectionsQueryKey = (
+	options: Options<DetectionControllerBulkApproveDetectionsData>,
+) => createQueryKey("detectionControllerBulkApproveDetections", options)
+
+export const detectionControllerBulkApproveDetectionsOptions = (
+	options: Options<DetectionControllerBulkApproveDetectionsData>,
+) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await detectionControllerBulkApproveDetections({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			})
+			return data
+		},
+		queryKey: detectionControllerBulkApproveDetectionsQueryKey(options),
+	})
+}
+
+export const detectionControllerBulkApproveDetectionsMutation = (
+	options?: Partial<Options<DetectionControllerBulkApproveDetectionsData>>,
+) => {
+	const mutationOptions: UseMutationOptions<
+		DetectionControllerBulkApproveDetectionsResponse,
+		AxiosError<DefaultError>,
+		Options<DetectionControllerBulkApproveDetectionsData>
+	> = {
+		mutationFn: async (localOptions) => {
+			const { data } = await detectionControllerBulkApproveDetections({
+				...options,
+				...localOptions,
+				throwOnError: true,
+			})
+			return data
+		},
+	}
+	return mutationOptions
+}
+
+export const authControllerLoginQueryKey = (options: Options<AuthControllerLoginData>) =>
+	createQueryKey("authControllerLogin", options)
+
+export const authControllerLoginOptions = (options: Options<AuthControllerLoginData>) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await authControllerLogin({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			})
+			return data
+		},
+		queryKey: authControllerLoginQueryKey(options),
+	})
+}
+
+export const authControllerLoginMutation = (options?: Partial<Options<AuthControllerLoginData>>) => {
+	const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options<AuthControllerLoginData>> = {
+		mutationFn: async (localOptions) => {
+			const { data } = await authControllerLogin({
+				...options,
+				...localOptions,
+				throwOnError: true,
+			})
+			return data
+		},
+	}
+	return mutationOptions
+}
+
+export const authControllerRegisterQueryKey = (options: Options<AuthControllerRegisterData>) =>
+	createQueryKey("authControllerRegister", options)
+
+export const authControllerRegisterOptions = (options: Options<AuthControllerRegisterData>) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await authControllerRegister({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			})
+			return data
+		},
+		queryKey: authControllerRegisterQueryKey(options),
+	})
+}
+
+export const authControllerRegisterMutation = (options?: Partial<Options<AuthControllerRegisterData>>) => {
+	const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options<AuthControllerRegisterData>> = {
+		mutationFn: async (localOptions) => {
+			const { data } = await authControllerRegister({
+				...options,
+				...localOptions,
+				throwOnError: true,
+			})
+			return data
+		},
+	}
+	return mutationOptions
+}
+
+export const authControllerGetPermissionsQueryKey = (options?: Options<AuthControllerGetPermissionsData>) =>
+	createQueryKey("authControllerGetPermissions", options)
+
+export const authControllerGetPermissionsOptions = (options?: Options<AuthControllerGetPermissionsData>) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await authControllerGetPermissions({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			})
+			return data
+		},
+		queryKey: authControllerGetPermissionsQueryKey(options),
+	})
 }

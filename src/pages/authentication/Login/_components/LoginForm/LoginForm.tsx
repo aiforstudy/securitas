@@ -2,10 +2,12 @@ import React from "react"
 import { useForm } from "react-hook-form"
 
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation } from "@tanstack/react-query"
 import { Lock, Mail } from "lucide-react"
 import { toast } from "sonner"
 import { z } from "zod"
 
+import { authControllerLoginMutation } from "@/api-generated/@tanstack/react-query.gen"
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
@@ -27,22 +29,19 @@ const LoginForm: React.FC = () => {
 		},
 	})
 	const { login: loginContext } = useAuth()
+	const { mutateAsync: login, isPending } = useMutation({
+		...authControllerLoginMutation(),
+		onSuccess: (data) => {
+			const response = data as { user: ICurrentUser; access_token: string }
+			loginContext({ ...response.user, access_token: response.access_token })
+		},
+		onError: () => {
+			toast.error("Invalid email or password")
+		},
+	})
 
 	const onSubmit = (data: LoginFormValues) => {
-		// Validate email is "admin@gmail.com"
-		if (data.email === "admin@gmail.com" && data.password === "Abc@123456") {
-			const mockUser: ICurrentUser = {
-				id: "1",
-				role: "SUPER_ADMIN",
-				name: "Root",
-				email: data.email,
-				token: "1234567890",
-				company_code: "demo2",
-			}
-			loginContext(mockUser)
-		} else {
-			toast.error("Invalid email or password")
-		}
+		login({ body: data })
 	}
 
 	return (
@@ -91,7 +90,7 @@ const LoginForm: React.FC = () => {
 					</Button>
 				</div>
 
-				<Button type="submit" className="w-full">
+				<Button type="submit" loading={isPending} className="w-full">
 					Sign In
 				</Button>
 			</form>

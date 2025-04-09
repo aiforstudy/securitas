@@ -10,7 +10,8 @@ export type ICurrentUser = {
 	role: string
 	name: string
 	email: string
-	token: string
+	permissions: string[]
+	access_token: string
 	company_code: string
 }
 
@@ -38,7 +39,7 @@ const useAuthProvider = () => {
 		if (isSaveLocal) {
 			localS.set(STORAGE_KEYS.COMPANY_CODE, user?.company_code)
 			localS.set(STORAGE_KEYS.CURRENT_USER, user)
-			localS.set(STORAGE_KEYS.ACCESS_TOKEN, user?.token)
+			localS.set(STORAGE_KEYS.ACCESS_TOKEN, user?.access_token)
 		}
 		setCurrentUser(user)
 		setIsAuthenticated(true)

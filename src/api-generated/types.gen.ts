@@ -1145,6 +1145,78 @@ export type UpdateDetectionDto = {
 	approved_by?: string
 }
 
+export type BulkApproveDetectionDto = {
+	/**
+	 * Array of detection IDs to approve
+	 */
+	detection_ids: Array<string>
+	/**
+	 * User ID who is approving the detections
+	 */
+	approved_by?: string
+}
+
+export type LoginDto = {
+	/**
+	 * The email of the user
+	 */
+	email: string
+	/**
+	 * The password of the user
+	 */
+	password: string
+}
+
+export type RegisterDto = {
+	/**
+	 * The email of the user
+	 */
+	email: string
+	/**
+	 * The password of the user
+	 */
+	password: string
+	/**
+	 * The name of the user
+	 */
+	name: string
+	/**
+	 * The role of the user
+	 */
+	role?: string
+	/**
+	 * The company code associated with the user
+	 */
+	company_code?: string
+}
+
+export type UserPermissionsDto = {
+	/**
+	 * User ID
+	 */
+	id: string
+	/**
+	 * User email
+	 */
+	email: string
+	/**
+	 * User name
+	 */
+	name: string
+	/**
+	 * User role
+	 */
+	role: string
+	/**
+	 * Company code associated with the user
+	 */
+	company_code?: string
+	/**
+	 * List of permissions based on role
+	 */
+	permissions: Array<string>
+}
+
 export type AppControllerGetHelloData = {
 	body?: never
 	path?: never
@@ -1807,6 +1879,122 @@ export type DetectionControllerUpdateResponses = {
 
 export type DetectionControllerUpdateResponse =
 	DetectionControllerUpdateResponses[keyof DetectionControllerUpdateResponses]
+
+export type DetectionControllerApproveDetectionData = {
+	body?: never
+	path: {
+		id: string
+	}
+	query?: never
+	url: "/detections/{id}/approve"
+}
+
+export type DetectionControllerApproveDetectionErrors = {
+	/**
+	 * Detection not found.
+	 */
+	404: unknown
+}
+
+export type DetectionControllerApproveDetectionResponses = {
+	/**
+	 * The detection has been successfully approved.
+	 */
+	200: Detection
+}
+
+export type DetectionControllerApproveDetectionResponse =
+	DetectionControllerApproveDetectionResponses[keyof DetectionControllerApproveDetectionResponses]
+
+export type DetectionControllerBulkApproveDetectionsData = {
+	body: BulkApproveDetectionDto
+	path?: never
+	query?: never
+	url: "/detections/approve/bulk"
+}
+
+export type DetectionControllerBulkApproveDetectionsErrors = {
+	/**
+	 * One or more detections not found.
+	 */
+	404: unknown
+}
+
+export type DetectionControllerBulkApproveDetectionsResponses = {
+	/**
+	 * The detections have been successfully approved.
+	 */
+	200: Array<Detection>
+}
+
+export type DetectionControllerBulkApproveDetectionsResponse =
+	DetectionControllerBulkApproveDetectionsResponses[keyof DetectionControllerBulkApproveDetectionsResponses]
+
+export type AuthControllerLoginData = {
+	body: LoginDto
+	path?: never
+	query?: never
+	url: "/auth/login"
+}
+
+export type AuthControllerLoginErrors = {
+	/**
+	 * Invalid credentials
+	 */
+	401: unknown
+}
+
+export type AuthControllerLoginResponses = {
+	/**
+	 * User logged in successfully
+	 */
+	200: unknown
+}
+
+export type AuthControllerRegisterData = {
+	body: RegisterDto
+	path?: never
+	query?: never
+	url: "/auth/register"
+}
+
+export type AuthControllerRegisterErrors = {
+	/**
+	 * Bad request
+	 */
+	400: unknown
+}
+
+export type AuthControllerRegisterResponses = {
+	/**
+	 * User registered successfully
+	 */
+	201: unknown
+}
+
+export type AuthControllerGetPermissionsData = {
+	body?: never
+	path?: never
+	query?: never
+	url: "/auth/permissions"
+}
+
+export type AuthControllerGetPermissionsErrors = {
+	/**
+	 * Unauthorized
+	 */
+	401: unknown
+}
+
+export type AuthControllerGetPermissionsResponses = {
+	/**
+	 * User permissions retrieved successfully
+	 */
+	200: UserPermissionsDto
+}
+
+export type AuthControllerGetPermissionsResponse =
+	AuthControllerGetPermissionsResponses[keyof AuthControllerGetPermissionsResponses]
 
 export type ClientOptions = {
 	baseURL: string
