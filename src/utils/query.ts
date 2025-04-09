@@ -5,11 +5,17 @@ import { STORAGE_KEYS } from "@/constants/storage"
 
 import { localS } from "./storage"
 
-client.setConfig({
-	headers: {
-		Authorization: `Bearer ${await localS.get(STORAGE_KEYS.ACCESS_TOKEN)}`,
-	},
-})
+const initializeClient = async () => {
+	const token = await localS.get(STORAGE_KEYS.ACCESS_TOKEN)
+	client.setConfig({
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	})
+}
+
+// Initialize the client
+initializeClient()
 
 const queryClient = new QueryClient({
 	defaultOptions: {
