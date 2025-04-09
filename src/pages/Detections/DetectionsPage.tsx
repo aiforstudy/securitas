@@ -33,6 +33,8 @@ import VideoPreview from "@/components/VideoPreview"
 import { DEFAULT_PAGINATION } from "@/constants/table"
 import queryClient from "@/utils/query"
 
+import ApprovalSelection from "./_component/ApprovalSelection/ApprovalSelection"
+
 const columnHelper = createColumnHelper<Detection>()
 
 const DetectionsPage: React.FC = () => {
@@ -44,6 +46,7 @@ const DetectionsPage: React.FC = () => {
 	const [approveAction, setApproveAction] = useState<Approved | null>(null)
 	const [selectedDelete, setSelectedDelete] = useState<Detection | null>(null)
 	const [openApproveDialog, setOpenApproveDialog] = useState<boolean>(false)
+	const [selectedApproval, setSelectedApproval] = useState<Approved | "all">("all")
 
 	const queryOptions = useMemo(() => {
 		return detectionControllerSearchDetectionsOptions({
@@ -52,9 +55,10 @@ const DetectionsPage: React.FC = () => {
 				limit: pagination.pageSize,
 				from: range?.from ? moment(range.from).startOf("day").toISOString() : undefined,
 				to: range?.to ? moment(range.to).endOf("day").toISOString() : undefined,
+				approved: selectedApproval === "all" ? undefined : selectedApproval,
 			},
 		})
-	}, [range, pagination])
+	}, [range, pagination, selectedApproval])
 
 	const { data, isLoading } = useQuery({ ...queryOptions, refetchInterval: 10000 })
 	const { mutateAsync: deleteDetection, isPending: isDeleting } = useMutation({
@@ -209,6 +213,13 @@ const DetectionsPage: React.FC = () => {
 				<h3 className="text-xl text-dark-700 font-semibold">List of alerts</h3>
 				<div className="w-[200px]">
 					<DatePicker id="range" mode="range" selected={range} onSelect={setRange} />
+				</div>
+				<div className="w-[200px]">
+					<ApprovalSelection
+						selectedApproval={selectedApproval}
+						setSelectedApproval={setSelectedApproval}
+						loading={isLoading}
+					/>
 				</div>
 				{selectedDetections.length > 0 && (
 					<div className="w-[200px]">
