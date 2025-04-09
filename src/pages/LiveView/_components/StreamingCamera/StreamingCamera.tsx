@@ -2,7 +2,6 @@ import { memo, useEffect } from "react"
 
 import { Cctv, Info, LoaderCircle, X } from "lucide-react"
 
-import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Button } from "@/components/ui/button"
 import { useStreaming } from "@/hooks/useStreaming"
 import { IStreamingCamera } from "@/types/liveView"
@@ -88,9 +87,9 @@ const StreamingCamera: React.FC<IStreamingCameraProps> = ({ viewOnly, onAddCamer
 							<LoaderCircle className="w-10 h-10 text-white animate-spin" />
 						</div>
 					)}
-					<AspectRatio ratio={16 / 9}>
-						<video ref={(el) => setVideoPlayer(el)} muted autoPlay playsInline />
-					</AspectRatio>
+					<div className="w-full h-full">
+						<video ref={(el) => setVideoPlayer(el)} className="w-full h-full" muted autoPlay playsInline />
+					</div>
 				</div>
 			)}
 		</div>

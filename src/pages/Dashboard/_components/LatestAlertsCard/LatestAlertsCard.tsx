@@ -9,8 +9,7 @@ import { Detection } from "@/api-generated/types.gen"
 import { AppTable } from "@/components/AppTable"
 import ImagePreview from "@/components/ImagePreview"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Dialog, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { DialogContent } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import VideoPreview from "@/components/VideoPreview"
 import { PATH } from "@/constants/path"
@@ -43,7 +42,7 @@ const LatestAlertsCard: React.FC<{ data: Detection[]; isLoading: boolean }> = ({
 			}),
 			columnHelper.accessor("video_url", {
 				cell: (info) => (
-					<div className="max-w-[25px]">
+					<div className="max-w-[10px]">
 						<Play className="w-4 h-4 cursor-pointer" onClick={() => setOpenVideo(info.getValue() as string)} />
 					</div>
 				),
@@ -52,7 +51,7 @@ const LatestAlertsCard: React.FC<{ data: Detection[]; isLoading: boolean }> = ({
 			}),
 			columnHelper.accessor("image_url", {
 				cell: (info) => (
-					<div className="max-w-[25px]">
+					<div className="max-w-[10px]">
 						<Image className="w-4 h-4 cursor-pointer" onClick={() => setOpenImage(info.getValue() as string)} />
 					</div>
 				),

@@ -97,7 +97,7 @@ export default class LiveViewApi {
 				created_at: "2024-07-11T15:43:02.000Z",
 				updated_at: "2024-07-11T15:43:02.000Z",
 				company_code: "demo",
-				configuration_id: "945c061a-094b-11ee-be56-0242ac120003",
+				configuration_id: "930e7e6e-dee4-4ca9-b7fc-694540ca0391",
 			},
 		]
 
@@ -110,42 +110,18 @@ export default class LiveViewApi {
 			id,
 			name: "Default",
 			layout: {
-				name: "4 Cameras",
+				name: "6 Cameras",
 				activated: true,
 				positions: [
-					{
-						id: "b8076312-7c50-4322-a0b6-c489e4b1164b",
-						monitor: {
-							id: "67744c97-8008-4004-ad92-aca2a7234f89",
-							name: "Main Entrance Camera",
-							snapshot:
-								"https://upload-file-service-viact-ai.s3.ap-southeast-1.amazonaws.com/7b2f8a25-5fbb-4ef0-9fb1-aa56f628ac5e-images2267-62270f110e752.jpeg",
-							rtmp_uri: "rtmp://13.210.250.61:1935/67744c97-8008-4004-ad92-aca2a7234f89",
-							company_code: "demo",
-							connection_uri: "rtsp://admin:Viact123@210.3.19.86:20111/cam/realmonitor?channel=1&subtype=0",
-						},
-						has_monitor: true,
-						grid_settings: { col: 1 },
-					},
-					{
-						id: "ba1f5bcc-2258-4528-8d98-a5397ad13e40",
-						monitor: {
-							id: "9877b46f-1939-4b73-9864-e8a4af0a36f8",
-							name: "Main Entrance Camera 2",
-							snapshot:
-								"https://upload-file-service-viact-ai.s3.ap-southeast-1.amazonaws.com/7b2f8a25-5fbb-4ef0-9fb1-aa56f628ac5e-images2267-62270f110e752.jpeg",
-							rtmp_uri: "rtmp://13.210.250.61:1935/9877b46f-1939-4b73-9864-e8a4af0a36f8",
-							company_code: "demo",
-							connection_uri: "rtsp://admin:Viact123@210.3.19.86:20111/cam/realmonitor?channel=1&subtype=0",
-						},
-						has_monitor: true,
-						grid_settings: { col: 2 },
-					},
-					{ has_monitor: false, grid_settings: { col: 3 } },
-					{ has_monitor: false, grid_settings: { col: 4 } },
+					{ has_monitor: true, grid_settings: { col: 1 } },
+					{ has_monitor: true, grid_settings: { col: 2 } },
+					{ has_monitor: true, grid_settings: { col: 3 } },
+					{ has_monitor: true, grid_settings: { col: 4 } },
+					{ has_monitor: true, grid_settings: { col: 5 } },
+					{ has_monitor: true, grid_settings: { col: 6 } },
 				],
-				total_columns: 2,
-				configuration_id: "945c061a-094b-11ee-be56-0242ac120003",
+				total_columns: 3,
+				configuration_id: "930e7e6e-dee4-4ca9-b7fc-694540ca0391",
 			},
 			company_code: "demo",
 		}
