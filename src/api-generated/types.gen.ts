@@ -1145,13 +1145,26 @@ export type UpdateDetectionDto = {
 	approved_by?: string
 }
 
+/**
+ * The approval status
+ */
+export enum Approved {
+	YES = "yes",
+	NO = "no",
+	EXPIRED = "expired",
+}
+
 export type BulkApproveDetectionDto = {
 	/**
 	 * Array of detection IDs to approve
 	 */
 	detection_ids: Array<string>
 	/**
-	 * User ID who is approving the detections
+	 * The approval status
+	 */
+	approved: "yes" | "no" | "expired"
+	/**
+	 * The user who approved the detection
 	 */
 	approved_by?: string
 }
@@ -1655,15 +1668,6 @@ export type DetectionControllerGetStatisticsResponses = {
 
 export type DetectionControllerGetStatisticsResponse =
 	DetectionControllerGetStatisticsResponses[keyof DetectionControllerGetStatisticsResponses]
-
-/**
- * Approval status to filter by
- */
-export enum Approved {
-	YES = "yes",
-	NO = "no",
-	EXPIRED = "expired",
-}
 
 export type DetectionControllerSearchDetectionsData = {
 	body?: never

@@ -3,19 +3,18 @@ import { DateRange } from "react-day-picker"
 
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { createColumnHelper, PaginationState } from "@tanstack/react-table"
-import { Loader2, Trash2 } from "lucide-react"
+import { CheckCheck, Image, Loader2, Play, Trash2, X } from "lucide-react"
 import moment from "moment"
 import { toast } from "sonner"
 
-import { Detection } from "@/api-generated"
+import { Approved, Detection } from "@/api-generated"
 import {
+	detectionControllerBulkApproveDetectionsMutation,
 	detectionControllerRemoveMutation,
 	detectionControllerSearchDetectionsOptions,
-	detectionControllerSearchDetectionsQueryKey,
 } from "@/api-generated/@tanstack/react-query.gen"
 import { AppTable } from "@/components/AppTable"
 import { DatePicker } from "@/components/DatePicker"
-import ImagePresent from "@/components/ImagePresent"
 import ImagePreview from "@/components/ImagePreview"
 import {
 	AlertDialog,
@@ -30,7 +29,6 @@ import {
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import VideoPresent from "@/components/VideoPresent"
 import VideoPreview from "@/components/VideoPreview"
 import { DEFAULT_PAGINATION } from "@/constants/table"
 import queryClient from "@/utils/query"
@@ -42,39 +40,69 @@ const DetectionsPage: React.FC = () => {
 	const [openVideo, setOpenVideo] = useState("")
 	const [openImage, setOpenImage] = useState("")
 	const [pagination, setPagination] = useState<PaginationState>(DEFAULT_PAGINATION)
-	const [rowSelection, setRowSelection] = useState({})
-	const [selectedDetection, setSelectedDetection] = useState<Detection | null>(null)
+	const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({})
+	const [approveAction, setApproveAction] = useState<Approved | null>(null)
+	const [selectedDelete, setSelectedDelete] = useState<Detection | null>(null)
+	const [openApproveDialog, setOpenApproveDialog] = useState<boolean>(false)
 
-	const { data, isLoading } = useQuery({
-		...detectionControllerSearchDetectionsOptions({
+	const queryOptions = useMemo(() => {
+		return detectionControllerSearchDetectionsOptions({
 			query: {
 				page: pagination.pageIndex + 1,
 				limit: pagination.pageSize,
 				from: range?.from ? moment(range.from).startOf("day").toISOString() : undefined,
 				to: range?.to ? moment(range.to).endOf("day").toISOString() : undefined,
 			},
-		}),
-		refetchInterval: 10000,
-	})
+		})
+	}, [range, pagination])
+
+	const { data, isLoading } = useQuery({ ...queryOptions, refetchInterval: 10000 })
 	const { mutateAsync: deleteDetection, isPending: isDeleting } = useMutation({
 		...detectionControllerRemoveMutation(),
 		onSuccess: () => {
-			queryClient.invalidateQueries({
-				queryKey: detectionControllerSearchDetectionsQueryKey({
-					query: {
-						page: pagination.pageIndex + 1,
-						limit: pagination.pageSize,
-						from: range?.from ? moment(range.from).toISOString() : undefined,
-						to: range?.to ? moment(range.to).toISOString() : undefined,
-					},
-				}),
-			})
+			queryClient.invalidateQueries({ queryKey: queryOptions.queryKey })
 			toast.success("Delete detection successfully")
 		},
 		onError: () => {
 			toast.error("Delete detection failed")
 		},
 	})
+	const { mutateAsync: bulkApproveDetection, isPending: isBulkApproving } = useMutation({
+		...detectionControllerBulkApproveDetectionsMutation(),
+		onSuccess: async (data) => {
+			if (data.length > 0) {
+				setApproveAction(null)
+				setOpenApproveDialog(false)
+				let message = "Detections processed successfully"
+				if (approveAction === Approved.YES) {
+					message = "Detections approved successfully"
+				} else if (approveAction === Approved.NO) {
+					message = "Detections rejected successfully"
+				}
+				toast.success(message)
+				queryClient.invalidateQueries({ queryKey: queryOptions.queryKey })
+			}
+		},
+		onError: () => {
+			let message = "Failed to process detections"
+			if (approveAction === Approved.YES) {
+				message = "Failed to approve detections"
+			} else if (approveAction === Approved.NO) {
+				message = "Failed to reject detections"
+			}
+			toast.error(message)
+		},
+	})
+
+	const selectedDetections = useMemo(() => {
+		return Object.keys(rowSelection).filter((key) => rowSelection[key])
+	}, [rowSelection])
+
+	const handleApproveDetections = async (action: Approved) => {
+		await bulkApproveDetection({
+			body: { approved: action, detection_ids: selectedDetections },
+		})
+	}
 
 	const columns = useMemo(
 		() => [
@@ -96,18 +124,20 @@ const DetectionsPage: React.FC = () => {
 			}),
 			columnHelper.accessor("video_url", {
 				cell: (info) => {
-					const videoUrl = info.getValue()
-					const imageUrl = info.row.original.image_url || ""
-					if (videoUrl) {
-						return <VideoPresent src={videoUrl} width={100} onClickPlay={() => setOpenVideo(videoUrl)} />
-					}
-					return <ImagePresent src={imageUrl} width={100} onClickPlay={() => setOpenImage(imageUrl)} />
+					const videoUrl = info.getValue() ?? ""
+					const imageUrl = info.row.original.image_url ?? ""
+					return (
+						<div className="flex gap-5 max-w-[80px]">
+							<Play className="w-5 h-5 cursor-pointer" onClick={() => setOpenVideo(videoUrl)} />
+							<Image className="w-5 h-5 cursor-pointer" onClick={() => setOpenImage(imageUrl)} />
+						</div>
+					)
 				},
 				header: () => <span>Alert</span>,
 				footer: (info) => info.column.id,
 			}),
 			columnHelper.accessor("monitor.name", {
-				cell: (info) => <div className="relative text-left">{info.getValue()}</div>,
+				cell: (info) => <div className="relative">{info.getValue()}</div>,
 				header: () => <span>Camera Name</span>,
 				footer: (info) => info.column.id,
 			}),
@@ -116,7 +146,7 @@ const DetectionsPage: React.FC = () => {
 					const engine = info.row.original.engineDetail
 					return (
 						<div className="relative flex">
-							<div className="ml-2">{engine?.name || "N/A"}</div>
+							<div>{engine?.name || "N/A"}</div>
 						</div>
 					)
 				},
@@ -124,21 +154,12 @@ const DetectionsPage: React.FC = () => {
 				footer: (info) => info.column.id,
 			}),
 			columnHelper.accessor("approved", {
-				cell: (info) => (
-					<div className="flex capitalize">
-						{info.getValue()}
-						{/* <StatusSelection
-							loading={isUpdating}
-							selectedStatus={info.getValue()}
-							setSelectedStatus={(status) => updateDetection({ body: { status }, path: { id: info.row.original.id } })}
-						/> */}
-					</div>
-				),
+				cell: (info) => <div className="flex capitalize">{info.getValue()}</div>,
 				header: () => <span>Approved</span>,
 				footer: (info) => info.column.id,
 			}),
 			columnHelper.accessor("approved_by", {
-				cell: (info) => <div className="relative text-left">{info.getValue()}</div>,
+				cell: (info) => <div className="relative text-left">{info.getValue() ?? "System"}</div>,
 				header: () => <span>Approved By</span>,
 				footer: (info) => info.column.id,
 			}),
@@ -149,8 +170,24 @@ const DetectionsPage: React.FC = () => {
 			}),
 			columnHelper.accessor("created_at", {
 				cell: (info) => (
-					<div className="relative text-right">
-						<Button size="icon" onClick={() => setSelectedDetection(info.row.original)} variant="outline">
+					<div className="flex gap-2 relative justify-end text-right">
+						<Button
+							size="icon"
+							onClick={() => {
+								setRowSelection({ [info.row.original.id]: true })
+								setOpenApproveDialog(true)
+							}}
+							variant="outline"
+							disabled={selectedDetections.includes(info.row.original.id)}
+						>
+							<CheckCheck />
+						</Button>
+						<Button
+							size="icon"
+							onClick={() => setSelectedDelete(info.row.original)}
+							variant="outline"
+							disabled={selectedDetections.includes(info.row.original.id)}
+						>
 							<Trash2 />
 						</Button>
 					</div>
@@ -163,7 +200,7 @@ const DetectionsPage: React.FC = () => {
 				footer: (info) => info.column.id,
 			}),
 		],
-		[],
+		[selectedDetections],
 	)
 
 	return (
@@ -173,6 +210,13 @@ const DetectionsPage: React.FC = () => {
 				<div className="w-[200px]">
 					<DatePicker id="range" mode="range" selected={range} onSelect={setRange} />
 				</div>
+				{selectedDetections.length > 0 && (
+					<div className="w-[200px]">
+						<Button onClick={() => setOpenApproveDialog(true)}>
+							<CheckCheck /> Approve {selectedDetections.length} detection(s)
+						</Button>
+					</div>
+				)}
 			</div>
 
 			<AppTable<Detection>
@@ -180,7 +224,8 @@ const DetectionsPage: React.FC = () => {
 					data: data?.data || [],
 					state: { pagination, rowSelection },
 					columns,
-					pageCount: data?.total_pages || 0,
+					getRowId: (row) => row.id,
+					pageCount: data?.total_pages ?? 0,
 					manualPagination: true,
 					onPaginationChange: (pagination) => {
 						setPagination(pagination)
@@ -216,7 +261,49 @@ const DetectionsPage: React.FC = () => {
 				</DialogContent>
 			</Dialog>
 
-			<AlertDialog open={!!selectedDetection} onOpenChange={() => setSelectedDetection(null)}>
+			<AlertDialog open={!!openApproveDialog}>
+				<AlertDialogContent>
+					<AlertDialogHeader>
+						<AlertDialogTitle>Approve this selection of detections?</AlertDialogTitle>
+						<AlertDialogDescription>
+							This action will mark the detections as approved. Approved detections are considered valid detections and
+							will be included in reports and analytics. Are you sure you want to approve this selection of detections?
+						</AlertDialogDescription>
+						<Button
+							className="absolute top-4 right-4"
+							size="icon"
+							variant="ghost"
+							onClick={() => setOpenApproveDialog(false)}
+						>
+							<X />
+						</Button>
+					</AlertDialogHeader>
+					<AlertDialogFooter>
+						<AlertDialogCancel
+							onClick={() => {
+								setApproveAction(Approved.NO)
+								handleApproveDetections(Approved.NO)
+							}}
+							disabled={isBulkApproving && approveAction === Approved.NO}
+							className="h-10"
+						>
+							{isBulkApproving && approveAction === Approved.NO ? <Loader2 className="w-4 h-4 animate-spin" /> : "No"}
+						</AlertDialogCancel>
+						<AlertDialogAction
+							onClick={() => {
+								setApproveAction(Approved.YES)
+								handleApproveDetections(Approved.YES)
+							}}
+							disabled={isBulkApproving && approveAction === Approved.YES}
+							className=" h-10"
+						>
+							{isBulkApproving && approveAction === Approved.YES ? <Loader2 className="w-4 h-4 animate-spin" /> : "Yes"}
+						</AlertDialogAction>
+					</AlertDialogFooter>
+				</AlertDialogContent>
+			</AlertDialog>
+
+			<AlertDialog open={!!selectedDelete} onOpenChange={() => setSelectedDelete(null)}>
 				<AlertDialogContent>
 					<AlertDialogHeader>
 						<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
@@ -228,7 +315,7 @@ const DetectionsPage: React.FC = () => {
 					<AlertDialogFooter>
 						<AlertDialogCancel className="h-10">Cancel</AlertDialogCancel>
 						<AlertDialogAction
-							onClick={() => deleteDetection({ path: { id: selectedDetection?.id || "" } })}
+							onClick={() => deleteDetection({ path: { id: selectedDelete?.id || "" } })}
 							disabled={isDeleting}
 							className="bg-red-500 hover:bg-red-600 h-10"
 						>
