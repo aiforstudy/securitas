@@ -40,7 +40,8 @@ type CompanyDialogProps = {
 }
 
 const CompanyDialog: React.FC<CompanyDialogProps> = ({ open, onSubmit, isLoading, editCompany, onOpenChange }) => {
-	const defaultLocation = JSON.parse(editCompany?.location ?? "[]")
+	const defaultLocation =
+		typeof editCompany?.location === "string" ? JSON.parse(editCompany?.location ?? "[]") : editCompany?.location
 	const form = useForm<CompanyDialogFormValues>({
 		resolver: zodResolver(companyFormSchema),
 		defaultValues,
@@ -157,8 +158,8 @@ const CompanyDialog: React.FC<CompanyDialogProps> = ({ open, onSubmit, isLoading
 												mapId="DEMO_MAP_ID"
 												defaultZoom={1}
 												defaultCenter={{
-													lat: field.value.latitude ?? 10.8300923,
-													lng: field.value.longitude ?? 106.6291799,
+													lat: field.value?.latitude ?? 10.8300923,
+													lng: field.value?.longitude ?? 106.6291799,
 												}}
 												gestureHandling={"greedy"}
 												disableDefaultUI
