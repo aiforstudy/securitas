@@ -1,7 +1,7 @@
 import React, { HTMLAttributes, memo } from "react"
 import { useTranslation } from "react-i18next"
 
-import { Loader2 } from "lucide-react"
+import { LoaderCircle } from "lucide-react"
 
 import { Approved } from "@/api-generated"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -25,8 +25,12 @@ const ApprovalSelection: React.FC<IApprovalSelectionProps> = ({ loading, selecte
 
 	return (
 		<Select value={selectedApproval} onValueChange={setSelectedApproval}>
-			<SelectTrigger className="h-full w-max text-sm font-normal px-2">
-				{loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <SelectValue placeholder={t("Approval")} />}
+			<SelectTrigger size="lg" className="h-[44px] w-max text-sm font-normal px-2">
+				<div className="flex items-center gap-2">
+					{loading && <LoaderCircle className="animate-spin" size={16} />}
+					<div className="text-gray-600">Approval:</div>
+					<SelectValue placeholder={t("Approval")} />
+				</div>
 			</SelectTrigger>
 			<SelectContent className="!rounded-md">
 				<SelectGroup>

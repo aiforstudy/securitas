@@ -38,6 +38,9 @@ const ENGINE_PERMISSION = {
 
 const DETECTION_PERMISSION = {
 	VIEW: "detections.view",
+	CREATE: "detections.create",
+	EDIT: "detections.edit",
+	DELETE: "detections.delete",
 	DETAILS_VIEW: "detections.details.view",
 	EXPORT: "detections.export",
 }

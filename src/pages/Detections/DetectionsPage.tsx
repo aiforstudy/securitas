@@ -16,6 +16,7 @@ import {
 import { AppTable } from "@/components/AppTable"
 import { DatePicker } from "@/components/DatePicker"
 import ImagePreview from "@/components/ImagePreview"
+import PermissionCheck from "@/components/PermissionCheck"
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -30,6 +31,7 @@ import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import VideoPreview from "@/components/VideoPreview"
+import PERMISSIONS from "@/constants/permissions"
 import { DEFAULT_PAGINATION } from "@/constants/table"
 import queryClient from "@/utils/query"
 
@@ -163,7 +165,7 @@ const DetectionsPage: React.FC = () => {
 				footer: (info) => info.column.id,
 			}),
 			columnHelper.accessor("approved_by", {
-				cell: (info) => <div className="relative text-left">{info.getValue() ?? "System"}</div>,
+				cell: (info) => <div className="relative text-left">{info.getValue() || "System"}</div>,
 				header: () => <span>Approved By</span>,
 				footer: (info) => info.column.id,
 			}),
@@ -172,28 +174,37 @@ const DetectionsPage: React.FC = () => {
 				header: () => <span>Created Date</span>,
 				footer: (info) => info.column.id,
 			}),
+			columnHelper.accessor("updated_at", {
+				cell: (info) => <div className="relative text-left">{moment(info.getValue()).format("DD/MM/YYYY HH:mm")}</div>,
+				header: () => <span>Updated Date</span>,
+				footer: (info) => info.column.id,
+			}),
 			columnHelper.accessor("created_at", {
 				cell: (info) => (
 					<div className="flex gap-2 relative justify-end text-right">
-						<Button
-							size="icon"
-							onClick={() => {
-								setRowSelection({ [info.row.original.id]: true })
-								setOpenApproveDialog(true)
-							}}
-							variant="outline"
-							disabled={selectedDetections.includes(info.row.original.id)}
-						>
-							<CheckCheck />
-						</Button>
-						<Button
-							size="icon"
-							onClick={() => setSelectedDelete(info.row.original)}
-							variant="outline"
-							disabled={selectedDetections.includes(info.row.original.id)}
-						>
-							<Trash2 />
-						</Button>
+						<PermissionCheck allowPermission={PERMISSIONS.DETECTION.EDIT}>
+							<Button
+								size="icon"
+								onClick={() => {
+									setRowSelection({ [info.row.original.id]: true })
+									setOpenApproveDialog(true)
+								}}
+								variant="outline"
+								disabled={selectedDetections.includes(info.row.original.id)}
+							>
+								<CheckCheck />
+							</Button>
+						</PermissionCheck>
+						<PermissionCheck allowPermission={PERMISSIONS.DETECTION.DELETE}>
+							<Button
+								size="icon"
+								onClick={() => setSelectedDelete(info.row.original)}
+								variant="outline"
+								disabled={selectedDetections.includes(info.row.original.id)}
+							>
+								<Trash2 />
+							</Button>
+						</PermissionCheck>
 					</div>
 				),
 				header: () => (
@@ -212,7 +223,7 @@ const DetectionsPage: React.FC = () => {
 			<div className="w-full flex gap-4 items-center">
 				<h3 className="text-xl text-dark-700 font-semibold">List of alerts</h3>
 				<div className="w-[200px]">
-					<DatePicker id="range" mode="range" selected={range} onSelect={setRange} />
+					<DatePicker id="range" sizing="lg" mode="range" selected={range} onSelect={setRange} />
 				</div>
 				<div className="w-[200px]">
 					<ApprovalSelection
@@ -223,9 +234,11 @@ const DetectionsPage: React.FC = () => {
 				</div>
 				{selectedDetections.length > 0 && (
 					<div className="w-[200px]">
-						<Button onClick={() => setOpenApproveDialog(true)}>
-							<CheckCheck /> Approve {selectedDetections.length} detection(s)
-						</Button>
+						<PermissionCheck allowPermission={PERMISSIONS.DETECTION.EDIT}>
+							<Button onClick={() => setOpenApproveDialog(true)}>
+								<CheckCheck /> Approve {selectedDetections.length} detection(s)
+							</Button>
+						</PermissionCheck>
 					</div>
 				)}
 			</div>
