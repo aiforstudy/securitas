@@ -49,7 +49,7 @@ const CompanyDialog: React.FC<CompanyDialogProps> = ({ open, onSubmit, isLoading
 			? {
 					values: {
 						name: editCompany.name,
-						location: { latitude: defaultLocation[0], longitude: defaultLocation[1] },
+						location: { latitude: defaultLocation?.[0], longitude: defaultLocation?.[1] },
 						expires_on: editCompany.expires_on ?? "",
 						company_code: editCompany.company_code ?? "",
 					},
@@ -137,7 +137,7 @@ const CompanyDialog: React.FC<CompanyDialogProps> = ({ open, onSubmit, isLoading
 											id="dropdown-select"
 											mode="single"
 											captionLayout="dropdown"
-											selected={moment(field.value).toDate()}
+											selected={field.value ? moment(field.value).toDate() : undefined}
 											onSelect={(date) => field.onChange(moment(date).toISOString())}
 											disabled={(date) => date < new Date()}
 										/>
