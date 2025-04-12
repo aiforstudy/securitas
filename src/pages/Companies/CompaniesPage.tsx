@@ -7,14 +7,13 @@ import moment from "moment"
 import { toast } from "sonner"
 
 import {
-	engineControllerFindAllOptions,
-	monitorControllerCreateMutation,
-	monitorControllerFindAllOptions,
-	monitorControllerFindAllQueryKey,
-	monitorControllerRemoveMutation,
-	monitorControllerUpdateMutation,
+	companyControllerCreateMutation,
+	companyControllerFindAllOptions,
+	companyControllerFindAllQueryKey,
+	companyControllerRemoveMutation,
+	companyControllerUpdateMutation,
 } from "@/api-generated/@tanstack/react-query.gen"
-import { CreateMonitorDto, Monitor, MonitorStatus, UpdateMonitorDto } from "@/api-generated/types.gen"
+import { Company, CreateCompanyDto, UpdateCompanyDto } from "@/api-generated/types.gen"
 import { AppTable } from "@/components/AppTable"
 import PermissionCheck from "@/components/PermissionCheck"
 import {
@@ -30,18 +29,16 @@ import {
 import { Button } from "@/components/ui/button"
 import PERMISSIONS from "@/constants/permissions"
 import { DEFAULT_PAGINATION } from "@/constants/table"
-import { useGlobalStore } from "@/stores/global"
 import queryClient from "@/utils/query"
 
-import CameraDialog from "./_components/CameraDialog"
+import CompanyDialog from "./_components/CompanyDialog"
 
-const columnHelper = createColumnHelper<Monitor>()
+const columnHelper = createColumnHelper<Company>()
 
-const CamerasPage: React.FC = () => {
-	const { selectedCompany } = useGlobalStore()
-	const [editCamera, setEditCamera] = useState<Monitor | null>(null)
+const CompaniesPage: React.FC = () => {
+	const [editCompany, setEditCompany] = useState<Company | null>(null)
 	const [pagination, setPagination] = useState<PaginationState>(DEFAULT_PAGINATION)
-	const [selectedDelete, setSelectedDelete] = useState<Monitor | null>(null)
+	const [selectedDelete, setSelectedDelete] = useState<Company | null>(null)
 	const [openCreateDialog, setOpenCreateDialog] = useState<boolean>(false)
 
 	const queryOptions = useMemo(() => {
@@ -49,83 +46,77 @@ const CamerasPage: React.FC = () => {
 			query: {
 				page: pagination.pageIndex + 1,
 				limit: pagination.pageSize,
-				company_code: selectedCompany?.company_code ?? "",
 			},
 		}
-	}, [pagination, selectedCompany?.company_code])
+	}, [pagination])
 
 	const { data, isLoading } = useQuery({
-		...monitorControllerFindAllOptions({ query: queryOptions.query }),
-		enabled: !!selectedCompany?.company_code,
+		...companyControllerFindAllOptions({ query: queryOptions.query }),
 	})
 
-	const { data: engines } = useQuery({
-		...engineControllerFindAllOptions({ query: { page: 1, limit: 100 } }),
-	})
-
-	const { mutateAsync: createCamera, isPending: isCreating } = useMutation({
-		...monitorControllerCreateMutation(),
+	const { mutateAsync: createCompany, isPending: isCreating } = useMutation({
+		...companyControllerCreateMutation(),
 		onSuccess: () => {
-			toast.success("Camera created successfully")
+			toast.success("Company created successfully")
 			setOpenCreateDialog(false)
 			queryClient.invalidateQueries({
-				queryKey: monitorControllerFindAllQueryKey({ query: queryOptions.query }),
+				queryKey: companyControllerFindAllQueryKey({ query: queryOptions.query }),
 			})
 		},
 		onError: () => {
-			toast.error("Failed to create camera")
+			toast.error("Failed to create company")
 		},
 	})
 
-	const { mutateAsync: updateCamera, isPending: isUpdating } = useMutation({
-		...monitorControllerUpdateMutation(),
+	const { mutateAsync: updateCompany, isPending: isUpdating } = useMutation({
+		...companyControllerUpdateMutation(),
 		onSuccess: () => {
-			toast.success("Camera updated successfully")
-			setEditCamera(null)
+			toast.success("Company updated successfully")
+			setEditCompany(null)
 			queryClient.invalidateQueries({
-				queryKey: monitorControllerFindAllQueryKey({ query: queryOptions.query }),
+				queryKey: companyControllerFindAllQueryKey({ query: queryOptions.query }),
 			})
 		},
 		onError: () => {
-			toast.error("Failed to update camera")
+			toast.error("Failed to update company")
 		},
 	})
 
-	const { mutateAsync: deleteCamera, isPending: isDeleting } = useMutation({
-		...monitorControllerRemoveMutation(),
+	const { mutateAsync: deleteCompany, isPending: isDeleting } = useMutation({
+		...companyControllerRemoveMutation(),
 		onSuccess: () => {
-			toast.success("Camera deleted successfully")
+			toast.success("Company deleted successfully")
 			setSelectedDelete(null)
-			queryClient.invalidateQueries({ queryKey: monitorControllerFindAllQueryKey({ query: queryOptions.query }) })
+			queryClient.invalidateQueries({ queryKey: companyControllerFindAllQueryKey({ query: queryOptions.query }) })
 		},
 		onError: () => {
-			toast.error("Failed to delete camera")
+			toast.error("Failed to delete company")
 		},
 	})
 
-	const handleCameraSubmit = async (values: CreateMonitorDto | UpdateMonitorDto) => {
-		if (editCamera) {
-			await updateCamera({
-				path: { id: editCamera.id },
-				body: values as UpdateMonitorDto,
+	const handleCompanySubmit = async (values: CreateCompanyDto | UpdateCompanyDto) => {
+		if (editCompany) {
+			await updateCompany({
+				path: { code: editCompany.company_code },
+				body: values as UpdateCompanyDto,
 			})
 		} else {
-			await createCamera({
-				body: values as CreateMonitorDto,
+			await createCompany({
+				body: values as CreateCompanyDto,
 			})
 		}
 	}
 
 	const handleOpenEditDialog = useCallback(
-		(camera: Monitor) => {
-			setEditCamera(camera)
+		(company: Company) => {
+			setEditCompany(company)
 		},
-		[setEditCamera],
+		[setEditCompany],
 	)
 
 	const handleCloseDialog = () => {
 		setOpenCreateDialog(false)
-		setEditCamera(null)
+		setEditCompany(null)
 	}
 
 	const columns = useMemo(
@@ -133,27 +124,6 @@ const CamerasPage: React.FC = () => {
 			columnHelper.accessor("name", {
 				cell: (info) => <div className="relative">{info.getValue()}</div>,
 				header: () => <span>Name</span>,
-				footer: (info) => info.column.id,
-			}),
-			columnHelper.accessor("connection_uri", {
-				cell: (info) => <div className="relative ">{info.getValue()}</div>,
-				header: () => <span>Connection URI</span>,
-				footer: (info) => info.column.id,
-			}),
-			columnHelper.accessor("status", {
-				cell: (info) => {
-					const statusValue = info.getValue()
-					let statusClass = "text-red-600" // Default for UNAVAILABLE
-
-					if (statusValue === MonitorStatus.CONNECTED) {
-						statusClass = "text-green-600"
-					} else if (statusValue === MonitorStatus.DISCONNECTED) {
-						statusClass = "text-orange-600"
-					}
-
-					return <div className={`relative capitalize ${statusClass}`}>{statusValue.toLowerCase()}</div>
-				},
-				header: () => <span>Status</span>,
 				footer: (info) => info.column.id,
 			}),
 			columnHelper.accessor("created_at", {
@@ -170,12 +140,12 @@ const CamerasPage: React.FC = () => {
 				id: "actions",
 				cell: (info) => (
 					<div className="flex gap-2 relative justify-end text-right">
-						<PermissionCheck allowPermission={PERMISSIONS.MONITOR.EDIT}>
+						<PermissionCheck allowPermission={PERMISSIONS.COMPANY.EDIT}>
 							<Button size="icon" onClick={() => handleOpenEditDialog(info.row.original)} variant="outline">
 								<Edit className="h-4 w-4" />
 							</Button>
 						</PermissionCheck>
-						<PermissionCheck allowPermission={PERMISSIONS.MONITOR.DELETE}>
+						<PermissionCheck allowPermission={PERMISSIONS.COMPANY.DELETE}>
 							<Button size="icon" onClick={() => setSelectedDelete(info.row.original)} variant="outline">
 								<Trash2 className="h-4 w-4" />
 							</Button>
@@ -196,20 +166,20 @@ const CamerasPage: React.FC = () => {
 	return (
 		<div className="p-5 h-full space-y-4">
 			<div className="w-full flex gap-4 items-center justify-between">
-				<h3 className="text-xl text-dark-700 font-semibold">List of cameras</h3>
-				<PermissionCheck allowPermission={PERMISSIONS.MONITOR.CREATE}>
+				<h3 className="text-xl text-dark-700 font-semibold">List of companies</h3>
+				<PermissionCheck allowPermission={PERMISSIONS.COMPANY.CREATE}>
 					<Button onClick={() => setOpenCreateDialog(true)}>
-						<Plus className="h-4 w-4" /> Add Camera
+						<Plus className="h-4 w-4" /> Add Company
 					</Button>
 				</PermissionCheck>
 			</div>
 
-			<AppTable<Monitor>
+			<AppTable<Company>
 				options={{
 					data: data?.data || [],
 					state: { pagination },
 					columns,
-					getRowId: (row) => row.id,
+					getRowId: (row) => row.company_code,
 					pageCount: data?.total_pages ?? 0,
 					manualPagination: true,
 					onPaginationChange: setPagination,
@@ -219,13 +189,11 @@ const CamerasPage: React.FC = () => {
 				pagination
 			/>
 
-			<CameraDialog
-				open={openCreateDialog || !!editCamera}
-				engines={engines?.data}
-				onSubmit={handleCameraSubmit}
+			<CompanyDialog
+				open={openCreateDialog || !!editCompany}
+				onSubmit={handleCompanySubmit}
 				isLoading={isCreating || isUpdating}
-				editCamera={editCamera}
-				companyCode={selectedCompany?.company_code ?? ""}
+				editCompany={editCompany}
 				onOpenChange={handleCloseDialog}
 			/>
 
@@ -234,13 +202,13 @@ const CamerasPage: React.FC = () => {
 					<AlertDialogHeader>
 						<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
 						<AlertDialogDescription>
-							This action cannot be undone. This will permanently delete the camera and remove it from our servers.
+							This action cannot be undone. This will permanently delete the company and remove it from our servers.
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>
 						<AlertDialogCancel className="h-10">Cancel</AlertDialogCancel>
 						<AlertDialogAction
-							onClick={() => selectedDelete && deleteCamera({ path: { id: selectedDelete.id } })}
+							onClick={() => selectedDelete && deleteCompany({ path: { code: selectedDelete.company_code } })}
 							disabled={isDeleting}
 							className="bg-red-500 hover:bg-red-600 h-10"
 						>
@@ -253,4 +221,4 @@ const CamerasPage: React.FC = () => {
 	)
 }
 
-export default CamerasPage
+export default CompaniesPage

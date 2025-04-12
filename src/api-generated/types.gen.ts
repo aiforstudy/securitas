@@ -16,41 +16,45 @@ export type CreateCompanyDto = {
 	/**
 	 * The selected project for the company
 	 */
-	selected_project: string
+	selected_project?: string
 	/**
 	 * The expiration date of the company
 	 */
-	expires_on: string
+	expires_on?: string
 	/**
 	 * The title of the company
 	 */
-	title: string
+	title?: string
 	/**
 	 * The API key for the company
 	 */
-	apikey: string
+	apikey?: string
 	/**
 	 * The URL of the company logo
 	 */
-	logo_url: string
+	logo_url?: string
 	/**
 	 * The daily report configuration
 	 */
-	daily_report: string
+	daily_report?: string
 	/**
 	 * The instant alert configuration
 	 */
-	instant_alert: string
+	instant_alert?: string
 	/**
 	 * The enabled cards configuration
 	 */
-	enabled_cards: string
+	enabled_cards?: string
 	/**
 	 * The locale settings for the company
 	 */
-	locale: {
+	locale?: {
 		[key: string]: unknown
 	}
+	/**
+	 * The location coordinates
+	 */
+	location?: string
 }
 
 export type Company = {
@@ -69,41 +73,45 @@ export type Company = {
 	/**
 	 * The selected project for the company
 	 */
-	selected_project: string
+	selected_project?: string
 	/**
 	 * The expiration date of the company
 	 */
-	expires_on: string
+	expires_on?: string
 	/**
 	 * The title of the company
 	 */
-	title: string
+	title?: string
 	/**
 	 * The API key for the company
 	 */
-	apikey: string
+	apikey?: string
 	/**
 	 * The URL of the company logo
 	 */
-	logo_url: string
+	logo_url?: string
 	/**
 	 * The daily report configuration
 	 */
-	daily_report: string
+	daily_report?: string
 	/**
 	 * The instant alert configuration
 	 */
-	instant_alert: string
+	instant_alert?: string
 	/**
 	 * The enabled cards configuration
 	 */
-	enabled_cards: string
+	enabled_cards?: string
 	/**
 	 * The locale settings for the company
 	 */
-	locale: {
+	locale?: {
 		[key: string]: unknown
 	}
+	/**
+	 * The location
+	 */
+	location?: string
 	/**
 	 * The timestamp when the company was created
 	 */
@@ -150,10 +158,6 @@ export type CreateEngineDto = {
 	 * Engine name
 	 */
 	name: string
-	/**
-	 * Engine title
-	 */
-	title?: string
 	/**
 	 * Related engine ID
 	 */
@@ -244,10 +248,6 @@ export type UpdateEngineDto = {
 	 */
 	name?: string
 	/**
-	 * Engine title
-	 */
-	title?: string
-	/**
 	 * Related engine ID
 	 */
 	related_engine?: string
@@ -280,25 +280,9 @@ export type CreateMonitorDto = {
 	 */
 	name?: string
 	/**
-	 * The RTMP URI for the monitor stream
-	 */
-	rtmp_uri?: string
-	/**
-	 * Whether to play from source
-	 */
-	play_from_source?: boolean
-	/**
 	 * The engines configuration as JSON string
 	 */
 	engines?: string
-	/**
-	 * Whether recording is enabled
-	 */
-	recording?: boolean
-	/**
-	 * The graph configuration as JSON string
-	 */
-	graph?: string
 	/**
 	 * The zone configuration as JSON string
 	 */
@@ -312,10 +296,6 @@ export type CreateMonitorDto = {
 	 */
 	device_id?: string
 	/**
-	 * The machine ID
-	 */
-	machine_id?: string
-	/**
 	 * The IP address
 	 */
 	ip?: string
@@ -324,101 +304,29 @@ export type CreateMonitorDto = {
 	 */
 	config?: string
 	/**
-	 * The time in
-	 */
-	time_in?: string
-	/**
-	 * The time out
-	 */
-	time_out?: string
-	/**
-	 * The socket ID
-	 */
-	socket_id?: string
-	/**
-	 * The YS token
-	 */
-	ys_token?: string
-	/**
 	 * The user ID
 	 */
 	user_id?: string
-	/**
-	 * The TNT value
-	 */
-	tnt?: number
-	/**
-	 * The FPT value
-	 */
-	fpt?: number
-	/**
-	 * The CONV value
-	 */
-	conv?: number
 	/**
 	 * The connection URI
 	 */
 	connection_uri?: string
 	/**
-	 * The sub-connection URI
+	 * The hls URI
 	 */
-	sub_connection_uri?: string
+	hls_uri?: string
 	/**
 	 * The snapshot data
 	 */
 	snapshot?: string
 	/**
-	 * The GPS coordinates
-	 */
-	gps_coordinates?: string
-	/**
-	 * The pending engines configuration
-	 */
-	pending_engines?: string
-	/**
 	 * The location
 	 */
 	location?: string
 	/**
-	 * The snapshot creation timestamp
-	 */
-	snapshot_created_at?: string
-	/**
-	 * The handling office
-	 */
-	handling_office?: string
-	/**
-	 * The battery sync status
-	 */
-	battery_sync?: boolean
-	/**
-	 * The battery threshold
-	 */
-	battery_threshold?: number
-	/**
-	 * Whether approval is required
-	 */
-	require_approval?: boolean
-	/**
-	 * The rule configuration
-	 */
-	rule?: string
-	/**
 	 * The last ping timestamp
 	 */
 	last_ping_at?: string
-	/**
-	 * The district
-	 */
-	district?: string
-	/**
-	 * Whether approval is not required
-	 */
-	dont_require_approval?: boolean
-	/**
-	 * The sequence number format
-	 */
-	seq_no_format?: string
 	/**
 	 * The engines requiring approval
 	 */
@@ -439,30 +347,6 @@ export type CreateMonitorDto = {
 	 * The description
 	 */
 	description?: string
-	/**
-	 * The camera identification
-	 */
-	camera_identification?: string
-	/**
-	 * The platform device ID
-	 */
-	platform_device_id?: string
-	/**
-	 * The expiry date
-	 */
-	expiry_date?: string
-	/**
-	 * Whether the monitor is disabled
-	 */
-	disabled?: boolean
-	/**
-	 * The latest disabled timestamp
-	 */
-	latest_disabled_at?: string
-	/**
-	 * The Zabbix host ID
-	 */
-	zabbix_host_id?: string
 }
 
 /**
@@ -488,25 +372,9 @@ export type Monitor = {
 	 */
 	name: string
 	/**
-	 * The RTMP URI for the monitor stream
-	 */
-	rtmp_uri: string
-	/**
-	 * Whether to play from source
-	 */
-	play_from_source: boolean
-	/**
 	 * The engines configuration as JSON string
 	 */
 	engines: string
-	/**
-	 * Whether recording is enabled
-	 */
-	recording: boolean
-	/**
-	 * The graph configuration as JSON string
-	 */
-	graph: string
 	/**
 	 * The zone configuration as JSON string
 	 */
@@ -520,10 +388,6 @@ export type Monitor = {
 	 */
 	device_id: string
 	/**
-	 * The machine ID
-	 */
-	machine_id: string
-	/**
 	 * The IP address
 	 */
 	ip: string
@@ -532,101 +396,29 @@ export type Monitor = {
 	 */
 	config: string
 	/**
-	 * The time in
-	 */
-	time_in: string
-	/**
-	 * The time out
-	 */
-	time_out: string
-	/**
-	 * The socket ID
-	 */
-	socket_id: string
-	/**
-	 * The YS token
-	 */
-	ys_token: string
-	/**
 	 * The user ID
 	 */
 	user_id: string
-	/**
-	 * The TNT value
-	 */
-	tnt: number
-	/**
-	 * The FPT value
-	 */
-	fpt: number
-	/**
-	 * The CONV value
-	 */
-	conv: number
 	/**
 	 * The connection URI
 	 */
 	connection_uri: string
 	/**
-	 * The sub-connection URI
+	 * The hls URI
 	 */
-	sub_connection_uri: string
+	hls_uri: string
 	/**
 	 * The snapshot data
 	 */
 	snapshot: string
 	/**
-	 * The GPS coordinates
-	 */
-	gps_coordinates: string
-	/**
-	 * The pending engines configuration
-	 */
-	pending_engines: string
-	/**
 	 * The location
 	 */
 	location: string
 	/**
-	 * The snapshot creation timestamp
-	 */
-	snapshot_created_at: string
-	/**
-	 * The handling office
-	 */
-	handling_office: string
-	/**
-	 * The battery sync status
-	 */
-	battery_sync: boolean
-	/**
-	 * The battery threshold
-	 */
-	battery_threshold: number
-	/**
-	 * Whether approval is required
-	 */
-	require_approval: boolean
-	/**
-	 * The rule configuration
-	 */
-	rule: string
-	/**
 	 * The last ping timestamp
 	 */
 	last_ping_at: string
-	/**
-	 * The district
-	 */
-	district: string
-	/**
-	 * Whether approval is not required
-	 */
-	dont_require_approval: boolean
-	/**
-	 * The sequence number format
-	 */
-	seq_no_format: string
 	/**
 	 * The engines requiring approval
 	 */
@@ -644,30 +436,6 @@ export type Monitor = {
 	 * The description
 	 */
 	description: string
-	/**
-	 * The camera identification
-	 */
-	camera_identification: string
-	/**
-	 * The platform device ID
-	 */
-	platform_device_id: string
-	/**
-	 * The expiry date
-	 */
-	expiry_date: string
-	/**
-	 * Whether the monitor is disabled
-	 */
-	disabled: boolean
-	/**
-	 * The latest disabled timestamp
-	 */
-	latest_disabled_at: string
-	/**
-	 * The Zabbix host ID
-	 */
-	zabbix_host_id: string
 	/**
 	 * The timestamp when the monitor was created
 	 */
@@ -711,25 +479,9 @@ export type UpdateMonitorDto = {
 	 */
 	name?: string
 	/**
-	 * The RTMP URI for the monitor stream
-	 */
-	rtmp_uri?: string
-	/**
-	 * Whether to play from source
-	 */
-	play_from_source?: boolean
-	/**
 	 * The engines configuration as JSON string
 	 */
 	engines?: string
-	/**
-	 * Whether recording is enabled
-	 */
-	recording?: boolean
-	/**
-	 * The graph configuration as JSON string
-	 */
-	graph?: string
 	/**
 	 * The zone configuration as JSON string
 	 */
@@ -743,10 +495,6 @@ export type UpdateMonitorDto = {
 	 */
 	device_id?: string
 	/**
-	 * The machine ID
-	 */
-	machine_id?: string
-	/**
 	 * The IP address
 	 */
 	ip?: string
@@ -755,101 +503,29 @@ export type UpdateMonitorDto = {
 	 */
 	config?: string
 	/**
-	 * The time in
-	 */
-	time_in?: string
-	/**
-	 * The time out
-	 */
-	time_out?: string
-	/**
-	 * The socket ID
-	 */
-	socket_id?: string
-	/**
-	 * The YS token
-	 */
-	ys_token?: string
-	/**
 	 * The user ID
 	 */
 	user_id?: string
-	/**
-	 * The TNT value
-	 */
-	tnt?: number
-	/**
-	 * The FPT value
-	 */
-	fpt?: number
-	/**
-	 * The CONV value
-	 */
-	conv?: number
 	/**
 	 * The connection URI
 	 */
 	connection_uri?: string
 	/**
-	 * The sub-connection URI
+	 * The hls URI
 	 */
-	sub_connection_uri?: string
+	hls_uri?: string
 	/**
 	 * The snapshot data
 	 */
 	snapshot?: string
 	/**
-	 * The GPS coordinates
-	 */
-	gps_coordinates?: string
-	/**
-	 * The pending engines configuration
-	 */
-	pending_engines?: string
-	/**
 	 * The location
 	 */
 	location?: string
 	/**
-	 * The snapshot creation timestamp
-	 */
-	snapshot_created_at?: string
-	/**
-	 * The handling office
-	 */
-	handling_office?: string
-	/**
-	 * The battery sync status
-	 */
-	battery_sync?: boolean
-	/**
-	 * The battery threshold
-	 */
-	battery_threshold?: number
-	/**
-	 * Whether approval is required
-	 */
-	require_approval?: boolean
-	/**
-	 * The rule configuration
-	 */
-	rule?: string
-	/**
 	 * The last ping timestamp
 	 */
 	last_ping_at?: string
-	/**
-	 * The district
-	 */
-	district?: string
-	/**
-	 * Whether approval is not required
-	 */
-	dont_require_approval?: boolean
-	/**
-	 * The sequence number format
-	 */
-	seq_no_format?: string
 	/**
 	 * The engines requiring approval
 	 */
@@ -870,30 +546,6 @@ export type UpdateMonitorDto = {
 	 * The description
 	 */
 	description?: string
-	/**
-	 * The camera identification
-	 */
-	camera_identification?: string
-	/**
-	 * The platform device ID
-	 */
-	platform_device_id?: string
-	/**
-	 * The expiry date
-	 */
-	expiry_date?: string
-	/**
-	 * Whether the monitor is disabled
-	 */
-	disabled?: boolean
-	/**
-	 * The latest disabled timestamp
-	 */
-	latest_disabled_at?: string
-	/**
-	 * The Zabbix host ID
-	 */
-	zabbix_host_id?: string
 }
 
 export type StartStreamDto = {

@@ -14,7 +14,7 @@ const Account: React.FC = () => {
 			</div>
 			<div className="h-full flex w-max flex-col justify-between">
 				<p className="font-semibold text-base">{currentUser?.name || currentUser?.email}</p>
-				<p className="text-sidebar-foreground/70 text-[12px] font-light">{currentUser?.role}</p>
+				<p className="text-sidebar-foreground/70 text-[12px] font-light capitalize">{currentUser?.role}</p>
 			</div>
 		</div>
 	)

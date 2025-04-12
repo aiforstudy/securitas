@@ -7,6 +7,7 @@ import { PATH } from "@/constants/path"
 import LoginPage from "@/pages/Authentication/Login"
 import CamerasPage from "@/pages/Cameras/CamerasPage"
 import ComingSoonPage from "@/pages/ComingSoon/ComingSoonPage"
+import CompaniesPage from "@/pages/Companies/CompaniesPage"
 import DashboardPage from "@/pages/Dashboard"
 import DetectionsPage from "@/pages/Detections/DetectionsPage"
 import LiveViewPage from "@/pages/LiveView/LiveViewPage"
@@ -119,6 +120,10 @@ const useRouterElements = () => {
 								{
 									path: PATH.SYSTEM.ROLE_SETTINGS,
 									element: withSuspense(ComingSoonPage),
+								},
+								{
+									path: PATH.SYSTEM.COMPANIES,
+									element: withSuspense(CompaniesPage),
 								},
 							],
 						},

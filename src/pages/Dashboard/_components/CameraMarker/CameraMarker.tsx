@@ -15,7 +15,7 @@ const CameraMarker: React.FC<CameraMarkerProps> = (props) => {
 	const { camera, onClick, setMarkerRef } = props
 
 	const position = useMemo(() => {
-		const location = JSON.parse(camera.location || "[]")
+		const location = typeof camera.location === "string" ? JSON.parse(camera.location ?? "[]") : camera.location
 		return { lat: location[0], lng: location[1] }
 	}, [camera.location])
 

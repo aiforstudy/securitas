@@ -26,11 +26,14 @@ const DashboardPage: React.FC = () => {
 	})
 
 	useEffect(() => {
-		if (data?.data?.length) {
-			const location = JSON.parse(data?.data[0].location || "[]")
+		if (selectedCompany?.location) {
+			const location =
+				typeof selectedCompany?.location === "string"
+					? JSON.parse(selectedCompany?.location || "[]")
+					: selectedCompany?.location
 			setCenter({ lat: location[0], lng: location[1] })
 		}
-	}, [data])
+	}, [selectedCompany?.location])
 
 	const handleFullscreen = () => {
 		if (isFullscreen) {

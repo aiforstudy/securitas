@@ -5,13 +5,14 @@ import { ChevronRight } from "lucide-react"
 
 import { Menubar, MenubarContent, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar"
 import { PATH } from "@/constants/path"
+import { useAuth } from "@/contexts/auth.context"
 import { cn } from "@/lib/utils"
 
 import { Button } from "../ui/button"
 import { SidebarGroupContent } from "../ui/sidebar"
 import RenderButton from "./RenderButton"
 import RenderSubmenuItems from "./RenderSubmenuItems"
-import { currentRoles, ISidebarChildren } from "./useSideBarItems"
+import { ISidebarChildren } from "./useSideBarItems"
 
 type IRenderSidebarItemProps = {
 	items: ISidebarChildren[]
@@ -19,10 +20,11 @@ type IRenderSidebarItemProps = {
 
 const RenderSidebarItem: React.FC<IRenderSidebarItemProps> = ({ items }) => {
 	const { pathname } = useLocation()
+	const { currentUser } = useAuth()
 	return (
 		<SidebarGroupContent>
 			{items.map((child) => {
-				const canRender = !child.roles || child.roles.some((role) => currentRoles.includes(role))
+				const canRender = !child.roles || child.roles.includes(currentUser?.role ?? "")
 				return (
 					<React.Fragment key={`sidebar-item-${child.label}`}>
 						{canRender ? (

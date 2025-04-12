@@ -2,6 +2,7 @@ import React from "react"
 
 import { ChevronRight } from "lucide-react"
 
+import { useAuth } from "@/contexts/auth.context"
 import { cn } from "@/lib/utils"
 
 import { Button } from "../ui/button"
@@ -15,7 +16,7 @@ import {
 	useSidebar,
 } from "../ui/sidebar"
 import RenderButton from "./RenderButton"
-import { currentRoles, ISidebarItem } from "./useSideBarItems"
+import { ISidebarItem } from "./useSideBarItems"
 
 type IRenderSidebarItemsProps = {
 	items: ISidebarItem[]
@@ -23,12 +24,13 @@ type IRenderSidebarItemsProps = {
 
 const RenderSidebarItems: React.FC<IRenderSidebarItemsProps> = ({ items }) => {
 	const { open } = useSidebar()
+	const { currentUser } = useAuth()
 
 	return (
 		<SidebarGroup className="py-5 px-5">
 			<SidebarMenu>
 				{items.map((item) => {
-					const canRender = !item.roles || item.roles.some((role) => currentRoles.includes(role))
+					const canRender = !item.roles || item.roles.includes(currentUser?.role ?? "")
 					const hasChildren = item.children && item.children.length > 0
 					return canRender ? (
 						<Collapsible key={item.key || item.label} asChild defaultOpen={true} className="group/collapsible">
@@ -48,11 +50,14 @@ const RenderSidebarItems: React.FC<IRenderSidebarItemsProps> = ({ items }) => {
 								</CollapsibleTrigger>
 								<CollapsibleContent className="my-3">
 									<SidebarMenuSub className="gap-3">
-										{item.children?.map((subItem) => (
-											<SidebarMenuSubItem key={subItem.label}>
-												<RenderButton path={subItem.path} icon={subItem.icon} label={subItem.label} justify="start" />
-											</SidebarMenuSubItem>
-										))}
+										{item.children?.map((subItem) => {
+											const canRender = !subItem.roles || subItem.roles.includes(currentUser?.role ?? "")
+											return canRender ? (
+												<SidebarMenuSubItem key={subItem.label}>
+													<RenderButton path={subItem.path} icon={subItem.icon} label={subItem.label} justify="start" />
+												</SidebarMenuSubItem>
+											) : null
+										})}
 									</SidebarMenuSub>
 								</CollapsibleContent>
 							</SidebarMenuItem>

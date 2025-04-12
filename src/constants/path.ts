@@ -44,5 +44,6 @@ export const PATH = {
 		ROOT: addBaseUrl("/system"),
 		ADMINISTRATION: addBaseUrl("/system/administration"),
 		ROLE_SETTINGS: addBaseUrl("/system/role-settings"),
+		COMPANIES: addBaseUrl("/system/companies"),
 	},
 }

@@ -9,6 +9,7 @@ import {
 	LayoutDashboard,
 	Logs,
 	Map,
+	Settings2,
 	Siren,
 	SquareStack,
 	User,
@@ -16,16 +17,12 @@ import {
 } from "lucide-react"
 
 import { PATH } from "@/constants/path"
-
-enum Roles {
-	Admin = "ADMIN",
-	SuperAdmin = "SUPER_ADMIN",
-}
+import { ERole } from "@/enums/permissions"
 
 export type ISubmenu = {
 	label: string
 	path?: string
-	roles?: Roles[]
+	roles?: string[]
 	icon?: React.ReactNode
 	isComingSoon?: boolean
 }
@@ -35,12 +32,10 @@ export type ISidebarChildren = ISubmenu & {
 }
 
 export type ISidebarItem = ISubmenu & {
-	prefixPath?: string
 	key?: string
 	children?: ISidebarChildren[]
+	prefixPath?: string
 }
-
-export const currentRoles = ["ADMIN", "SUPER_ADMIN"]
 
 export const useSideBarItems = () => {
 	const { t } = useTranslation()
@@ -129,6 +124,12 @@ export const useSideBarItems = () => {
 						label: t("sidebar.roleSettings"),
 						icon: <Users className="!w-5 !h-5" />,
 						path: PATH.SYSTEM.ROLE_SETTINGS,
+					},
+					{
+						icon: <Settings2 className="!w-5 !h-5" />,
+						path: PATH.SYSTEM.COMPANIES,
+						label: t("sidebar.companies"),
+						roles: [ERole.ADMIN],
 					},
 				],
 			},
