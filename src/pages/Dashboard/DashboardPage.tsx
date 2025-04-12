@@ -1,18 +1,36 @@
-import React, { useRef, useState } from "react"
+import React, { useCallback, useEffect, useRef, useState } from "react"
 
+import { useQuery } from "@tanstack/react-query"
 import { Map } from "@vis.gl/react-google-maps"
 
+import { monitorControllerFindAllOptions } from "@/api-generated/@tanstack/react-query.gen"
 import { EMapTypeId } from "@/enums/map"
+import { useGlobalStore } from "@/stores/global"
 
+import CameraMarker from "./_components/CameraMarker"
 import GroupButtonsRight from "./_components/GroupButtonsRight"
 import GroupCardsLeft from "./_components/GroupCardsLeft"
 import SwitchMapType from "./_components/SwitchMapType"
 
 const DashboardPage: React.FC = () => {
 	const containerRef = useRef<HTMLDivElement>(null)
-	const position = { lat: 10.8300923, lng: 106.6291799 }
+	const [center, setCenter] = useState<{ lat: number; lng: number }>({ lat: 10.8300923, lng: 106.6291799 })
 	const [mapType, setMapType] = useState<EMapTypeId>(EMapTypeId.ROADMAP)
 	const [isFullscreen, setIsFullscreen] = useState(false)
+	const { selectedCompany } = useGlobalStore()
+	const { data } = useQuery({
+		...monitorControllerFindAllOptions({
+			query: { page: 1, limit: 1000, company_code: selectedCompany?.company_code ?? "" },
+		}),
+		enabled: !!selectedCompany?.company_code,
+	})
+
+	useEffect(() => {
+		if (data?.data?.length) {
+			const location = JSON.parse(data?.data[0].location || "[]")
+			setCenter({ lat: location[0], lng: location[1] })
+		}
+	}, [data])
 
 	const handleFullscreen = () => {
 		if (isFullscreen) {
@@ -24,16 +42,17 @@ const DashboardPage: React.FC = () => {
 		}
 	}
 
+	const renderCameraMakers = useCallback(() => {
+		return data?.data?.map((monitor) => {
+			return <CameraMarker key={monitor.id} camera={monitor} onClick={() => {}} setMarkerRef={() => {}} />
+		})
+	}, [data])
+
 	return (
 		<div ref={containerRef} className="w-full h-full relative overflow-hidden">
-			<Map
-				mapId="DEMO_MAP_ID"
-				mapTypeId={mapType}
-				defaultZoom={12}
-				defaultCenter={position}
-				cameraControl
-				disableDefaultUI
-			></Map>
+			<Map mapId="DEMO_MAP_ID" center={center} mapTypeId={mapType} defaultZoom={12} cameraControl disableDefaultUI>
+				{renderCameraMakers()}
+			</Map>
 			<GroupCardsLeft />
 			<GroupButtonsRight isFullscreen={isFullscreen} toggleFullscreen={handleFullscreen} />
 			<div className="absolute bottom-20 right-[10px]">
