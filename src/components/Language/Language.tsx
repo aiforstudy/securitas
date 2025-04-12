@@ -39,13 +39,7 @@ const Language: React.FC<ILanguageProps> = () => {
 	)
 
 	return (
-		<Select
-			value={currentLang}
-			onValueChange={(value) => {
-				console.log(value)
-				changeLang()
-			}}
-		>
+		<Select value={currentLang} onValueChange={changeLang}>
 			<SelectTrigger className="w-10 md:w-[140px] h-10 text-sm font-normal px-2 font-bricolage">
 				<div className="flex items-center gap-2">
 					{currentLang === LANGUAGES.EN ? <EnFlag /> : <VnFlag />}

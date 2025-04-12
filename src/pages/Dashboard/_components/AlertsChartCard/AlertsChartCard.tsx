@@ -17,18 +17,6 @@ const AlertsChartCard: React.FC<AlertsChartCardProps> = ({ data, isLoading }) =>
 	const [chartData, setChartData] = useState<Record<string, number>>({})
 	const [chartConfig, setChartConfig] = useState<Record<string, { label: string; color: string }>>({})
 
-	// const allData = Object.keys(data?.engines || {}).map((key) => {
-	// 	const engine = data?.engines[key] as { name: string } | undefined
-	// 	const byEngine = data?.data?.reduce((acc, item) => {
-	// 		const value = item[key as keyof typeof item]
-	// 		return acc + (typeof value === "number" ? value : 0)
-	// 	}, 0)
-
-	// 	return { ...engine, key, total: byEngine || 0, [key]: byEngine || 0 }
-	// })
-
-	// console.log("allData", allData)
-
 	useLayoutEffect(() => {
 		const newChartData: Record<string, number> = {}
 		const newChartConfig: Record<string, { label: string; color: string }> = {}
@@ -56,7 +44,7 @@ const AlertsChartCard: React.FC<AlertsChartCardProps> = ({ data, isLoading }) =>
 				<CardTitle>Alerts</CardTitle>
 				<CardDescription></CardDescription>
 			</CardHeader>
-			<CardContent className="p-3 pr-0 w-[400px] max-h-[300px] overflow-hidden">
+			<CardContent className="p-3 pr-4 w-[400px] max-h-[300px] overflow-hidden">
 				{isLoading ? (
 					<Skeleton className="w-full h-[250px]" />
 				) : (

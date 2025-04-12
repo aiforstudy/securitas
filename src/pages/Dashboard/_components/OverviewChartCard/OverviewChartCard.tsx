@@ -27,8 +27,6 @@ const OverviewChartCard: React.FC<OverviewChartCardProps> = ({ data, isLoading }
 		}
 	})
 
-	console.log(config)
-
 	return (
 		<Card className="flex gap-2 py-3 flex-col">
 			<CardHeader className="p-3 pr-4 items-center pb-0 flex justify-between">

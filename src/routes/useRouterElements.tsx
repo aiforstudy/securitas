@@ -5,6 +5,7 @@ import FallbackLoader from "@/components/FallbackLoader"
 import { AuthLayout, MainLayout } from "@/components/Layouts"
 import { PATH } from "@/constants/path"
 import LoginPage from "@/pages/Authentication/Login"
+import CamerasPage from "@/pages/Cameras/CamerasPage"
 import ComingSoonPage from "@/pages/ComingSoon/ComingSoonPage"
 import DashboardPage from "@/pages/Dashboard"
 import DetectionsPage from "@/pages/Detections/DetectionsPage"
@@ -79,7 +80,7 @@ const useRouterElements = () => {
 							children: [
 								{
 									path: PATH.DEVICES.CAMERAS.ROOT,
-									element: withSuspense(ComingSoonPage),
+									element: withSuspense(CamerasPage),
 								},
 							],
 						},

@@ -278,191 +278,191 @@ export type CreateMonitorDto = {
 	/**
 	 * The name of the monitor
 	 */
-	name: string
+	name?: string
 	/**
 	 * The RTMP URI for the monitor stream
 	 */
-	rtmp_uri: string
+	rtmp_uri?: string
 	/**
 	 * Whether to play from source
 	 */
-	play_from_source: boolean
+	play_from_source?: boolean
 	/**
 	 * The engines configuration as JSON string
 	 */
-	engines: string
+	engines?: string
 	/**
 	 * Whether recording is enabled
 	 */
-	recording: boolean
+	recording?: boolean
 	/**
 	 * The graph configuration as JSON string
 	 */
-	graph: string
+	graph?: string
 	/**
 	 * The zone configuration as JSON string
 	 */
-	zone: string
+	zone?: string
 	/**
 	 * The type of monitor
 	 */
-	type: string
+	type?: string
 	/**
 	 * The device ID
 	 */
-	device_id: string
+	device_id?: string
 	/**
 	 * The machine ID
 	 */
-	machine_id: string
+	machine_id?: string
 	/**
 	 * The IP address
 	 */
-	ip: string
+	ip?: string
 	/**
 	 * The configuration version
 	 */
-	config: string
+	config?: string
 	/**
 	 * The time in
 	 */
-	time_in: string
+	time_in?: string
 	/**
 	 * The time out
 	 */
-	time_out: string
+	time_out?: string
 	/**
 	 * The socket ID
 	 */
-	socket_id: string
+	socket_id?: string
 	/**
 	 * The YS token
 	 */
-	ys_token: string
+	ys_token?: string
 	/**
 	 * The user ID
 	 */
-	user_id: string
+	user_id?: string
 	/**
 	 * The TNT value
 	 */
-	tnt: number
+	tnt?: number
 	/**
 	 * The FPT value
 	 */
-	fpt: number
+	fpt?: number
 	/**
 	 * The CONV value
 	 */
-	conv: number
+	conv?: number
 	/**
 	 * The connection URI
 	 */
-	connection_uri: string
+	connection_uri?: string
 	/**
 	 * The sub-connection URI
 	 */
-	sub_connection_uri: string
+	sub_connection_uri?: string
 	/**
 	 * The snapshot data
 	 */
-	snapshot: string
+	snapshot?: string
 	/**
 	 * The GPS coordinates
 	 */
-	gps_coordinates: string
+	gps_coordinates?: string
 	/**
 	 * The pending engines configuration
 	 */
-	pending_engines: string
+	pending_engines?: string
 	/**
 	 * The location
 	 */
-	location: string
+	location?: string
 	/**
 	 * The snapshot creation timestamp
 	 */
-	snapshot_created_at: string
+	snapshot_created_at?: string
 	/**
 	 * The handling office
 	 */
-	handling_office: string
+	handling_office?: string
 	/**
 	 * The battery sync status
 	 */
-	battery_sync: boolean
+	battery_sync?: boolean
 	/**
 	 * The battery threshold
 	 */
-	battery_threshold: number
+	battery_threshold?: number
 	/**
 	 * Whether approval is required
 	 */
-	require_approval: boolean
+	require_approval?: boolean
 	/**
 	 * The rule configuration
 	 */
-	rule: string
+	rule?: string
 	/**
 	 * The last ping timestamp
 	 */
-	last_ping_at: string
+	last_ping_at?: string
 	/**
 	 * The district
 	 */
-	district: string
+	district?: string
 	/**
 	 * Whether approval is not required
 	 */
-	dont_require_approval: boolean
+	dont_require_approval?: boolean
 	/**
 	 * The sequence number format
 	 */
-	seq_no_format: string
+	seq_no_format?: string
 	/**
 	 * The engines requiring approval
 	 */
-	engines_require_approval: string
+	engines_require_approval?: string
 	/**
 	 * The color
 	 */
-	color: string
+	color?: string
 	/**
 	 * The status of the monitor
 	 */
-	status: "CONNECTED" | "DISCONNECTED" | "UNAVAILABLE"
+	status?: "CONNECTED" | "DISCONNECTED" | "UNAVAILABLE"
 	/**
 	 * The serial number
 	 */
-	sn: string
+	sn?: string
 	/**
 	 * The description
 	 */
-	description: string
+	description?: string
 	/**
 	 * The camera identification
 	 */
-	camera_identification: string
+	camera_identification?: string
 	/**
 	 * The platform device ID
 	 */
-	platform_device_id: string
+	platform_device_id?: string
 	/**
 	 * The expiry date
 	 */
-	expiry_date: string
+	expiry_date?: string
 	/**
 	 * Whether the monitor is disabled
 	 */
-	disabled: boolean
+	disabled?: boolean
 	/**
 	 * The latest disabled timestamp
 	 */
-	latest_disabled_at: string
+	latest_disabled_at?: string
 	/**
 	 * The Zabbix host ID
 	 */
-	zabbix_host_id: string
+	zabbix_host_id?: string
 }
 
 /**
@@ -1081,35 +1081,35 @@ export type CreateDetectionDto = {
 	/**
 	 * The status of the detection
 	 */
-	status: "PENDING" | "APPROVED" | "REJECTED" | "COMPLETED"
+	status?: "PENDING" | "APPROVED" | "REJECTED" | "COMPLETED"
 	/**
 	 * The feedback status of the detection
 	 */
-	feedback_status: "UNMARK" | "APPROVED" | "REJECTED"
+	feedback_status?: "UNMARK" | "APPROVED" | "REJECTED"
 	/**
 	 * Whether the detection is an alert
 	 */
-	alert: string
+	alert?: string
 	/**
 	 * The district where the detection occurred
 	 */
-	district: string
+	district?: string
 	/**
 	 * The suspected offense
 	 */
-	suspected_offense: string
+	suspected_offense?: string
 	/**
 	 * The type of vehicle
 	 */
-	vehicle_type: string
+	vehicle_type?: string
 	/**
 	 * The license plate number
 	 */
-	license_plate: string
+	license_plate?: string
 	/**
 	 * Additional metadata about the detection
 	 */
-	metadata: {
+	metadata?: {
 		[key: string]: unknown
 	}
 	/**
@@ -1650,11 +1650,11 @@ export type DetectionControllerGetStatisticsData = {
 		/**
 		 * Timezone for date formatting
 		 */
-		timezone: string
+		timezone?: string
 		/**
 		 * Group by time unit
 		 */
-		group_by: "day" | "hour"
+		group_by?: "day" | "hour"
 	}
 	url: "/detections/statistics"
 }
