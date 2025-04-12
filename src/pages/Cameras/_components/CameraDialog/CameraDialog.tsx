@@ -70,7 +70,7 @@ const CameraDialog: React.FC<CameraDialogProps> = ({
 	})
 
 	const handleSubmit = async (values: CameraFormValues) => {
-		if (!companyCode && !editCamera) {
+		if (!companyCode) {
 			return
 		}
 
