@@ -3,9 +3,7 @@ import { useRef, useState } from "react"
 import Axios, { CancelTokenSource } from "axios"
 import Hls from "hls.js"
 
-import { CONFIG } from "@/constants/config"
 import { IStreamingCamera } from "@/types/liveView"
-import { sha256Hash } from "@/utils/hash"
 
 export const useStreaming = () => {
 	const hlsRef = useRef<Hls | null>(null)
@@ -16,12 +14,10 @@ export const useStreaming = () => {
 	const [videoPlayer, setVideoPlayer] = useState<HTMLVideoElement | null>(null)
 	const [loadStreamError, setLoadStreamError] = useState(false)
 
-	const startPlayHLS = async (id: string, link: string) => {
+	const startPlayHLS = async (url: string) => {
 		setLoading(true)
 		setLoadStreamError(false)
-		const streamRequestHash = id ?? (await sha256Hash(link))
 		if (videoPlayer) {
-			const url = `${CONFIG.HSL_STREAM_URL}/${streamRequestHash}/index.m3u8`
 			const CancelToken = Axios.CancelToken
 			const source = CancelToken.source()
 			cancelSourceRef.current = source
@@ -30,32 +26,7 @@ export const useStreaming = () => {
 				if (res.data) loadVideoSource(videoPlayer, url)
 			} catch (e) {
 				console.log("🚀 ~ useStreaming.ts:34 ~ e:", e)
-				// addStream(streamRequestHash, link)
-			} finally {
-				// setLoading(false)
 			}
-		}
-	}
-
-	const addStream = async (streamRequestHash: string, url?: string | null) => {
-		if (!url) {
-			setLoadStreamError(true)
-			setLoading(false)
-			return
-		}
-		try {
-			const res = await Axios.post(
-				`${CONFIG.API_URL}/v3/config/paths/add/${streamRequestHash}`,
-				JSON.stringify({ source: url }),
-			)
-			if (res.data) {
-				startPlayHLS(streamRequestHash, url)
-			}
-		} catch {
-			setLoadStreamError(true)
-			setTimeout(() => {
-				setLoading(false)
-			}, 1000)
 		}
 	}
 
@@ -85,8 +56,8 @@ export const useStreaming = () => {
 	}
 
 	const retry = (monitoring: IStreamingCamera) => {
-		if (videoPlayer && monitoring.url) {
-			startPlayHLS(monitoring.cameraId ?? "", monitoring.url)
+		if (videoPlayer && monitoring.hls_uri) {
+			startPlayHLS(monitoring.hls_uri)
 		}
 	}
 
@@ -99,7 +70,6 @@ export const useStreaming = () => {
 		loading,
 		loadStreamError,
 		setVideoPlayer,
-		addStream,
 		startPlayHLS,
 		retry,
 		setLoading,

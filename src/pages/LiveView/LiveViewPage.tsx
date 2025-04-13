@@ -5,6 +5,7 @@ import { EllipsisVertical, Loader2, Maximize, Minimize } from "lucide-react"
 
 import {
 	monitorControllerFindAllOptions,
+	monitorControllerFindAllQueryKey,
 	monitorControllerStartStreamMutation,
 } from "@/api-generated/@tanstack/react-query.gen"
 import { Button } from "@/components/ui/button"
@@ -12,8 +13,9 @@ import { DEFAULT_STREAM } from "@/constants/stream"
 import { cn } from "@/lib/utils"
 import LiveViewApi from "@/pages/LiveView/mocks/liveView"
 import { useGlobalStore } from "@/stores/global"
-import { ILiveViewDetailLayout, ILiveViewGridCol, ILiveViewTemplate } from "@/types/liveView"
+import { ILiveViewDetailLayout, ILiveViewGridCol, ILiveViewTemplate, IStreamingCamera } from "@/types/liveView"
 import { getGridItemClasses } from "@/utils/grid"
+import queryClient from "@/utils/query"
 
 import AddCameraDialog from "./_components/AddCameraDialog"
 import AddLayoutDialog from "./_components/AddLayoutDialog"
@@ -45,6 +47,13 @@ const LiveViewPage: React.FC = () => {
 	const [selectedTemplate, setSelectedTemplate] = useState<ILiveViewTemplate | null>(null)
 	const { mutateAsync: startStream } = useMutation({
 		...monitorControllerStartStreamMutation(),
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: monitorControllerFindAllQueryKey({
+					query: { page: 1, limit: 1000, company_code: selectedCompany?.company_code },
+				}),
+			})
+		},
 	})
 
 	useEffect(() => {
@@ -61,7 +70,7 @@ const LiveViewPage: React.FC = () => {
 								monitor: {
 									id: monitor?.id,
 									name: monitor?.name,
-									rtmp_uri: monitor?.rtmp_uri,
+									hls_uri: monitor?.hls_uri,
 									snapshot: monitor?.snapshot,
 									company_code: monitor?.company_code,
 									connection_uri: monitor?.connection_uri,
@@ -102,11 +111,12 @@ const LiveViewPage: React.FC = () => {
 		}
 	}
 
-	const getCameraStreamInfo = (col: ILiveViewGridCol) => {
+	const getCameraStreamInfo = (col: ILiveViewGridCol): IStreamingCamera => {
 		const camera = detailLayout?.layout?.positions?.find((e) => e?.grid_settings?.col === col?.col && e?.has_monitor)
 		if (camera) {
 			return {
 				url: camera?.monitor?.connection_uri,
+				hls_uri: camera?.monitor?.hls_uri,
 				snapshot: camera?.monitor?.snapshot,
 				cameraId: camera?.monitor?.id,
 				cameraName: camera?.monitor?.name,
@@ -165,7 +175,7 @@ const LiveViewPage: React.FC = () => {
 							<div key={col.col} className={`bg-gray-50 ${getGridItemClasses(col)} border-l-2 border-t-2`}>
 								<StreamingCamera
 									onAddCamera={() => setOpenAddNewCamera(true)}
-									streamingInfo={getCameraStreamInfo(col) as typeof DEFAULT_STREAM}
+									streamingInfo={getCameraStreamInfo(col)}
 								/>
 							</div>
 						)

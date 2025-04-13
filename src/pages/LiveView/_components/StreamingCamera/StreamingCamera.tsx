@@ -22,9 +22,7 @@ const StreamingCamera: React.FC<IStreamingCameraProps> = ({ viewOnly, onAddCamer
 		cancelSourceRef,
 		loadStreamError,
 		retry,
-		// setLoading,
 		startPlayHLS,
-		// setStreaming,
 		setVideoPlayer,
 	} = useStreaming()
 
@@ -37,8 +35,8 @@ const StreamingCamera: React.FC<IStreamingCameraProps> = ({ viewOnly, onAddCamer
 	}, [cancelSourceRef, hlsRef])
 
 	useEffect(() => {
-		if (videoPlayer && streamingInfo.url) {
-			startPlayHLS(streamingInfo.cameraId ?? "", streamingInfo.url)
+		if (videoPlayer && streamingInfo.hls_uri) {
+			startPlayHLS(streamingInfo.hls_uri)
 		} else {
 			if (hlsPlayer) {
 				hlsPlayer.stopLoad()
@@ -46,7 +44,7 @@ const StreamingCamera: React.FC<IStreamingCameraProps> = ({ viewOnly, onAddCamer
 			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [streamingInfo.cameraId, streamingInfo.url, videoPlayer])
+	}, [streamingInfo.hls_uri, videoPlayer])
 
 	return (
 		<div className="w-full h-full flex items-center justify-center relative">

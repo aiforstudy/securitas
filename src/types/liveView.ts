@@ -47,8 +47,8 @@ export type ILiveViewPositionCamera = {
 	monitor?: {
 		id: string
 		name: string
+		hls_uri: null | string
 		snapshot: string
-		rtmp_uri: null | string
 		company_code: string
 		connection_uri: string
 	}
@@ -59,8 +59,9 @@ export type ILiveViewPositionCamera = {
 }
 
 export type IStreamingCamera = {
-	url: string | null
-	snapshot: string | null
-	cameraId: string | null
-	cameraName: string | null
+	url?: string
+	hls_uri?: string | null
+	snapshot?: string
+	cameraId?: string
+	cameraName?: string
 }

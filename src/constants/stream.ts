@@ -1,6 +1,7 @@
 export const DEFAULT_STREAM = {
-	url: null,
-	snapshot: null,
-	cameraId: null,
-	cameraName: null,
+	url: undefined,
+	hls_uri: undefined,
+	snapshot: undefined,
+	cameraId: undefined,
+	cameraName: undefined,
 }
