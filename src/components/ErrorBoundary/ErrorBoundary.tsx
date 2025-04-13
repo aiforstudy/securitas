@@ -31,7 +31,7 @@ class ErrorBoundary extends Component<IErrorBoundaryProps, IErrorBoundaryState> 
 			// Render fallback UI if provided, otherwise default error UI
 			return (
 				this.props.fallback || (
-					<div className="flex flex-col items-center justify-center p-6 rounded-lg bg-destructive/10 text-destructive border border-destructive">
+					<div className="m-10 flex flex-col items-center justify-center p-6 rounded-lg bg-destructive/10 text-destructive border border-destructive">
 						<h2 className="text-lg font-semibold mb-2">Something went wrong</h2>
 						<p className="text-sm mb-4">{this.state.error?.message || "An unexpected error occurred"}</p>
 						<button

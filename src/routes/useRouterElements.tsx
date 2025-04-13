@@ -4,18 +4,20 @@ import { Navigate, useRoutes } from "react-router-dom"
 import FallbackLoader from "@/components/FallbackLoader"
 import { AuthLayout, MainLayout } from "@/components/Layouts"
 import { PATH } from "@/constants/path"
+import { ERole } from "@/enums/permissions"
 import LoginPage from "@/pages/Authentication/Login"
 import CamerasPage from "@/pages/Cameras/CamerasPage"
 import ComingSoonPage from "@/pages/ComingSoon/ComingSoonPage"
 import CompaniesPage from "@/pages/Companies/CompaniesPage"
 import DashboardPage from "@/pages/Dashboard"
 import DetectionsPage from "@/pages/Detections/DetectionsPage"
+import ForbiddenPage from "@/pages/Forbidden/ForbiddenPage"
 import LiveViewPage from "@/pages/LiveView/LiveViewPage"
+import NotFoundPage from "@/pages/NotFound/NotFoundPage"
 
 import GuardedProtectedRoute from "./guard/ProtectedRoute/ProtectedRoute"
 import GuardedRejectedRoute from "./guard/RejectedRoute/RejectedRoute"
-
-// import RoleProtectedRoute from "./guard/RoleProtectedRoute"
+import RoleProtectedRoute from "./guard/RoleProtectedRoute"
 
 const withSuspense = (Component: React.ComponentType) => {
 	return (
@@ -123,7 +125,7 @@ const useRouterElements = () => {
 								},
 								{
 									path: PATH.SYSTEM.COMPANIES,
-									element: withSuspense(CompaniesPage),
+									element: <RoleProtectedRoute element={withSuspense(CompaniesPage)} allowedRoles={[ERole.ADMIN]} />,
 								},
 							],
 						},
@@ -133,11 +135,11 @@ const useRouterElements = () => {
 		},
 		{
 			path: PATH.FORBIDDEN,
-			element: <div>403</div>,
+			element: withSuspense(ForbiddenPage),
 		},
 		{
 			path: "*",
-			element: <div>404</div>,
+			element: withSuspense(NotFoundPage),
 		},
 	])
 	return elements
