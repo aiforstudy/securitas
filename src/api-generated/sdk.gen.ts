@@ -57,6 +57,19 @@ import type {
 	MonitorControllerStartStreamData,
 	MonitorControllerUpdateData,
 	MonitorControllerUpdateResponse,
+	SmartLockControllerCreateData,
+	SmartLockControllerCreateResponse,
+	SmartLockControllerFindAllData,
+	SmartLockControllerFindAllResponse,
+	SmartLockControllerFindBySnData,
+	SmartLockControllerFindBySnResponse,
+	SmartLockControllerFindOneData,
+	SmartLockControllerFindOneResponse,
+	SmartLockControllerRemoveData,
+	SmartLockControllerSearchAndPaginateData,
+	SmartLockControllerSearchAndPaginateResponse,
+	SmartLockControllerUpdateData,
+	SmartLockControllerUpdateResponse,
 } from "./types.gen"
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = ClientOptions<
@@ -479,6 +492,94 @@ export const authControllerGetPermissions = <ThrowOnError extends boolean = fals
 			},
 		],
 		url: "/auth/permissions",
+		...options,
+	})
+}
+
+/**
+ * Get all smartlocks
+ */
+export const smartLockControllerFindAll = <ThrowOnError extends boolean = false>(
+	options?: Options<SmartLockControllerFindAllData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).get<SmartLockControllerFindAllResponse, unknown, ThrowOnError>({
+		url: "/smartlocks",
+		...options,
+	})
+}
+
+/**
+ * Create a new smartlock
+ */
+export const smartLockControllerCreate = <ThrowOnError extends boolean = false>(
+	options: Options<SmartLockControllerCreateData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).post<SmartLockControllerCreateResponse, unknown, ThrowOnError>({
+		url: "/smartlocks",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options?.headers,
+		},
+	})
+}
+
+/**
+ * Search and paginate smartlocks
+ */
+export const smartLockControllerSearchAndPaginate = <ThrowOnError extends boolean = false>(
+	options?: Options<SmartLockControllerSearchAndPaginateData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).get<SmartLockControllerSearchAndPaginateResponse, unknown, ThrowOnError>({
+		url: "/smartlocks/search",
+		...options,
+	})
+}
+
+/**
+ * Delete a smartlock
+ */
+export const smartLockControllerRemove = <ThrowOnError extends boolean = false>(
+	options: Options<SmartLockControllerRemoveData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).delete<unknown, unknown, ThrowOnError>({
+		url: "/smartlocks/{id}",
+		...options,
+	})
+}
+
+/**
+ * Get a smartlock by id
+ */
+export const smartLockControllerFindOne = <ThrowOnError extends boolean = false>(
+	options: Options<SmartLockControllerFindOneData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).get<SmartLockControllerFindOneResponse, unknown, ThrowOnError>({
+		url: "/smartlocks/{id}",
+		...options,
+	})
+}
+
+/**
+ * Update a smartlock
+ */
+export const smartLockControllerUpdate = <ThrowOnError extends boolean = false>(
+	options: Options<SmartLockControllerUpdateData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).patch<SmartLockControllerUpdateResponse, unknown, ThrowOnError>({
+		url: "/smartlocks/{id}",
+		...options,
+	})
+}
+
+/**
+ * Get a smartlock by serial number
+ */
+export const smartLockControllerFindBySn = <ThrowOnError extends boolean = false>(
+	options: Options<SmartLockControllerFindBySnData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).get<SmartLockControllerFindBySnResponse, unknown, ThrowOnError>({
+		url: "/smartlocks/sn/{sn}",
 		...options,
 	})
 }

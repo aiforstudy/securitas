@@ -3,13 +3,17 @@ import React, { useCallback, useEffect, useRef, useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { Map } from "@vis.gl/react-google-maps"
 
-import { monitorControllerFindAllOptions } from "@/api-generated/@tanstack/react-query.gen"
+import {
+	monitorControllerFindAllOptions,
+	smartLockControllerFindAllOptions,
+} from "@/api-generated/@tanstack/react-query.gen"
 import { EMapTypeId } from "@/enums/map"
 import { useGlobalStore } from "@/stores/global"
 
-import CameraMarker from "./_components/CameraMarker"
+import CameraMarker2 from "./_components/CameraMarker2"
 import GroupButtonsRight from "./_components/GroupButtonsRight"
 import GroupCardsLeft from "./_components/GroupCardsLeft"
+import SmartLockMarker from "./_components/SmartLockMarker"
 import SwitchMapType from "./_components/SwitchMapType"
 
 const DashboardPage: React.FC = () => {
@@ -18,9 +22,15 @@ const DashboardPage: React.FC = () => {
 	const [mapType, setMapType] = useState<EMapTypeId>(EMapTypeId.ROADMAP)
 	const [isFullscreen, setIsFullscreen] = useState(false)
 	const { selectedCompany } = useGlobalStore()
-	const { data } = useQuery({
+	const { data: monitors } = useQuery({
 		...monitorControllerFindAllOptions({
 			query: { page: 1, limit: 1000, company_code: selectedCompany?.company_code ?? "" },
+		}),
+		enabled: !!selectedCompany?.company_code,
+	})
+	const { data: smartLocks } = useQuery({
+		...smartLockControllerFindAllOptions({
+			query: { company_code: selectedCompany?.company_code },
 		}),
 		enabled: !!selectedCompany?.company_code,
 	})
@@ -46,10 +56,16 @@ const DashboardPage: React.FC = () => {
 	}
 
 	const renderCameraMakers = useCallback(() => {
-		return data?.data?.map((monitor) => {
-			return <CameraMarker key={monitor.id} camera={monitor} onClick={() => {}} setMarkerRef={() => {}} />
+		return monitors?.data?.map((monitor) => {
+			return <CameraMarker2 key={monitor.id} camera={monitor} onClick={() => {}} setMarkerRef={() => {}} />
 		})
-	}, [data])
+	}, [monitors])
+
+	const renderSmartLockMarkers = useCallback(() => {
+		return smartLocks?.map((smartLock) => {
+			return <SmartLockMarker key={smartLock.id} smartLock={smartLock} onClick={() => {}} setMarkerRef={() => {}} />
+		})
+	}, [smartLocks])
 
 	return (
 		<div ref={containerRef} className="w-full h-full relative overflow-hidden">
@@ -62,6 +78,7 @@ const DashboardPage: React.FC = () => {
 				disableDefaultUI
 			>
 				{renderCameraMakers()}
+				{renderSmartLockMarkers()}
 			</Map>
 			<GroupCardsLeft />
 			<GroupButtonsRight isFullscreen={isFullscreen} toggleFullscreen={handleFullscreen} />

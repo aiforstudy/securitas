@@ -882,6 +882,99 @@ export type UserPermissionsDto = {
 	permissions: Array<string>
 }
 
+export type CreateSmartLockDto = {
+	/**
+	 * Company code that owns the smartlock
+	 */
+	company_code: string
+	/**
+	 * Serial number of the smartlock
+	 */
+	sn: string
+	/**
+	 * Name of the smartlock
+	 */
+	name: string
+	/**
+	 * Latitude coordinate of the smartlock location
+	 */
+	lat: number
+	/**
+	 * Longitude coordinate of the smartlock location
+	 */
+	lng: number
+	/**
+	 * Connection status of the smartlock
+	 */
+	status?: "connected" | "disconnected"
+}
+
+export type SmartLock = {
+	/**
+	 * Unique identifier of the smartlock
+	 */
+	id: string
+	/**
+	 * Company code that owns the smartlock
+	 */
+	company_code: string
+	/**
+	 * Serial number of the smartlock
+	 */
+	sn: string
+	/**
+	 * Name of the smartlock
+	 */
+	name: string
+	/**
+	 * Latitude coordinate of the smartlock location
+	 */
+	lat: number
+	/**
+	 * Longitude coordinate of the smartlock location
+	 */
+	lng: number
+	/**
+	 * Connection status of the smartlock
+	 */
+	status: "connected" | "disconnected"
+	/**
+	 * Latest update time of the smartlock
+	 */
+	latest_time: string
+	/**
+	 * Creation timestamp
+	 */
+	created_at: string
+	/**
+	 * Last update timestamp
+	 */
+	updated_at: string
+}
+
+export type PaginatedResponseDto = {
+	/**
+	 * List of items
+	 */
+	items: Array<string>
+	/**
+	 * Total number of items
+	 */
+	total: number
+	/**
+	 * Current page number
+	 */
+	page: number
+	/**
+	 * Number of items per page
+	 */
+	limit: number
+	/**
+	 * Total number of pages
+	 */
+	totalPages: number
+}
+
 export type AppControllerGetHelloData = {
 	body?: never
 	path?: never
@@ -1651,6 +1744,207 @@ export type AuthControllerGetPermissionsResponses = {
 
 export type AuthControllerGetPermissionsResponse =
 	AuthControllerGetPermissionsResponses[keyof AuthControllerGetPermissionsResponses]
+
+export type SmartLockControllerFindAllData = {
+	body?: never
+	path?: never
+	query?: {
+		/**
+		 * Filter by company code
+		 */
+		company_code?: string
+		/**
+		 * Filter by connection status
+		 */
+		status?: "connected" | "disconnected"
+	}
+	url: "/smartlocks"
+}
+
+export type SmartLockControllerFindAllResponses = {
+	/**
+	 * Return all smartlocks.
+	 */
+	200: Array<SmartLock>
+}
+
+export type SmartLockControllerFindAllResponse =
+	SmartLockControllerFindAllResponses[keyof SmartLockControllerFindAllResponses]
+
+export type SmartLockControllerCreateData = {
+	body: CreateSmartLockDto
+	path?: never
+	query?: never
+	url: "/smartlocks"
+}
+
+export type SmartLockControllerCreateErrors = {
+	/**
+	 * Bad Request.
+	 */
+	400: unknown
+}
+
+export type SmartLockControllerCreateResponses = {
+	/**
+	 * The smartlock has been successfully created.
+	 */
+	201: SmartLock
+}
+
+export type SmartLockControllerCreateResponse =
+	SmartLockControllerCreateResponses[keyof SmartLockControllerCreateResponses]
+
+export type SmartLockControllerSearchAndPaginateData = {
+	body?: never
+	path?: never
+	query?: {
+		/**
+		 * Search by name or serial number
+		 */
+		search?: string
+		/**
+		 * Filter by company code
+		 */
+		company_code?: string
+		/**
+		 * Filter by connection status
+		 */
+		status?: "connected" | "disconnected"
+		/**
+		 * Page number (1-based)
+		 */
+		page?: number
+		/**
+		 * Number of items per page
+		 */
+		limit?: number
+	}
+	url: "/smartlocks/search"
+}
+
+export type SmartLockControllerSearchAndPaginateResponses = {
+	/**
+	 * Return paginated smartlocks.
+	 */
+	200: PaginatedResponseDto
+}
+
+export type SmartLockControllerSearchAndPaginateResponse =
+	SmartLockControllerSearchAndPaginateResponses[keyof SmartLockControllerSearchAndPaginateResponses]
+
+export type SmartLockControllerRemoveData = {
+	body?: never
+	path: {
+		/**
+		 * Smartlock ID
+		 */
+		id: string
+	}
+	query?: never
+	url: "/smartlocks/{id}"
+}
+
+export type SmartLockControllerRemoveErrors = {
+	/**
+	 * Smartlock not found.
+	 */
+	404: unknown
+}
+
+export type SmartLockControllerRemoveResponses = {
+	/**
+	 * The smartlock has been successfully deleted.
+	 */
+	200: unknown
+}
+
+export type SmartLockControllerFindOneData = {
+	body?: never
+	path: {
+		/**
+		 * Smartlock ID
+		 */
+		id: string
+	}
+	query?: never
+	url: "/smartlocks/{id}"
+}
+
+export type SmartLockControllerFindOneErrors = {
+	/**
+	 * Smartlock not found.
+	 */
+	404: unknown
+}
+
+export type SmartLockControllerFindOneResponses = {
+	/**
+	 * Return the smartlock.
+	 */
+	200: SmartLock
+}
+
+export type SmartLockControllerFindOneResponse =
+	SmartLockControllerFindOneResponses[keyof SmartLockControllerFindOneResponses]
+
+export type SmartLockControllerUpdateData = {
+	body?: never
+	path: {
+		/**
+		 * Smartlock ID
+		 */
+		id: string
+	}
+	query?: never
+	url: "/smartlocks/{id}"
+}
+
+export type SmartLockControllerUpdateErrors = {
+	/**
+	 * Smartlock not found.
+	 */
+	404: unknown
+}
+
+export type SmartLockControllerUpdateResponses = {
+	/**
+	 * The smartlock has been successfully updated.
+	 */
+	200: SmartLock
+}
+
+export type SmartLockControllerUpdateResponse =
+	SmartLockControllerUpdateResponses[keyof SmartLockControllerUpdateResponses]
+
+export type SmartLockControllerFindBySnData = {
+	body?: never
+	path: {
+		/**
+		 * Smartlock Serial Number
+		 */
+		sn: string
+	}
+	query?: never
+	url: "/smartlocks/sn/{sn}"
+}
+
+export type SmartLockControllerFindBySnErrors = {
+	/**
+	 * Smartlock not found.
+	 */
+	404: unknown
+}
+
+export type SmartLockControllerFindBySnResponses = {
+	/**
+	 * Return the smartlock.
+	 */
+	200: SmartLock
+}
+
+export type SmartLockControllerFindBySnResponse =
+	SmartLockControllerFindBySnResponses[keyof SmartLockControllerFindBySnResponses]
 
 export type ClientOptions = {
 	baseURL: string

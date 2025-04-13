@@ -40,6 +40,13 @@ import {
 	monitorControllerStartStream,
 	monitorControllerUpdate,
 	type Options,
+	smartLockControllerCreate,
+	smartLockControllerFindAll,
+	smartLockControllerFindBySn,
+	smartLockControllerFindOne,
+	smartLockControllerRemove,
+	smartLockControllerSearchAndPaginate,
+	smartLockControllerUpdate,
 } from "../sdk.gen"
 import type {
 	AppControllerGetHelloData,
@@ -90,6 +97,16 @@ import type {
 	MonitorControllerStartStreamData,
 	MonitorControllerUpdateData,
 	MonitorControllerUpdateResponse,
+	SmartLockControllerCreateData,
+	SmartLockControllerCreateResponse,
+	SmartLockControllerFindAllData,
+	SmartLockControllerFindBySnData,
+	SmartLockControllerFindOneData,
+	SmartLockControllerRemoveData,
+	SmartLockControllerSearchAndPaginateData,
+	SmartLockControllerSearchAndPaginateResponse,
+	SmartLockControllerUpdateData,
+	SmartLockControllerUpdateResponse,
 } from "../types.gen"
 
 export type QueryKey<TOptions extends Options> = [
@@ -1024,5 +1041,196 @@ export const authControllerGetPermissionsOptions = (options?: Options<AuthContro
 			return data
 		},
 		queryKey: authControllerGetPermissionsQueryKey(options),
+	})
+}
+
+export const smartLockControllerFindAllQueryKey = (options?: Options<SmartLockControllerFindAllData>) =>
+	createQueryKey("smartLockControllerFindAll", options)
+
+export const smartLockControllerFindAllOptions = (options?: Options<SmartLockControllerFindAllData>) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await smartLockControllerFindAll({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			})
+			return data
+		},
+		queryKey: smartLockControllerFindAllQueryKey(options),
+	})
+}
+
+export const smartLockControllerCreateQueryKey = (options: Options<SmartLockControllerCreateData>) =>
+	createQueryKey("smartLockControllerCreate", options)
+
+export const smartLockControllerCreateOptions = (options: Options<SmartLockControllerCreateData>) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await smartLockControllerCreate({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			})
+			return data
+		},
+		queryKey: smartLockControllerCreateQueryKey(options),
+	})
+}
+
+export const smartLockControllerCreateMutation = (options?: Partial<Options<SmartLockControllerCreateData>>) => {
+	const mutationOptions: UseMutationOptions<
+		SmartLockControllerCreateResponse,
+		AxiosError<DefaultError>,
+		Options<SmartLockControllerCreateData>
+	> = {
+		mutationFn: async (localOptions) => {
+			const { data } = await smartLockControllerCreate({
+				...options,
+				...localOptions,
+				throwOnError: true,
+			})
+			return data
+		},
+	}
+	return mutationOptions
+}
+
+export const smartLockControllerSearchAndPaginateQueryKey = (
+	options?: Options<SmartLockControllerSearchAndPaginateData>,
+) => createQueryKey("smartLockControllerSearchAndPaginate", options)
+
+export const smartLockControllerSearchAndPaginateOptions = (
+	options?: Options<SmartLockControllerSearchAndPaginateData>,
+) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await smartLockControllerSearchAndPaginate({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			})
+			return data
+		},
+		queryKey: smartLockControllerSearchAndPaginateQueryKey(options),
+	})
+}
+
+export const smartLockControllerSearchAndPaginateInfiniteQueryKey = (
+	options?: Options<SmartLockControllerSearchAndPaginateData>,
+): QueryKey<Options<SmartLockControllerSearchAndPaginateData>> =>
+	createQueryKey("smartLockControllerSearchAndPaginate", options, true)
+
+export const smartLockControllerSearchAndPaginateInfiniteOptions = (
+	options?: Options<SmartLockControllerSearchAndPaginateData>,
+) => {
+	return infiniteQueryOptions<
+		SmartLockControllerSearchAndPaginateResponse,
+		AxiosError<DefaultError>,
+		InfiniteData<SmartLockControllerSearchAndPaginateResponse>,
+		QueryKey<Options<SmartLockControllerSearchAndPaginateData>>,
+		number | Pick<QueryKey<Options<SmartLockControllerSearchAndPaginateData>>[0], "body" | "headers" | "path" | "query">
+	>(
+		// @ts-ignore
+		{
+			queryFn: async ({ pageParam, queryKey, signal }) => {
+				// @ts-ignore
+				const page: Pick<
+					QueryKey<Options<SmartLockControllerSearchAndPaginateData>>[0],
+					"body" | "headers" | "path" | "query"
+				> =
+					typeof pageParam === "object"
+						? pageParam
+						: {
+								query: {
+									page: pageParam,
+								},
+							}
+				const params = createInfiniteParams(queryKey, page)
+				const { data } = await smartLockControllerSearchAndPaginate({
+					...options,
+					...params,
+					signal,
+					throwOnError: true,
+				})
+				return data
+			},
+			queryKey: smartLockControllerSearchAndPaginateInfiniteQueryKey(options),
+		},
+	)
+}
+
+export const smartLockControllerRemoveMutation = (options?: Partial<Options<SmartLockControllerRemoveData>>) => {
+	const mutationOptions: UseMutationOptions<
+		unknown,
+		AxiosError<DefaultError>,
+		Options<SmartLockControllerRemoveData>
+	> = {
+		mutationFn: async (localOptions) => {
+			const { data } = await smartLockControllerRemove({
+				...options,
+				...localOptions,
+				throwOnError: true,
+			})
+			return data
+		},
+	}
+	return mutationOptions
+}
+
+export const smartLockControllerFindOneQueryKey = (options: Options<SmartLockControllerFindOneData>) =>
+	createQueryKey("smartLockControllerFindOne", options)
+
+export const smartLockControllerFindOneOptions = (options: Options<SmartLockControllerFindOneData>) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await smartLockControllerFindOne({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			})
+			return data
+		},
+		queryKey: smartLockControllerFindOneQueryKey(options),
+	})
+}
+
+export const smartLockControllerUpdateMutation = (options?: Partial<Options<SmartLockControllerUpdateData>>) => {
+	const mutationOptions: UseMutationOptions<
+		SmartLockControllerUpdateResponse,
+		AxiosError<DefaultError>,
+		Options<SmartLockControllerUpdateData>
+	> = {
+		mutationFn: async (localOptions) => {
+			const { data } = await smartLockControllerUpdate({
+				...options,
+				...localOptions,
+				throwOnError: true,
+			})
+			return data
+		},
+	}
+	return mutationOptions
+}
+
+export const smartLockControllerFindBySnQueryKey = (options: Options<SmartLockControllerFindBySnData>) =>
+	createQueryKey("smartLockControllerFindBySn", options)
+
+export const smartLockControllerFindBySnOptions = (options: Options<SmartLockControllerFindBySnData>) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await smartLockControllerFindBySn({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			})
+			return data
+		},
+		queryKey: smartLockControllerFindBySnQueryKey(options),
 	})
 }
