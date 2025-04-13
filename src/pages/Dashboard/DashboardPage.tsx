@@ -53,7 +53,14 @@ const DashboardPage: React.FC = () => {
 
 	return (
 		<div ref={containerRef} className="w-full h-full relative overflow-hidden">
-			<Map mapId="DEMO_MAP_ID" center={center} mapTypeId={mapType} defaultZoom={12} cameraControl disableDefaultUI>
+			<Map
+				mapId="DEMO_MAP_ID"
+				mapTypeId={mapType}
+				defaultZoom={12}
+				cameraControl
+				defaultCenter={center}
+				disableDefaultUI
+			>
 				{renderCameraMakers()}
 			</Map>
 			<GroupCardsLeft />
