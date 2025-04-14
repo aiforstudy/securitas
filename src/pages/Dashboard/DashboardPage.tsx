@@ -21,6 +21,10 @@ const DashboardPage: React.FC = () => {
 	const [center, setCenter] = useState<{ lat: number; lng: number }>({ lat: 10.8300923, lng: 106.6291799 })
 	const [mapType, setMapType] = useState<EMapTypeId>(EMapTypeId.ROADMAP)
 	const [isFullscreen, setIsFullscreen] = useState(false)
+	const [selectedId, setSelectedId] = useState<string | null>(null)
+	const [selectedMarker, setSelectedMarker] = useState<google.maps.marker.AdvancedMarkerElement | null>(null)
+	const [infoWindowShown, setInfoWindowShown] = useState(false)
+
 	const { selectedCompany } = useGlobalStore()
 	const { data: monitors } = useQuery({
 		...monitorControllerFindAllOptions({
@@ -56,21 +60,52 @@ const DashboardPage: React.FC = () => {
 	}
 
 	const renderCameraMakers = useCallback(() => {
-		return monitors?.data?.map((monitor) => {
-			return <CameraMarker2 key={monitor.id} camera={monitor} onClick={() => {}} setMarkerRef={() => {}} />
+		return monitors?.data?.map((monitor, index) => {
+			return (
+				<CameraMarker2
+					key={monitor.id}
+					index={index}
+					camera={monitor}
+					selectedId={selectedId}
+					selectedMarker={selectedMarker}
+					infoWindowShown={infoWindowShown}
+					setSelectedId={setSelectedId}
+					setSelectedMarker={setSelectedMarker}
+					setInfoWindowShown={setInfoWindowShown}
+				/>
+			)
 		})
-	}, [monitors])
+	}, [monitors, selectedId, selectedMarker, infoWindowShown, setSelectedId, setSelectedMarker, setInfoWindowShown])
 
 	const renderSmartLockMarkers = useCallback(() => {
-		return smartLocks?.map((smartLock) => {
-			return <SmartLockMarker key={smartLock.id} smartLock={smartLock} onClick={() => {}} setMarkerRef={() => {}} />
+		return smartLocks?.map((smartLock, index) => {
+			return (
+				<SmartLockMarker
+					key={smartLock.id}
+					index={index}
+					smartLock={smartLock}
+					selectedId={selectedId}
+					selectedMarker={selectedMarker}
+					infoWindowShown={infoWindowShown}
+					setSelectedId={setSelectedId}
+					setSelectedMarker={setSelectedMarker}
+					setInfoWindowShown={setInfoWindowShown}
+				/>
+			)
 		})
-	}, [smartLocks])
+	}, [smartLocks, selectedId, selectedMarker, infoWindowShown, setSelectedId, setSelectedMarker, setInfoWindowShown])
+
+	const onMapClick = useCallback(() => {
+		setSelectedId(null)
+		setSelectedMarker(null)
+		setInfoWindowShown(false)
+	}, [])
 
 	return (
 		<div ref={containerRef} className="w-full h-full relative overflow-hidden">
 			<Map
 				mapId="DEMO_MAP_ID"
+				onClick={onMapClick}
 				mapTypeId={mapType}
 				defaultZoom={12}
 				cameraControl
