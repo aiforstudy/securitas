@@ -70,6 +70,12 @@ import type {
 	SmartLockControllerSearchAndPaginateResponse,
 	SmartLockControllerUpdateData,
 	SmartLockControllerUpdateResponse,
+	SmartLockEventControllerCreateData,
+	SmartLockEventControllerCreateResponse,
+	SmartLockEventControllerFindAllData,
+	SmartLockEventControllerFindAllResponse,
+	SmartLockEventControllerFindOneData,
+	SmartLockEventControllerFindOneResponse,
 } from "./types.gen"
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = ClientOptions<
@@ -580,6 +586,46 @@ export const smartLockControllerFindBySn = <ThrowOnError extends boolean = false
 ) => {
 	return (options.client ?? _heyApiClient).get<SmartLockControllerFindBySnResponse, unknown, ThrowOnError>({
 		url: "/smartlocks/sn/{sn}",
+		...options,
+	})
+}
+
+/**
+ * Get all smart lock events with pagination
+ */
+export const smartLockEventControllerFindAll = <ThrowOnError extends boolean = false>(
+	options?: Options<SmartLockEventControllerFindAllData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).get<SmartLockEventControllerFindAllResponse, unknown, ThrowOnError>({
+		url: "/smartlock-events",
+		...options,
+	})
+}
+
+/**
+ * Create a new smart lock event
+ */
+export const smartLockEventControllerCreate = <ThrowOnError extends boolean = false>(
+	options: Options<SmartLockEventControllerCreateData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).post<SmartLockEventControllerCreateResponse, unknown, ThrowOnError>({
+		url: "/smartlock-events",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options?.headers,
+		},
+	})
+}
+
+/**
+ * Get a smart lock event by ID
+ */
+export const smartLockEventControllerFindOne = <ThrowOnError extends boolean = false>(
+	options: Options<SmartLockEventControllerFindOneData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).get<SmartLockEventControllerFindOneResponse, unknown, ThrowOnError>({
+		url: "/smartlock-events/{id}",
 		...options,
 	})
 }

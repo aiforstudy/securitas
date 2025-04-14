@@ -56,6 +56,13 @@ const REPORT_PERMISSION = {
 	EXPORT: "reports.export",
 }
 
+const SMART_LOCKS_PERMISSION = {
+	VIEW: "smart-locks.view",
+	CREATE: "smart-locks.create",
+	EDIT: "smart-locks.edit",
+	DELETE: "smart-locks.delete",
+}
+
 const PERMISSIONS = {
 	DASHBOARD: DASHBOARD_PERMISSION,
 	USER: USER_PERMISSION,
@@ -65,6 +72,7 @@ const PERMISSIONS = {
 	DETECTION: DETECTION_PERMISSION,
 	SETTING: SETTING_PERMISSION,
 	REPORT: REPORT_PERMISSION,
+	SMART_LOCKS: SMART_LOCKS_PERMISSION,
 }
 
 export default PERMISSIONS

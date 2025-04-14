@@ -7,14 +7,13 @@ import moment from "moment"
 import { toast } from "sonner"
 
 import {
-	engineControllerFindAllOptions,
-	monitorControllerCreateMutation,
-	monitorControllerFindAllOptions,
-	monitorControllerFindAllQueryKey,
-	monitorControllerRemoveMutation,
-	monitorControllerUpdateMutation,
+	smartLockControllerCreateMutation,
+	smartLockControllerFindAllQueryKey,
+	smartLockControllerRemoveMutation,
+	smartLockControllerSearchAndPaginateOptions,
+	smartLockControllerUpdateMutation,
 } from "@/api-generated/@tanstack/react-query.gen"
-import { CreateMonitorDto, Monitor, MonitorStatus, UpdateMonitorDto } from "@/api-generated/types.gen"
+import { CreateSmartLockDto, SmartLock } from "@/api-generated/types.gen"
 import { AppTable } from "@/components/AppTable"
 import PermissionCheck from "@/components/PermissionCheck"
 import {
@@ -33,99 +32,91 @@ import { DEFAULT_PAGINATION } from "@/constants/table"
 import { useGlobalStore } from "@/stores/global"
 import queryClient from "@/utils/query"
 
-import CameraDialog from "./_components/CameraDialog"
+import SmartLockDialog from "../SmartLockDialog"
 
-const columnHelper = createColumnHelper<Monitor>()
+const columnHelper = createColumnHelper<SmartLock>()
 
-const CamerasPage: React.FC = () => {
+const SmartLocks: React.FC = () => {
 	const { selectedCompany } = useGlobalStore()
-	const [editCamera, setEditCamera] = useState<Monitor | null>(null)
 	const [pagination, setPagination] = useState<PaginationState>(DEFAULT_PAGINATION)
-	const [selectedDelete, setSelectedDelete] = useState<Monitor | null>(null)
+	const [editSmartLock, setEditSmartLock] = useState<SmartLock | null>(null)
+	const [selectedDelete, setSelectedDelete] = useState<SmartLock | null>(null)
 	const [openCreateDialog, setOpenCreateDialog] = useState<boolean>(false)
 
 	const queryOptions = useMemo(() => {
 		return {
 			query: {
-				page: pagination.pageIndex + 1,
-				limit: pagination.pageSize,
 				company_code: selectedCompany?.company_code ?? "",
 			},
 		}
-	}, [pagination, selectedCompany?.company_code])
+	}, [selectedCompany?.company_code])
 
 	const { data, isLoading } = useQuery({
-		...monitorControllerFindAllOptions({ query: queryOptions.query }),
+		...smartLockControllerSearchAndPaginateOptions({ query: queryOptions.query }),
 		enabled: !!selectedCompany?.company_code,
 	})
 
-	const { data: engines } = useQuery({
-		...engineControllerFindAllOptions({ query: { page: 1, limit: 100 } }),
-	})
-
-	const { mutateAsync: createCamera, isPending: isCreating } = useMutation({
-		...monitorControllerCreateMutation(),
+	const { mutateAsync: createSmartLock, isPending: isCreating } = useMutation({
+		...smartLockControllerCreateMutation(),
 		onSuccess: () => {
-			toast.success("Camera created successfully")
+			toast.success("Smart lock created successfully")
 			setOpenCreateDialog(false)
 			queryClient.invalidateQueries({
-				queryKey: monitorControllerFindAllQueryKey({ query: queryOptions.query }),
+				queryKey: smartLockControllerFindAllQueryKey({ query: queryOptions.query }),
 			})
 		},
 		onError: () => {
-			toast.error("Failed to create camera")
+			toast.error("Failed to create smart lock")
 		},
 	})
 
-	const { mutateAsync: updateCamera, isPending: isUpdating } = useMutation({
-		...monitorControllerUpdateMutation(),
+	const { mutateAsync: updateSmartLock, isPending: isUpdating } = useMutation({
+		...smartLockControllerUpdateMutation(),
 		onSuccess: () => {
-			toast.success("Camera updated successfully")
-			setEditCamera(null)
+			toast.success("Smart lock updated successfully")
+			setEditSmartLock(null)
 			queryClient.invalidateQueries({
-				queryKey: monitorControllerFindAllQueryKey({ query: queryOptions.query }),
+				queryKey: smartLockControllerFindAllQueryKey({ query: queryOptions.query }),
 			})
 		},
 		onError: () => {
-			toast.error("Failed to update camera")
+			toast.error("Failed to update smart lock")
 		},
 	})
 
-	const { mutateAsync: deleteCamera, isPending: isDeleting } = useMutation({
-		...monitorControllerRemoveMutation(),
+	const { mutateAsync: deleteSmartLock, isPending: isDeleting } = useMutation({
+		...smartLockControllerRemoveMutation(),
 		onSuccess: () => {
-			toast.success("Camera deleted successfully")
+			toast.success("Smart lock deleted successfully")
 			setSelectedDelete(null)
-			queryClient.invalidateQueries({ queryKey: monitorControllerFindAllQueryKey({ query: queryOptions.query }) })
+			queryClient.invalidateQueries({ queryKey: smartLockControllerFindAllQueryKey({ query: queryOptions.query }) })
 		},
 		onError: () => {
-			toast.error("Failed to delete camera")
+			toast.error("Failed to delete smart lock")
 		},
 	})
 
-	const handleCameraSubmit = async (values: CreateMonitorDto | UpdateMonitorDto) => {
-		if (editCamera) {
-			await updateCamera({
-				path: { id: editCamera.id },
-				body: values as UpdateMonitorDto,
+	const handleSmartLockSubmit = async (values: CreateSmartLockDto) => {
+		if (editSmartLock) {
+			await updateSmartLock({
+				path: { id: editSmartLock.id },
+				body: values as unknown as never,
 			})
 		} else {
-			await createCamera({
-				body: values as CreateMonitorDto,
-			})
+			await createSmartLock({ body: values })
 		}
 	}
 
 	const handleOpenEditDialog = useCallback(
-		(camera: Monitor) => {
-			setEditCamera(camera)
+		(smartLock: SmartLock) => {
+			setEditSmartLock(smartLock)
 		},
-		[setEditCamera],
+		[setEditSmartLock],
 	)
 
 	const handleCloseDialog = () => {
 		setOpenCreateDialog(false)
-		setEditCamera(null)
+		setEditSmartLock(null)
 	}
 
 	const columns = useMemo(
@@ -135,9 +126,9 @@ const CamerasPage: React.FC = () => {
 				header: () => <span>Name</span>,
 				footer: (info) => info.column.id,
 			}),
-			columnHelper.accessor("connection_uri", {
-				cell: (info) => <div className="relative ">{info.getValue()}</div>,
-				header: () => <span>Connection URI</span>,
+			columnHelper.accessor("sn", {
+				cell: (info) => <div className="relative">{info.getValue()}</div>,
+				header: () => <span>Serial Number</span>,
 				footer: (info) => info.column.id,
 			}),
 			columnHelper.accessor("status", {
@@ -145,9 +136,9 @@ const CamerasPage: React.FC = () => {
 					const statusValue = info.getValue()
 					let statusClass = "text-red-600" // Default for UNAVAILABLE
 
-					if (statusValue === MonitorStatus.CONNECTED) {
+					if (statusValue === "connected") {
 						statusClass = "text-green-600"
-					} else if (statusValue === MonitorStatus.DISCONNECTED) {
+					} else if (statusValue === "disconnected") {
 						statusClass = "text-orange-600"
 					}
 
@@ -170,12 +161,12 @@ const CamerasPage: React.FC = () => {
 				id: "actions",
 				cell: (info) => (
 					<div className="flex gap-2 relative justify-end text-right">
-						<PermissionCheck allowPermission={PERMISSIONS.MONITOR.EDIT}>
+						<PermissionCheck allowPermission={PERMISSIONS.SMART_LOCKS.EDIT}>
 							<Button size="icon" onClick={() => handleOpenEditDialog(info.row.original)} variant="outline">
 								<Edit className="h-4 w-4" />
 							</Button>
 						</PermissionCheck>
-						<PermissionCheck allowPermission={PERMISSIONS.MONITOR.DELETE}>
+						<PermissionCheck allowPermission={PERMISSIONS.SMART_LOCKS.DELETE}>
 							<Button size="icon" onClick={() => setSelectedDelete(info.row.original)} variant="outline">
 								<Trash2 className="h-4 w-4" />
 							</Button>
@@ -194,40 +185,39 @@ const CamerasPage: React.FC = () => {
 	)
 
 	return (
-		<div className="p-5 flex flex-col gap-5 h-full">
-			<div className="w-full flex gap-4 items-center justify-between">
-				<h3 className="text-xl text-dark-700 font-semibold">List of cameras</h3>
-				<PermissionCheck allowPermission={PERMISSIONS.MONITOR.CREATE}>
+		<div className="w-full h-full pb-5">
+			<div className="w-full mt-3 mb-5 flex gap-4 items-center justify-between">
+				<h3 className="text-xl text-dark-700 font-semibold">List of smart locks</h3>
+				<PermissionCheck allowPermission={PERMISSIONS.SMART_LOCKS.CREATE}>
 					<Button onClick={() => setOpenCreateDialog(true)}>
-						<Plus className="h-4 w-4" /> Add Camera
+						<Plus className="h-4 w-4" /> Add Smart Lock
 					</Button>
 				</PermissionCheck>
 			</div>
 
-			<div className="pb-5">
-				<AppTable<Monitor>
-					options={{
-						data: data?.data || [],
-						state: { pagination },
-						columns,
-						getRowId: (row) => row.id,
-						pageCount: data?.total_pages ?? 0,
-						manualPagination: true,
-						onPaginationChange: setPagination,
-					}}
-					loading={{ spinning: isLoading }}
-					pagination
-				/>
-			</div>
+			<AppTable<SmartLock>
+				options={{
+					data: (data?.items as unknown as SmartLock[]) || [],
+					state: { pagination },
+					columns,
+					getRowId: (row) => row.id,
+					pageCount: data?.totalPages ?? 0,
+					manualPagination: true,
+					onPaginationChange: (pagination) => {
+						setPagination(pagination)
+					},
+				}}
+				loading={{ spinning: isLoading }}
+				pagination
+			/>
 
-			<CameraDialog
-				open={openCreateDialog || !!editCamera}
-				engines={engines?.data}
-				onSubmit={handleCameraSubmit}
+			<SmartLockDialog
+				open={openCreateDialog || !!editSmartLock}
+				onSubmit={handleSmartLockSubmit}
 				isLoading={isCreating || isUpdating}
-				editCamera={editCamera}
 				companyCode={selectedCompany?.company_code ?? ""}
 				onOpenChange={handleCloseDialog}
+				editSmartLock={editSmartLock}
 			/>
 
 			<AlertDialog open={!!selectedDelete} onOpenChange={() => setSelectedDelete(null)}>
@@ -235,13 +225,13 @@ const CamerasPage: React.FC = () => {
 					<AlertDialogHeader>
 						<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
 						<AlertDialogDescription>
-							This action cannot be undone. This will permanently delete the camera and remove it from our servers.
+							This action cannot be undone. This will permanently delete the smart lock and remove it from our servers.
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>
 						<AlertDialogCancel className="h-10">Cancel</AlertDialogCancel>
 						<AlertDialogAction
-							onClick={() => selectedDelete && deleteCamera({ path: { id: selectedDelete.id } })}
+							onClick={() => selectedDelete && deleteSmartLock({ path: { id: selectedDelete.id } })}
 							disabled={isDeleting}
 							className="bg-red-500 hover:bg-red-600 h-10"
 						>
@@ -254,4 +244,4 @@ const CamerasPage: React.FC = () => {
 	)
 }
 
-export default CamerasPage
+export default SmartLocks

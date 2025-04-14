@@ -14,6 +14,7 @@ import DetectionsPage from "@/pages/Detections/DetectionsPage"
 import ForbiddenPage from "@/pages/Forbidden/ForbiddenPage"
 import LiveViewPage from "@/pages/LiveView/LiveViewPage"
 import NotFoundPage from "@/pages/NotFound/NotFoundPage"
+import SmartLocksPage from "@/pages/SmartLocks/SmartLocksPage"
 
 import GuardedProtectedRoute from "./guard/ProtectedRoute/ProtectedRoute"
 import GuardedRejectedRoute from "./guard/RejectedRoute/RejectedRoute"
@@ -84,6 +85,10 @@ const useRouterElements = () => {
 								{
 									path: PATH.DEVICES.CAMERAS.ROOT,
 									element: withSuspense(CamerasPage),
+								},
+								{
+									path: PATH.DEVICES.SMART_LOCKS.ROOT,
+									element: withSuspense(SmartLocksPage),
 								},
 							],
 						},

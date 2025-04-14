@@ -47,6 +47,9 @@ import {
 	smartLockControllerRemove,
 	smartLockControllerSearchAndPaginate,
 	smartLockControllerUpdate,
+	smartLockEventControllerCreate,
+	smartLockEventControllerFindAll,
+	smartLockEventControllerFindOne,
 } from "../sdk.gen"
 import type {
 	AppControllerGetHelloData,
@@ -107,6 +110,11 @@ import type {
 	SmartLockControllerSearchAndPaginateResponse,
 	SmartLockControllerUpdateData,
 	SmartLockControllerUpdateResponse,
+	SmartLockEventControllerCreateData,
+	SmartLockEventControllerCreateResponse,
+	SmartLockEventControllerFindAllData,
+	SmartLockEventControllerFindAllResponse,
+	SmartLockEventControllerFindOneData,
 } from "../types.gen"
 
 export type QueryKey<TOptions extends Options> = [
@@ -1232,5 +1240,123 @@ export const smartLockControllerFindBySnOptions = (options: Options<SmartLockCon
 			return data
 		},
 		queryKey: smartLockControllerFindBySnQueryKey(options),
+	})
+}
+
+export const smartLockEventControllerFindAllQueryKey = (options?: Options<SmartLockEventControllerFindAllData>) =>
+	createQueryKey("smartLockEventControllerFindAll", options)
+
+export const smartLockEventControllerFindAllOptions = (options?: Options<SmartLockEventControllerFindAllData>) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await smartLockEventControllerFindAll({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			})
+			return data
+		},
+		queryKey: smartLockEventControllerFindAllQueryKey(options),
+	})
+}
+
+export const smartLockEventControllerFindAllInfiniteQueryKey = (
+	options?: Options<SmartLockEventControllerFindAllData>,
+): QueryKey<Options<SmartLockEventControllerFindAllData>> =>
+	createQueryKey("smartLockEventControllerFindAll", options, true)
+
+export const smartLockEventControllerFindAllInfiniteOptions = (
+	options?: Options<SmartLockEventControllerFindAllData>,
+) => {
+	return infiniteQueryOptions<
+		SmartLockEventControllerFindAllResponse,
+		AxiosError<DefaultError>,
+		InfiniteData<SmartLockEventControllerFindAllResponse>,
+		QueryKey<Options<SmartLockEventControllerFindAllData>>,
+		number | Pick<QueryKey<Options<SmartLockEventControllerFindAllData>>[0], "body" | "headers" | "path" | "query">
+	>(
+		// @ts-ignore
+		{
+			queryFn: async ({ pageParam, queryKey, signal }) => {
+				// @ts-ignore
+				const page: Pick<
+					QueryKey<Options<SmartLockEventControllerFindAllData>>[0],
+					"body" | "headers" | "path" | "query"
+				> =
+					typeof pageParam === "object"
+						? pageParam
+						: {
+								query: {
+									page: pageParam,
+								},
+							}
+				const params = createInfiniteParams(queryKey, page)
+				const { data } = await smartLockEventControllerFindAll({
+					...options,
+					...params,
+					signal,
+					throwOnError: true,
+				})
+				return data
+			},
+			queryKey: smartLockEventControllerFindAllInfiniteQueryKey(options),
+		},
+	)
+}
+
+export const smartLockEventControllerCreateQueryKey = (options: Options<SmartLockEventControllerCreateData>) =>
+	createQueryKey("smartLockEventControllerCreate", options)
+
+export const smartLockEventControllerCreateOptions = (options: Options<SmartLockEventControllerCreateData>) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await smartLockEventControllerCreate({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			})
+			return data
+		},
+		queryKey: smartLockEventControllerCreateQueryKey(options),
+	})
+}
+
+export const smartLockEventControllerCreateMutation = (
+	options?: Partial<Options<SmartLockEventControllerCreateData>>,
+) => {
+	const mutationOptions: UseMutationOptions<
+		SmartLockEventControllerCreateResponse,
+		AxiosError<DefaultError>,
+		Options<SmartLockEventControllerCreateData>
+	> = {
+		mutationFn: async (localOptions) => {
+			const { data } = await smartLockEventControllerCreate({
+				...options,
+				...localOptions,
+				throwOnError: true,
+			})
+			return data
+		},
+	}
+	return mutationOptions
+}
+
+export const smartLockEventControllerFindOneQueryKey = (options: Options<SmartLockEventControllerFindOneData>) =>
+	createQueryKey("smartLockEventControllerFindOne", options)
+
+export const smartLockEventControllerFindOneOptions = (options: Options<SmartLockEventControllerFindOneData>) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await smartLockEventControllerFindOne({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			})
+			return data
+		},
+		queryKey: smartLockEventControllerFindOneQueryKey(options),
 	})
 }

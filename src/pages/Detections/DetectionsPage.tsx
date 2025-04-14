@@ -206,7 +206,7 @@ const DetectionsPage: React.FC = () => {
 	)
 
 	return (
-		<div className="p-5 h-full space-y-4">
+		<div className="p-5 flex flex-col gap-5 h-full">
 			<div className="w-full flex gap-4 items-center">
 				<h3 className="text-xl text-dark-700 font-semibold">List of alerts</h3>
 				<div className="w-[200px]">
@@ -230,25 +230,27 @@ const DetectionsPage: React.FC = () => {
 				)}
 			</div>
 
-			<AppTable<Detection>
-				options={{
-					data: data?.data || [],
-					state: { pagination, rowSelection },
-					columns,
-					getRowId: (row) => row.id,
-					pageCount: data?.total_pages ?? 0,
-					manualPagination: true,
-					onPaginationChange: (pagination) => {
-						setPagination(pagination)
-						setRowSelection({})
-					},
-					enableRowSelection: true,
-					onRowSelectionChange: setRowSelection,
-				}}
-				loading={{ spinning: isLoading }}
-				className="h-[calc(100%-44px-69px-16px)]"
-				pagination
-			/>
+			<div className="pb-5">
+				<AppTable<Detection>
+					options={{
+						data: data?.data || [],
+						state: { pagination, rowSelection },
+						columns,
+						getRowId: (row) => row.id,
+						pageCount: data?.total_pages ?? 0,
+						manualPagination: true,
+						onPaginationChange: (pagination) => {
+							setPagination(pagination)
+							setRowSelection({})
+						},
+						enableRowSelection: true,
+						onRowSelectionChange: setRowSelection,
+					}}
+					loading={{ spinning: isLoading }}
+					// className="h-[calc(100%-44px-69px-16px)]"
+					pagination
+				/>
+			</div>
 
 			<Dialog open={!!openVideo} onOpenChange={() => setOpenVideo("")}>
 				<DialogContent className="pt-12 !max-w-[800px]">

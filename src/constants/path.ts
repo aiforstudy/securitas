@@ -31,6 +31,11 @@ export const PATH = {
 			ADD: addBaseUrl("/devices/cameras/add"),
 			EDIT: addBaseUrl("/devices/cameras/edit"),
 		},
+		SMART_LOCKS: {
+			ROOT: addBaseUrl("/devices/smart-locks"),
+			ADD: addBaseUrl("/devices/smart-locks/add"),
+			EDIT: addBaseUrl("/devices/smart-locks/edit"),
+		},
 	},
 	OPERATIONS: {
 		ROOT: addBaseUrl("/operations"),

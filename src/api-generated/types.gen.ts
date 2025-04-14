@@ -975,6 +975,72 @@ export type PaginatedResponseDto = {
 	totalPages: number
 }
 
+export type CreateSmartLockEventDto = {
+	/**
+	 * Serial number of the smartlock
+	 */
+	sn: string
+	/**
+	 * Latitude coordinate
+	 */
+	lat: number
+	/**
+	 * Longitude coordinate
+	 */
+	lng: number
+	/**
+	 * Temperature in Celsius
+	 */
+	temperature: number
+	/**
+	 * Humidity percentage
+	 */
+	humidity: number
+	/**
+	 * Battery level percentage
+	 */
+	battery_level: number
+}
+
+export type SmartLockEvent = {
+	/**
+	 * Unique identifier for the event
+	 */
+	id: string
+	/**
+	 * Serial number of the smart lock
+	 */
+	sn: string
+	/**
+	 * Latitude of the event location
+	 */
+	lat: number
+	/**
+	 * Longitude of the event location
+	 */
+	lng: number
+	/**
+	 * Temperature in Celsius
+	 */
+	temperature: number
+	/**
+	 * Humidity percentage
+	 */
+	humidity: number
+	/**
+	 * Battery level percentage
+	 */
+	battery_level: number
+	/**
+	 * Timestamp when the event was created
+	 */
+	created_at: string
+	/**
+	 * Timestamp when the event was last updated
+	 */
+	updated_at: string
+}
+
 export type AppControllerGetHelloData = {
 	body?: never
 	path?: never
@@ -1750,6 +1816,10 @@ export type SmartLockControllerFindAllData = {
 	path?: never
 	query?: {
 		/**
+		 * Search by name or serial number
+		 */
+		search?: string
+		/**
 		 * Filter by company code
 		 */
 		company_code?: string
@@ -1800,17 +1870,13 @@ export type SmartLockControllerSearchAndPaginateData = {
 	path?: never
 	query?: {
 		/**
-		 * Search by name or serial number
+		 * Search term for name or serial number
 		 */
 		search?: string
 		/**
-		 * Filter by company code
+		 * Company code associated with the smart lock
 		 */
 		company_code?: string
-		/**
-		 * Filter by connection status
-		 */
-		status?: "connected" | "disconnected"
 		/**
 		 * Page number (1-based)
 		 */
@@ -1819,6 +1885,18 @@ export type SmartLockControllerSearchAndPaginateData = {
 		 * Number of items per page
 		 */
 		limit?: number
+		/**
+		 * Status of the smart lock
+		 */
+		status?: "connected" | "disconnected"
+		/**
+		 * Start date for filtering by latest_time (ISO format)
+		 */
+		from?: string
+		/**
+		 * End date for filtering by latest_time (ISO format)
+		 */
+		to?: string
 	}
 	url: "/smartlocks/search"
 }
@@ -1945,6 +2023,94 @@ export type SmartLockControllerFindBySnResponses = {
 
 export type SmartLockControllerFindBySnResponse =
 	SmartLockControllerFindBySnResponses[keyof SmartLockControllerFindBySnResponses]
+
+export type SmartLockEventControllerFindAllData = {
+	body?: never
+	path?: never
+	query?: {
+		/**
+		 * Page number (1-based)
+		 */
+		page?: number
+		/**
+		 * Number of items per page
+		 */
+		limit?: number
+		/**
+		 * Serial number to filter events
+		 */
+		sn?: string
+		/**
+		 * Start date for filtering events (ISO format)
+		 */
+		from?: string
+		/**
+		 * End date for filtering events (ISO format)
+		 */
+		to?: string
+	}
+	url: "/smartlock-events"
+}
+
+export type SmartLockEventControllerFindAllResponses = {
+	/**
+	 * Return all events with pagination.
+	 */
+	200: Array<PaginatedResponseDto>
+}
+
+export type SmartLockEventControllerFindAllResponse =
+	SmartLockEventControllerFindAllResponses[keyof SmartLockEventControllerFindAllResponses]
+
+export type SmartLockEventControllerCreateData = {
+	body: CreateSmartLockEventDto
+	path?: never
+	query?: never
+	url: "/smartlock-events"
+}
+
+export type SmartLockEventControllerCreateErrors = {
+	/**
+	 * Smart lock not found.
+	 */
+	404: unknown
+}
+
+export type SmartLockEventControllerCreateResponses = {
+	/**
+	 * The event has been successfully created.
+	 */
+	201: SmartLockEvent
+}
+
+export type SmartLockEventControllerCreateResponse =
+	SmartLockEventControllerCreateResponses[keyof SmartLockEventControllerCreateResponses]
+
+export type SmartLockEventControllerFindOneData = {
+	body?: never
+	path: {
+		id: string
+	}
+	query?: never
+	url: "/smartlock-events/{id}"
+}
+
+export type SmartLockEventControllerFindOneErrors = {
+	/**
+	 * Event not found.
+	 */
+	404: unknown
+}
+
+export type SmartLockEventControllerFindOneResponses = {
+	/**
+	 * Return the event.
+	 */
+	200: SmartLockEvent
+}
+
+export type SmartLockEventControllerFindOneResponse =
+	SmartLockEventControllerFindOneResponses[keyof SmartLockEventControllerFindOneResponses]
 
 export type ClientOptions = {
 	baseURL: string
