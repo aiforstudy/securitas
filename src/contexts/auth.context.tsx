@@ -3,11 +3,12 @@ import React, { createContext, useCallback, useContext, useMemo, useState } from
 import isEmpty from "lodash/isEmpty"
 
 import { STORAGE_KEYS } from "@/constants/storage"
+import { ERole } from "@/enums/permissions"
 import { localS } from "@/utils/storage"
 
 export type ICurrentUser = {
 	id: string
-	role: string
+	role: ERole
 	name: string
 	email: string
 	permissions: string[]

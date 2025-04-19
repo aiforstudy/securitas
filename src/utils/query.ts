@@ -11,6 +11,7 @@ const initializeClient = async () => {
 		headers: {
 			Authorization: `Bearer ${token}`,
 		},
+		timeout: 30000,
 	})
 }
 

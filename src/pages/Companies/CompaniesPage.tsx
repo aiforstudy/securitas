@@ -1,18 +1,10 @@
 import React, { useCallback, useMemo, useState } from "react"
 
-import { useMutation, useQuery } from "@tanstack/react-query"
 import { createColumnHelper, PaginationState } from "@tanstack/react-table"
 import { Edit, Plus, Trash2 } from "lucide-react"
 import moment from "moment"
 import { toast } from "sonner"
 
-import {
-	companyControllerCreateMutation,
-	companyControllerFindAllOptions,
-	companyControllerFindAllQueryKey,
-	companyControllerRemoveMutation,
-	companyControllerUpdateMutation,
-} from "@/api-generated/@tanstack/react-query.gen"
 import { Company, CreateCompanyDto, UpdateCompanyDto } from "@/api-generated/types.gen"
 import { AppTable } from "@/components/AppTable"
 import PermissionCheck from "@/components/PermissionCheck"
@@ -29,6 +21,7 @@ import {
 import { Button } from "@/components/ui/button"
 import PERMISSIONS from "@/constants/permissions"
 import { DEFAULT_PAGINATION } from "@/constants/table"
+import useCompanyApi from "@/hooks/useCompanyApi"
 import queryClient from "@/utils/query"
 
 import CompanyDialog from "./_components/CompanyDialog"
@@ -50,60 +43,40 @@ const CompaniesPage: React.FC = () => {
 		}
 	}, [pagination])
 
-	const { data, isLoading } = useQuery({
-		...companyControllerFindAllOptions({ query: queryOptions.query }),
-	})
-
-	const { mutateAsync: createCompany, isPending: isCreating } = useMutation({
-		...companyControllerCreateMutation(),
-		onSuccess: () => {
-			toast.success("Company created successfully")
-			setOpenCreateDialog(false)
-			queryClient.invalidateQueries({
-				queryKey: companyControllerFindAllQueryKey({ query: queryOptions.query }),
-			})
-		},
-		onError: () => {
-			toast.error("Failed to create company")
-		},
-	})
-
-	const { mutateAsync: updateCompany, isPending: isUpdating } = useMutation({
-		...companyControllerUpdateMutation(),
-		onSuccess: () => {
-			toast.success("Company updated successfully")
-			setEditCompany(null)
-			queryClient.invalidateQueries({
-				queryKey: companyControllerFindAllQueryKey({ query: queryOptions.query }),
-			})
-		},
-		onError: () => {
-			toast.error("Failed to update company")
-		},
-	})
-
-	const { mutateAsync: deleteCompany, isPending: isDeleting } = useMutation({
-		...companyControllerRemoveMutation(),
-		onSuccess: () => {
-			toast.success("Company deleted successfully")
-			setSelectedDelete(null)
-			queryClient.invalidateQueries({ queryKey: companyControllerFindAllQueryKey({ query: queryOptions.query }) })
-		},
-		onError: () => {
-			toast.error("Failed to delete company")
-		},
+	const { companies, createCompany, updateCompany, deleteCompany } = useCompanyApi({
+		query: queryOptions.query,
 	})
 
 	const handleCompanySubmit = async (values: CreateCompanyDto | UpdateCompanyDto) => {
 		if (editCompany) {
-			await updateCompany({
-				path: { code: editCompany.company_code },
-				body: values as UpdateCompanyDto,
-			})
+			try {
+				const response = await updateCompany.mutateAsync({
+					path: { code: editCompany.company_code },
+					body: values as UpdateCompanyDto,
+				})
+				if (response?.id) {
+					toast.success("Company updated successfully")
+					setEditCompany(null)
+					queryClient.invalidateQueries({ queryKey: companies.queryKey })
+				}
+			} catch (e) {
+				const error = e as Error
+				toast.error(`Failed to update company: ${error.message}`)
+			}
 		} else {
-			await createCompany({
-				body: values as CreateCompanyDto,
-			})
+			try {
+				const response = await createCompany.mutateAsync({
+					body: values as CreateCompanyDto,
+				})
+				if (response?.id) {
+					toast.success("Company created successfully")
+					setOpenCreateDialog(false)
+					queryClient.invalidateQueries({ queryKey: companies.queryKey })
+				}
+			} catch (e) {
+				const error = e as Error
+				toast.error(`Failed to create company: ${error.message}`)
+			}
 		}
 	}
 
@@ -163,6 +136,20 @@ const CompaniesPage: React.FC = () => {
 		[handleOpenEditDialog],
 	)
 
+	const handleDeleteCompany = async (company: Company) => {
+		try {
+			await deleteCompany.mutateAsync({
+				path: { code: company.company_code },
+			})
+			toast.success("Company deleted successfully")
+			setSelectedDelete(null)
+			queryClient.invalidateQueries({ queryKey: companies.queryKey })
+		} catch (e) {
+			const error = e as Error
+			toast.error(`Failed to delete company: ${error.message}`)
+		}
+	}
+
 	return (
 		<div className="p-5 h-full space-y-4">
 			<div className="w-full flex gap-4 items-center justify-between">
@@ -176,15 +163,15 @@ const CompaniesPage: React.FC = () => {
 
 			<AppTable<Company>
 				options={{
-					data: data?.data || [],
+					data: companies.data?.data || [],
 					state: { pagination },
 					columns,
 					getRowId: (row) => row.company_code,
-					pageCount: data?.total_pages ?? 0,
+					pageCount: companies.data?.total_pages ?? 0,
 					manualPagination: true,
 					onPaginationChange: setPagination,
 				}}
-				loading={{ spinning: isLoading }}
+				loading={{ spinning: companies.isLoading }}
 				className="h-[calc(100%-44px-69px-16px)]"
 				pagination
 			/>
@@ -192,7 +179,7 @@ const CompaniesPage: React.FC = () => {
 			<CompanyDialog
 				open={openCreateDialog || !!editCompany}
 				onSubmit={handleCompanySubmit}
-				isLoading={isCreating || isUpdating}
+				isLoading={createCompany.isPending || updateCompany.isPending}
 				editCompany={editCompany}
 				onOpenChange={handleCloseDialog}
 			/>
@@ -208,11 +195,11 @@ const CompaniesPage: React.FC = () => {
 					<AlertDialogFooter>
 						<AlertDialogCancel className="h-10">Cancel</AlertDialogCancel>
 						<AlertDialogAction
-							onClick={() => selectedDelete && deleteCompany({ path: { code: selectedDelete.company_code } })}
-							disabled={isDeleting}
+							onClick={() => selectedDelete && handleDeleteCompany(selectedDelete)}
+							disabled={deleteCompany.isPending}
 							className="bg-red-500 hover:bg-red-600 h-10"
 						>
-							{isDeleting ? "Deleting..." : "Delete"}
+							{deleteCompany.isPending ? "Deleting..." : "Delete"}
 						</AlertDialogAction>
 					</AlertDialogFooter>
 				</AlertDialogContent>
