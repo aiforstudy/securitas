@@ -10,7 +10,7 @@ interface RoleProtectedRouteProps {
 }
 
 const RoleProtectedRoute: React.FC<RoleProtectedRouteProps> = ({ element, allowedRoles }) => {
-	const userRoles = ["404"]
+	const userRoles = [ERole.ADMIN]
 	const hasAccess = userRoles.length && allowedRoles.some((role) => userRoles.includes(role as ERole))
 
 	return hasAccess ? element : <Navigate to={PATH.FORBIDDEN} />
