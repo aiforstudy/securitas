@@ -99,6 +99,11 @@ const CompaniesPage: React.FC = () => {
 				header: () => <span>Name</span>,
 				footer: (info) => info.column.id,
 			}),
+			columnHelper.accessor("company_code", {
+				cell: (info) => <div className="relative">{info.getValue()}</div>,
+				header: () => <span>Code</span>,
+				footer: (info) => info.column.id,
+			}),
 			columnHelper.accessor("created_at", {
 				cell: (info) => <div className="relative">{moment(info.getValue()).format("DD/MM/YYYY HH:mm")}</div>,
 				header: () => <span>Created Date</span>,
