@@ -21,7 +21,7 @@ import {
 import { Button } from "@/components/ui/button"
 import PERMISSIONS from "@/constants/permissions"
 import { DEFAULT_PAGINATION } from "@/constants/table"
-import useCompanyApi from "@/hooks/useCompanyApi"
+import useCompanyApi from "@/hooks/api/useCompanyApi"
 import queryClient from "@/utils/query"
 
 import CompanyDialog from "./_components/CompanyDialog"
