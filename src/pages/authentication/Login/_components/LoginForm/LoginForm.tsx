@@ -2,16 +2,16 @@ import React from "react"
 import { useForm } from "react-hook-form"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useMutation } from "@tanstack/react-query"
+import { AxiosError } from "axios"
 import { Lock, Mail } from "lucide-react"
 import { toast } from "sonner"
 import { z } from "zod"
 
-import { authControllerLoginMutation } from "@/api-generated/@tanstack/react-query.gen"
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { ICurrentUser, useAuth } from "@/contexts/auth.context"
+import useAuthApi from "@/hooks/api/useAuthApi"
 
 const loginSchema = z.object({
 	email: z.string().email("Please enter a valid email address"),
@@ -29,19 +29,17 @@ const LoginForm: React.FC = () => {
 		},
 	})
 	const { login: loginContext } = useAuth()
-	const { mutateAsync: login, isPending } = useMutation({
-		...authControllerLoginMutation(),
-		onSuccess: (data) => {
-			const response = data as { user: ICurrentUser; access_token: string }
-			loginContext({ ...response.user, access_token: response.access_token })
-		},
-		onError: () => {
-			toast.error("Invalid email or password")
-		},
-	})
+	const { login } = useAuthApi({})
 
-	const onSubmit = (data: LoginFormValues) => {
-		login({ body: data })
+	const onSubmit = async (data: LoginFormValues) => {
+		try {
+			const response = await login.mutateAsync({ body: data })
+			const responseData = response as { user: ICurrentUser; access_token: string }
+			loginContext({ ...responseData.user, access_token: responseData.access_token })
+		} catch (e) {
+			const error = e as AxiosError
+			toast.error((error.response?.data as { message: string }).message ?? error?.message)
+		}
 	}
 
 	return (
@@ -90,7 +88,7 @@ const LoginForm: React.FC = () => {
 					</Button>
 				</div>
 
-				<Button type="submit" loading={isPending} className="w-full">
+				<Button type="submit" loading={login.isPending} className="w-full">
 					Sign In
 				</Button>
 			</form>
