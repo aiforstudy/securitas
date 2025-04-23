@@ -1,19 +1,10 @@
 import React, { useCallback, useMemo, useState } from "react"
 
-import { useMutation, useQuery } from "@tanstack/react-query"
 import { createColumnHelper, PaginationState } from "@tanstack/react-table"
 import { Edit, Plus, Trash2 } from "lucide-react"
 import moment from "moment"
 import { toast } from "sonner"
 
-import {
-	engineControllerFindAllOptions,
-	monitorControllerCreateMutation,
-	monitorControllerFindAllOptions,
-	monitorControllerFindAllQueryKey,
-	monitorControllerRemoveMutation,
-	monitorControllerUpdateMutation,
-} from "@/api-generated/@tanstack/react-query.gen"
 import { CreateMonitorDto, Monitor, MonitorStatus, UpdateMonitorDto } from "@/api-generated/types.gen"
 import { AppTable } from "@/components/AppTable"
 import PermissionCheck from "@/components/PermissionCheck"
@@ -30,6 +21,8 @@ import {
 import { Button } from "@/components/ui/button"
 import PERMISSIONS from "@/constants/permissions"
 import { DEFAULT_PAGINATION } from "@/constants/table"
+import useEngineApi from "@/hooks/api/useEngineApi"
+import useMonitorApi from "@/hooks/api/useMonitorApi"
 import { useGlobalStore } from "@/stores/global"
 import queryClient from "@/utils/query"
 
@@ -44,75 +37,45 @@ const CamerasPage: React.FC = () => {
 	const [selectedDelete, setSelectedDelete] = useState<Monitor | null>(null)
 	const [openCreateDialog, setOpenCreateDialog] = useState<boolean>(false)
 
-	const queryOptions = useMemo(() => {
-		return {
-			query: {
-				page: pagination.pageIndex + 1,
-				limit: pagination.pageSize,
-				company_code: selectedCompany?.company_code ?? "",
-			},
-		}
-	}, [pagination, selectedCompany?.company_code])
-
-	const { data, isLoading } = useQuery({
-		...monitorControllerFindAllOptions({ query: queryOptions.query }),
-		enabled: !!selectedCompany?.company_code,
-	})
-
-	const { data: engines } = useQuery({
-		...engineControllerFindAllOptions({ query: { page: 1, limit: 100 } }),
-	})
-
-	const { mutateAsync: createCamera, isPending: isCreating } = useMutation({
-		...monitorControllerCreateMutation(),
-		onSuccess: () => {
-			toast.success("Camera created successfully")
-			setOpenCreateDialog(false)
-			queryClient.invalidateQueries({
-				queryKey: monitorControllerFindAllQueryKey({ query: queryOptions.query }),
-			})
-		},
-		onError: () => {
-			toast.error("Failed to create camera")
+	const { monitors, createMonitor, updateMonitor, deleteMonitor } = useMonitorApi({
+		query: {
+			page: pagination.pageIndex + 1,
+			limit: pagination.pageSize,
+			company_code: selectedCompany?.company_code ?? "",
 		},
 	})
-
-	const { mutateAsync: updateCamera, isPending: isUpdating } = useMutation({
-		...monitorControllerUpdateMutation(),
-		onSuccess: () => {
-			toast.success("Camera updated successfully")
-			setEditCamera(null)
-			queryClient.invalidateQueries({
-				queryKey: monitorControllerFindAllQueryKey({ query: queryOptions.query }),
-			})
-		},
-		onError: () => {
-			toast.error("Failed to update camera")
-		},
-	})
-
-	const { mutateAsync: deleteCamera, isPending: isDeleting } = useMutation({
-		...monitorControllerRemoveMutation(),
-		onSuccess: () => {
-			toast.success("Camera deleted successfully")
-			setSelectedDelete(null)
-			queryClient.invalidateQueries({ queryKey: monitorControllerFindAllQueryKey({ query: queryOptions.query }) })
-		},
-		onError: () => {
-			toast.error("Failed to delete camera")
-		},
-	})
+	const { engines } = useEngineApi({ query: { page: 1, limit: 100 } })
 
 	const handleCameraSubmit = async (values: CreateMonitorDto | UpdateMonitorDto) => {
 		if (editCamera) {
-			await updateCamera({
-				path: { id: editCamera.id },
-				body: values as UpdateMonitorDto,
-			})
+			try {
+				const response = await updateMonitor.mutateAsync({
+					path: { id: editCamera.id },
+					body: values as UpdateMonitorDto,
+				})
+				if (response) {
+					toast.success("Camera updated successfully")
+					setEditCamera(null)
+					queryClient.invalidateQueries({ queryKey: monitors.queryKey })
+				}
+			} catch (e) {
+				const error = e as Error
+				toast.error(`Failed to update camera: ${error.message}`)
+			}
 		} else {
-			await createCamera({
-				body: values as CreateMonitorDto,
-			})
+			try {
+				const response = await createMonitor.mutateAsync({
+					body: values as CreateMonitorDto,
+				})
+				if (response) {
+					toast.success("Camera created successfully")
+					setOpenCreateDialog(false)
+					queryClient.invalidateQueries({ queryKey: monitors.queryKey })
+				}
+			} catch (e) {
+				const error = e as Error
+				toast.error(`Failed to create camera: ${error.message}`)
+			}
 		}
 	}
 
@@ -128,6 +91,17 @@ const CamerasPage: React.FC = () => {
 		setEditCamera(null)
 	}
 
+	const handleDeleteCamera = async (camera: Monitor) => {
+		try {
+			await deleteMonitor.mutateAsync({ path: { id: camera.id } })
+			toast.success("Camera deleted successfully")
+			setSelectedDelete(null)
+			queryClient.invalidateQueries({ queryKey: monitors.queryKey })
+		} catch (e) {
+			const error = e as Error
+			toast.error(`Failed to delete camera: ${error.message}`)
+		}
+	}
 	const columns = useMemo(
 		() => [
 			columnHelper.accessor("name", {
@@ -207,24 +181,24 @@ const CamerasPage: React.FC = () => {
 			<div className="pb-5">
 				<AppTable<Monitor>
 					options={{
-						data: data?.data || [],
+						data: monitors?.data?.data || [],
 						state: { pagination },
 						columns,
 						getRowId: (row) => row.id,
-						pageCount: data?.total_pages ?? 0,
+						pageCount: monitors?.data?.total_pages ?? 0,
 						manualPagination: true,
 						onPaginationChange: setPagination,
 					}}
-					loading={{ spinning: isLoading }}
+					loading={{ spinning: monitors?.isLoading }}
 					pagination
 				/>
 			</div>
 
 			<CameraDialog
 				open={openCreateDialog || !!editCamera}
-				engines={engines?.data}
+				engines={engines?.data?.data}
 				onSubmit={handleCameraSubmit}
-				isLoading={isCreating || isUpdating}
+				isLoading={createMonitor.isPending || updateMonitor.isPending}
 				editCamera={editCamera}
 				companyCode={selectedCompany?.company_code ?? ""}
 				onOpenChange={handleCloseDialog}
@@ -241,11 +215,11 @@ const CamerasPage: React.FC = () => {
 					<AlertDialogFooter>
 						<AlertDialogCancel className="h-10">Cancel</AlertDialogCancel>
 						<AlertDialogAction
-							onClick={() => selectedDelete && deleteCamera({ path: { id: selectedDelete.id } })}
-							disabled={isDeleting}
+							onClick={() => selectedDelete && handleDeleteCamera(selectedDelete)}
+							disabled={deleteMonitor.isPending}
 							className="bg-red-500 hover:bg-red-600 h-10"
 						>
-							{isDeleting ? "Deleting..." : "Delete"}
+							{deleteMonitor.isPending ? "Deleting..." : "Delete"}
 						</AlertDialogAction>
 					</AlertDialogFooter>
 				</AlertDialogContent>

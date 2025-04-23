@@ -12,12 +12,17 @@ import {
 	monitorControllerUpdateMutation,
 } from "@/api-generated/@tanstack/react-query.gen"
 
-export const useGetMonitors = (queryOptions: Options<MonitorControllerFindAllData>) => {
+export const useGetMonitors = (
+	options: Options<MonitorControllerFindAllData>,
+	queryOptions?: { enabled?: boolean; refetchInterval?: number },
+) => {
 	return {
 		...useQuery({
-			...monitorControllerFindAllOptions({ query: queryOptions.query }),
+			...monitorControllerFindAllOptions({ query: options.query }),
+			enabled: !!queryOptions?.enabled,
+			refetchInterval: queryOptions?.refetchInterval,
 		}),
-		queryKey: monitorControllerFindAllQueryKey({ query: queryOptions.query }),
+		queryKey: monitorControllerFindAllQueryKey({ query: options.query }),
 	}
 }
 
@@ -77,7 +82,7 @@ const useMonitorApi = ({
 	onStartStreamError,
 }: UseMonitorApiOptions) => {
 	const monitor = useGetMonitor({ path: path! })
-	const monitors = useGetMonitors({ query: query! })
+	const monitors = useGetMonitors({ query: query! }, { enabled: !!query })
 	const createMonitor = useCreateMonitor(onCreateSuccess, onCreateError)
 	const updateMonitor = useUpdateMonitor(onUpdateSuccess, onUpdateError)
 	const deleteMonitor = useDeleteMonitor(onDeleteSuccess, onDeleteError)

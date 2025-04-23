@@ -1,18 +1,12 @@
 import React, { useMemo, useState } from "react"
 import { DateRange } from "react-day-picker"
 
-import { useMutation, useQuery } from "@tanstack/react-query"
 import { createColumnHelper, PaginationState } from "@tanstack/react-table"
 import { CheckCheck, Image, Loader2, Play, Trash2, X } from "lucide-react"
 import moment from "moment"
 import { toast } from "sonner"
 
 import { Approved, Detection } from "@/api-generated"
-import {
-	detectionControllerBulkApproveDetectionsMutation,
-	detectionControllerRemoveMutation,
-	detectionControllerSearchDetectionsOptions,
-} from "@/api-generated/@tanstack/react-query.gen"
 import { AppTable } from "@/components/AppTable"
 import { DatePicker } from "@/components/DatePicker"
 import ImagePreview from "@/components/ImagePreview"
@@ -33,6 +27,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import VideoPreview from "@/components/VideoPreview"
 import PERMISSIONS from "@/constants/permissions"
 import { DEFAULT_PAGINATION } from "@/constants/table"
+import useDetectionApi from "@/hooks/api/useDetectionApi"
 import queryClient from "@/utils/query"
 
 import ApprovalSelection from "./_component/ApprovalSelection/ApprovalSelection"
@@ -50,65 +45,20 @@ const DetectionsPage: React.FC = () => {
 	const [openApproveDialog, setOpenApproveDialog] = useState<boolean>(false)
 	const [selectedApproval, setSelectedApproval] = useState<Approved | "all">("all")
 
-	const queryOptions = useMemo(() => {
-		return detectionControllerSearchDetectionsOptions({
-			query: {
-				page: pagination.pageIndex + 1,
-				limit: pagination.pageSize,
-				from: range?.from ? moment(range.from).startOf("day").toISOString() : undefined,
-				to: range?.to ? moment(range.to).endOf("day").toISOString() : undefined,
-				approved: selectedApproval === "all" ? undefined : selectedApproval,
-			},
-		})
-	}, [range, pagination, selectedApproval])
-
-	const { data, isLoading } = useQuery({ ...queryOptions, refetchInterval: 10000 })
-	const { mutateAsync: deleteDetection, isPending: isDeleting } = useMutation({
-		...detectionControllerRemoveMutation(),
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: queryOptions.queryKey })
-			toast.success("Delete detection successfully")
+	const { detections, deleteDetection, approveDetections } = useDetectionApi({
+		query: {
+			page: pagination.pageIndex + 1,
+			limit: pagination.pageSize,
+			from: range?.from ? moment(range.from).startOf("day").toISOString() : undefined,
+			to: range?.to ? moment(range.to).endOf("day").toISOString() : undefined,
+			approved: selectedApproval === "all" ? undefined : selectedApproval,
 		},
-		onError: () => {
-			toast.error("Delete detection failed")
-		},
-	})
-	const { mutateAsync: bulkApproveDetection, isPending: isBulkApproving } = useMutation({
-		...detectionControllerBulkApproveDetectionsMutation(),
-		onSuccess: async (data) => {
-			if (data.length > 0) {
-				setApproveAction(null)
-				setOpenApproveDialog(false)
-				let message = "Detections processed successfully"
-				if (approveAction === Approved.YES) {
-					message = "Detections approved successfully"
-				} else if (approveAction === Approved.NO) {
-					message = "Detections rejected successfully"
-				}
-				toast.success(message)
-				queryClient.invalidateQueries({ queryKey: queryOptions.queryKey })
-			}
-		},
-		onError: () => {
-			let message = "Failed to process detections"
-			if (approveAction === Approved.YES) {
-				message = "Failed to approve detections"
-			} else if (approveAction === Approved.NO) {
-				message = "Failed to reject detections"
-			}
-			toast.error(message)
-		},
+		refetchInterval: 10000,
 	})
 
 	const selectedDetections = useMemo(() => {
 		return Object.keys(rowSelection).filter((key) => rowSelection[key])
 	}, [rowSelection])
-
-	const handleApproveDetections = async (action: Approved) => {
-		await bulkApproveDetection({
-			body: { approved: action, detection_ids: selectedDetections },
-		})
-	}
 
 	const columns = useMemo(
 		() => [
@@ -205,6 +155,47 @@ const DetectionsPage: React.FC = () => {
 		[selectedDetections],
 	)
 
+	const handleApproveDetections = async (action: Approved) => {
+		try {
+			const response = await approveDetections.mutateAsync({
+				body: { approved: action, detection_ids: selectedDetections },
+			})
+			if (response.length > 0) {
+				setApproveAction(null)
+				setOpenApproveDialog(false)
+				let message = "Detections processed successfully"
+				if (approveAction === Approved.YES) {
+					message = "Detections approved successfully"
+				} else if (approveAction === Approved.NO) {
+					message = "Detections rejected successfully"
+				}
+				toast.success(message)
+				queryClient.invalidateQueries({ queryKey: detections.queryKey })
+			}
+		} catch (e) {
+			const error = e as Error
+			let message = "Failed to process detections"
+			if (approveAction === Approved.YES) {
+				message = "Failed to approve detections"
+			} else if (approveAction === Approved.NO) {
+				message = "Failed to reject detections"
+			}
+			toast.error(`${message}: ${error.message}`)
+		}
+	}
+
+	const handleDeleteDetection = async () => {
+		try {
+			await deleteDetection.mutateAsync({ path: { id: selectedDelete?.id ?? "" } })
+			toast.success("Detection deleted successfully")
+			setSelectedDelete(null)
+			queryClient.invalidateQueries({ queryKey: detections.queryKey })
+		} catch (e) {
+			const error = e as Error
+			toast.error(`Failed to delete detection: ${error.message}`)
+		}
+	}
+
 	return (
 		<div className="p-5 flex flex-col gap-5 h-full">
 			<div className="w-full flex gap-4 items-center">
@@ -216,7 +207,7 @@ const DetectionsPage: React.FC = () => {
 					<ApprovalSelection
 						selectedApproval={selectedApproval}
 						setSelectedApproval={setSelectedApproval}
-						loading={isLoading}
+						loading={detections.isLoading}
 					/>
 				</div>
 				{selectedDetections.length > 0 && (
@@ -233,11 +224,11 @@ const DetectionsPage: React.FC = () => {
 			<div className="pb-5">
 				<AppTable<Detection>
 					options={{
-						data: data?.data || [],
+						data: detections.data?.data || [],
 						state: { pagination, rowSelection },
 						columns,
 						getRowId: (row) => row.id,
-						pageCount: data?.total_pages ?? 0,
+						pageCount: detections.data?.total_pages ?? 0,
 						manualPagination: true,
 						onPaginationChange: (pagination) => {
 							setPagination(pagination)
@@ -246,7 +237,7 @@ const DetectionsPage: React.FC = () => {
 						enableRowSelection: true,
 						onRowSelectionChange: setRowSelection,
 					}}
-					loading={{ spinning: isLoading }}
+					loading={{ spinning: detections.isLoading }}
 					// className="h-[calc(100%-44px-69px-16px)]"
 					pagination
 				/>
@@ -297,20 +288,28 @@ const DetectionsPage: React.FC = () => {
 								setApproveAction(Approved.NO)
 								handleApproveDetections(Approved.NO)
 							}}
-							disabled={isBulkApproving && approveAction === Approved.NO}
+							disabled={approveDetections.isPending && approveAction === Approved.NO}
 							className="h-10"
 						>
-							{isBulkApproving && approveAction === Approved.NO ? <Loader2 className="w-4 h-4 animate-spin" /> : "No"}
+							{approveDetections.isPending && approveAction === Approved.NO ? (
+								<Loader2 className="w-4 h-4 animate-spin" />
+							) : (
+								"No"
+							)}
 						</AlertDialogCancel>
 						<AlertDialogAction
 							onClick={() => {
 								setApproveAction(Approved.YES)
 								handleApproveDetections(Approved.YES)
 							}}
-							disabled={isBulkApproving && approveAction === Approved.YES}
+							disabled={approveDetections.isPending && approveAction === Approved.YES}
 							className=" h-10"
 						>
-							{isBulkApproving && approveAction === Approved.YES ? <Loader2 className="w-4 h-4 animate-spin" /> : "Yes"}
+							{approveDetections.isPending && approveAction === Approved.YES ? (
+								<Loader2 className="w-4 h-4 animate-spin" />
+							) : (
+								"Yes"
+							)}
 						</AlertDialogAction>
 					</AlertDialogFooter>
 				</AlertDialogContent>
@@ -328,11 +327,11 @@ const DetectionsPage: React.FC = () => {
 					<AlertDialogFooter>
 						<AlertDialogCancel className="h-10">Cancel</AlertDialogCancel>
 						<AlertDialogAction
-							onClick={() => deleteDetection({ path: { id: selectedDelete?.id || "" } })}
-							disabled={isDeleting}
+							onClick={() => handleDeleteDetection()}
+							disabled={deleteDetection.isPending}
 							className="bg-red-500 hover:bg-red-600 h-10"
 						>
-							{isDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : "Delete"}
+							{deleteDetection.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : "Delete"}
 						</AlertDialogAction>
 					</AlertDialogFooter>
 				</AlertDialogContent>

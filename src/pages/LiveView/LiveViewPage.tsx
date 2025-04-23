@@ -1,15 +1,11 @@
 import React, { memo, useEffect, useRef, useState } from "react"
 
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query"
 import { EllipsisVertical, Loader2, Maximize, Minimize } from "lucide-react"
 
-import {
-	monitorControllerFindAllOptions,
-	monitorControllerFindAllQueryKey,
-	monitorControllerStartStreamMutation,
-} from "@/api-generated/@tanstack/react-query.gen"
 import { Button } from "@/components/ui/button"
 import { DEFAULT_STREAM } from "@/constants/stream"
+import useMonitorApi from "@/hooks/api/useMonitorApi"
 import { cn } from "@/lib/utils"
 import LiveViewApi from "@/pages/LiveView/mocks/liveView"
 import { useGlobalStore } from "@/stores/global"
@@ -32,39 +28,26 @@ const LiveViewPage: React.FC = () => {
 		queryFn: () => LiveViewApi.getLiveViewLayouts(),
 		queryKey: ["live-view-layouts"],
 	})
-	const { data: monitors } = useQuery({
-		...monitorControllerFindAllOptions({
-			query: { page: 1, limit: 1000, company_code: selectedCompany?.company_code },
-		}),
-		enabled: !!selectedCompany?.company_code,
-	})
 	const containerRef = useRef<HTMLDivElement>(null)
 	const [layout, setLayout] = useState("")
 	const [isFullscreen, setIsFullscreen] = useState(false)
 	const [detailLayout, setDetailLayout] = useState<ILiveViewDetailLayout | null>(null)
+	const { monitors, startMonitorsStream } = useMonitorApi({
+		query: { page: 1, limit: 1000, company_code: selectedCompany?.company_code },
+	})
 	const [openAddNewCamera, setOpenAddNewCamera] = useState(false)
 	const [openAddNewLayout, setOpenAddNewLayout] = useState(false)
 	const [selectedTemplate, setSelectedTemplate] = useState<ILiveViewTemplate | null>(null)
-	const { mutateAsync: startStream } = useMutation({
-		...monitorControllerStartStreamMutation(),
-		onSuccess: () => {
-			queryClient.invalidateQueries({
-				queryKey: monitorControllerFindAllQueryKey({
-					query: { page: 1, limit: 1000, company_code: selectedCompany?.company_code },
-				}),
-			})
-		},
-	})
 
 	useEffect(() => {
-		if (monitors?.data?.length) {
+		if (monitors?.data?.data?.length) {
 			LiveViewApi.getLiveViewLayoutById(layout).then((res) => {
 				setDetailLayout({
 					...res,
 					layout: {
 						...res.layout,
 						positions: res.layout.positions.map((e, index) => {
-							const monitor = monitors?.data[index]
+							const monitor = monitors?.data?.data[index]
 							return {
 								...e,
 								monitor: {
@@ -97,9 +80,11 @@ const LiveViewPage: React.FC = () => {
 			const cameraIds = detailLayout.layout.positions
 				.map((e) => e.has_monitor && e.monitor?.id)
 				.filter(Boolean) as string[]
-			startStream({ body: { monitor_ids: cameraIds } })
+			startMonitorsStream.mutateAsync({ body: { monitor_ids: cameraIds } }).then(() => {
+				queryClient.invalidateQueries({ queryKey: monitors.queryKey })
+			})
 		}
-	}, [detailLayout, startStream])
+	}, [detailLayout, monitors.queryKey, startMonitorsStream])
 
 	const handleFullscreen = () => {
 		if (isFullscreen) {
@@ -183,7 +168,11 @@ const LiveViewPage: React.FC = () => {
 				</div>
 			)}
 
-			<AddCameraDialog open={openAddNewCamera} cameras={monitors?.data || []} onOpenChange={setOpenAddNewCamera} />
+			<AddCameraDialog
+				open={openAddNewCamera}
+				cameras={monitors?.data?.data || []}
+				onOpenChange={setOpenAddNewCamera}
+			/>
 			<AddLayoutDialog open={openAddNewLayout} templates={data || []} onOpenChange={setOpenAddNewLayout} />
 		</div>
 	)

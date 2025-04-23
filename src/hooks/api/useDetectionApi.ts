@@ -24,30 +24,45 @@ import {
 	detectionControllerUpdateMutation,
 } from "@/api-generated/@tanstack/react-query.gen"
 
-export const useGetDetections = (queryOptions: Options<DetectionControllerSearchDetectionsData>) => {
+export const useGetDetections = (
+	options: Options<DetectionControllerSearchDetectionsData>,
+	queryOptions?: { enabled?: boolean; refetchInterval?: number },
+) => {
 	return {
 		...useQuery({
-			...detectionControllerSearchDetectionsOptions({ query: queryOptions.query }),
+			...detectionControllerSearchDetectionsOptions({ query: options?.query }),
+			enabled: !!queryOptions?.enabled,
+			refetchInterval: queryOptions?.refetchInterval,
 		}),
-		queryKey: detectionControllerSearchDetectionsQueryKey({ query: queryOptions.query }),
+		queryKey: detectionControllerSearchDetectionsQueryKey({ query: options?.query }),
 	}
 }
 
-export const useGetAllDetections = (queryOptions: Options<DetectionControllerFindAllData>) => {
+export const useGetAllDetections = (
+	options: Options<DetectionControllerFindAllData>,
+	queryOptions?: { enabled?: boolean; refetchInterval?: number },
+) => {
 	return {
 		...useQuery({
-			...detectionControllerFindAllOptions({ query: queryOptions.query }),
+			...detectionControllerFindAllOptions({ query: options.query }),
+			enabled: !!queryOptions?.enabled,
+			refetchInterval: queryOptions?.refetchInterval,
 		}),
-		queryKey: detectionControllerFindAllQueryKey({ query: queryOptions.query }),
+		queryKey: detectionControllerFindAllQueryKey({ query: options.query }),
 	}
 }
 
-export const useGetDetectionsStatistics = (queryOptions: Options<DetectionControllerGetStatisticsData>) => {
+export const useGetDetectionsStatistics = (
+	options: Options<DetectionControllerGetStatisticsData>,
+	queryOptions?: { enabled?: boolean; refetchInterval?: number },
+) => {
 	return {
 		...useQuery({
-			...detectionControllerGetStatisticsOptions({ query: queryOptions.query }),
+			...detectionControllerGetStatisticsOptions({ query: options.query }),
+			enabled: !!queryOptions?.enabled,
+			refetchInterval: queryOptions?.refetchInterval,
 		}),
-		queryKey: detectionControllerGetStatisticsQueryKey({ query: queryOptions.query }),
+		queryKey: detectionControllerGetStatisticsQueryKey({ query: options.query }),
 	}
 }
 
@@ -91,6 +106,7 @@ type UseDetectionApiOptions = {
 	allQuery?: Options<DetectionControllerFindAllData>["query"]
 	path?: Options<DetectionControllerFindOneData>["path"]
 	statisticsQuery?: Options<DetectionControllerGetStatisticsData>["query"]
+	refetchInterval?: number
 	onCreateSuccess?: (data: Detection) => void
 	onCreateError?: (error: Error) => void
 	onUpdateSuccess?: (data: Detection) => void
@@ -104,10 +120,11 @@ type UseDetectionApiOptions = {
 }
 
 const useDetectionApi = ({
+	path,
 	query,
 	allQuery,
-	path,
 	statisticsQuery,
+	refetchInterval,
 	onCreateSuccess,
 	onCreateError,
 	onUpdateSuccess,
@@ -120,8 +137,8 @@ const useDetectionApi = ({
 	onApproveDetectionsError,
 }: UseDetectionApiOptions) => {
 	const detection = useGetDetection({ path: path! })
-	const detections = useGetDetections({ query: query! })
-	const allDetections = useGetAllDetections({ query: allQuery! })
+	const detections = useGetDetections({ query: query! }, { enabled: !!query, refetchInterval })
+	const allDetections = useGetAllDetections({ query: allQuery! }, { enabled: !!allQuery })
 	const createDetection = useCreateDetection(onCreateSuccess, onCreateError)
 	const updateDetection = useUpdateDetection(onUpdateSuccess, onUpdateError)
 	const deleteDetection = useDeleteDetection(onDeleteSuccess, onDeleteError)

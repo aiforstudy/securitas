@@ -1,13 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from "react"
 
-import { useQuery } from "@tanstack/react-query"
 import { Map } from "@vis.gl/react-google-maps"
 
-import {
-	monitorControllerFindAllOptions,
-	smartLockControllerFindAllOptions,
-} from "@/api-generated/@tanstack/react-query.gen"
 import { EMapTypeId } from "@/enums/map"
+import useMonitorApi from "@/hooks/api/useMonitorApi"
+import useSmartLockApi from "@/hooks/api/useSmartLockApi"
 import { useGlobalStore } from "@/stores/global"
 
 import CameraMarker2 from "./_components/CameraMarker2"
@@ -18,26 +15,18 @@ import SwitchMapType from "./_components/SwitchMapType"
 
 const DashboardPage: React.FC = () => {
 	const containerRef = useRef<HTMLDivElement>(null)
+	const { selectedCompany } = useGlobalStore()
 	const [center, setCenter] = useState<{ lat: number; lng: number }>({ lat: 10.8300923, lng: 106.6291799 })
 	const [mapType, setMapType] = useState<EMapTypeId>(EMapTypeId.ROADMAP)
-	const [isFullscreen, setIsFullscreen] = useState(false)
 	const [selectedId, setSelectedId] = useState<string | null>(null)
+	const [isFullscreen, setIsFullscreen] = useState(false)
 	const [selectedMarker, setSelectedMarker] = useState<google.maps.marker.AdvancedMarkerElement | null>(null)
 	const [infoWindowShown, setInfoWindowShown] = useState(false)
 
-	const { selectedCompany } = useGlobalStore()
-	const { data: monitors } = useQuery({
-		...monitorControllerFindAllOptions({
-			query: { page: 1, limit: 1000, company_code: selectedCompany?.company_code ?? "" },
-		}),
-		enabled: !!selectedCompany?.company_code,
+	const { monitors } = useMonitorApi({
+		query: { page: 1, limit: 1000, company_code: selectedCompany?.company_code ?? "" },
 	})
-	const { data: smartLocks } = useQuery({
-		...smartLockControllerFindAllOptions({
-			query: { company_code: selectedCompany?.company_code },
-		}),
-		enabled: !!selectedCompany?.company_code,
-	})
+	const { allSmartLocks } = useSmartLockApi({ query: { company_code: selectedCompany?.company_code } })
 
 	useEffect(() => {
 		if (selectedCompany?.location) {
@@ -60,7 +49,7 @@ const DashboardPage: React.FC = () => {
 	}
 
 	const renderCameraMakers = useCallback(() => {
-		return monitors?.data?.map((monitor, index) => {
+		return monitors?.data?.data?.map((monitor, index) => {
 			return (
 				<CameraMarker2
 					key={monitor.id}
@@ -78,7 +67,7 @@ const DashboardPage: React.FC = () => {
 	}, [monitors, selectedId, selectedMarker, infoWindowShown, setSelectedId, setSelectedMarker, setInfoWindowShown])
 
 	const renderSmartLockMarkers = useCallback(() => {
-		return smartLocks?.map((smartLock, index) => {
+		return allSmartLocks?.data?.map((smartLock, index) => {
 			return (
 				<SmartLockMarker
 					key={smartLock.id}
@@ -93,7 +82,7 @@ const DashboardPage: React.FC = () => {
 				/>
 			)
 		})
-	}, [smartLocks, selectedId, selectedMarker, infoWindowShown, setSelectedId, setSelectedMarker, setInfoWindowShown])
+	}, [allSmartLocks, selectedId, selectedMarker, infoWindowShown, setSelectedId, setSelectedMarker, setInfoWindowShown])
 
 	const onMapClick = useCallback(() => {
 		setSelectedId(null)
