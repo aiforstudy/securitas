@@ -7,39 +7,32 @@ import {
 	authControllerRegisterMutation,
 } from "@/api-generated/@tanstack/react-query.gen"
 
-export const useLogin = (onSuccess?: (data: unknown) => void, onError?: (error: Error) => void) => {
+export const useLogin = () => {
 	const mutationOptions = authControllerLoginMutation()
-	return useMutation({ ...mutationOptions, onSuccess, onError })
+	return useMutation({ ...mutationOptions })
 }
 
-export const useRegister = (onSuccess?: (data: unknown) => void, onError?: (error: Error) => void) => {
+export const useRegister = () => {
 	const mutationOptions = authControllerRegisterMutation()
-	return useMutation({ ...mutationOptions, onSuccess, onError })
+	return useMutation({ ...mutationOptions })
 }
 
 export const useGetPermissions = () => {
-	return {
-		...useQuery({ ...authControllerGetPermissionsOptions() }),
-		queryKey: authControllerGetPermissionsQueryKey(),
-	}
+	const query = useQuery({ ...authControllerGetPermissionsOptions() })
+	const queryKey = authControllerGetPermissionsQueryKey()
+
+	return { ...query, queryKey }
 }
 
-type UseAuthApiOptions = {
-	onLoginSuccess?: (data: unknown) => void
-	onLoginError?: (error: Error) => void
-	onRegisterSuccess?: (data: unknown) => void
-	onRegisterError?: (error: Error) => void
-}
-
-const useAuthApi = ({ onLoginSuccess, onLoginError, onRegisterSuccess, onRegisterError }: UseAuthApiOptions) => {
-	const login = useLogin(onLoginSuccess, onLoginError)
-	const register = useRegister(onRegisterSuccess, onRegisterError)
-	const getPermissions = useGetPermissions()
+const useAuthApi = () => {
+	const login = useLogin()
+	const register = useRegister()
+	const permissions = useGetPermissions()
 
 	return {
 		login,
 		register,
-		getPermissions,
+		permissions,
 	}
 }
 

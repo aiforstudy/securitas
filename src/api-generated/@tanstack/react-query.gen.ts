@@ -40,6 +40,11 @@ import {
 	monitorControllerStartStream,
 	monitorControllerUpdate,
 	type Options,
+	rolesControllerCreate,
+	rolesControllerFindAll,
+	rolesControllerFindOne,
+	rolesControllerGetPermissions,
+	rolesControllerUpdate,
 	smartLockControllerCreate,
 	smartLockControllerFindAll,
 	smartLockControllerFindBySn,
@@ -50,6 +55,11 @@ import {
 	smartLockEventControllerCreate,
 	smartLockEventControllerFindAll,
 	smartLockEventControllerFindOne,
+	usersControllerCreate,
+	usersControllerFindAll,
+	usersControllerFindOne,
+	usersControllerRemove,
+	usersControllerUpdate,
 } from "../sdk.gen"
 import type {
 	AppControllerGetHelloData,
@@ -100,6 +110,13 @@ import type {
 	MonitorControllerStartStreamData,
 	MonitorControllerUpdateData,
 	MonitorControllerUpdateResponse,
+	RolesControllerCreateData,
+	RolesControllerCreateResponse,
+	RolesControllerFindAllData,
+	RolesControllerFindOneData,
+	RolesControllerGetPermissionsData,
+	RolesControllerUpdateData,
+	RolesControllerUpdateResponse,
 	SmartLockControllerCreateData,
 	SmartLockControllerCreateResponse,
 	SmartLockControllerFindAllData,
@@ -115,6 +132,13 @@ import type {
 	SmartLockEventControllerFindAllData,
 	SmartLockEventControllerFindAllResponse,
 	SmartLockEventControllerFindOneData,
+	UsersControllerCreateData,
+	UsersControllerCreateResponse,
+	UsersControllerFindAllData,
+	UsersControllerFindOneData,
+	UsersControllerRemoveData,
+	UsersControllerUpdateData,
+	UsersControllerUpdateResponse,
 } from "../types.gen"
 
 export type QueryKey<TOptions extends Options> = [
@@ -1052,6 +1076,114 @@ export const authControllerGetPermissionsOptions = (options?: Options<AuthContro
 	})
 }
 
+export const rolesControllerFindAllQueryKey = (options?: Options<RolesControllerFindAllData>) =>
+	createQueryKey("rolesControllerFindAll", options)
+
+export const rolesControllerFindAllOptions = (options?: Options<RolesControllerFindAllData>) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await rolesControllerFindAll({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			})
+			return data
+		},
+		queryKey: rolesControllerFindAllQueryKey(options),
+	})
+}
+
+export const rolesControllerCreateQueryKey = (options: Options<RolesControllerCreateData>) =>
+	createQueryKey("rolesControllerCreate", options)
+
+export const rolesControllerCreateOptions = (options: Options<RolesControllerCreateData>) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await rolesControllerCreate({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			})
+			return data
+		},
+		queryKey: rolesControllerCreateQueryKey(options),
+	})
+}
+
+export const rolesControllerCreateMutation = (options?: Partial<Options<RolesControllerCreateData>>) => {
+	const mutationOptions: UseMutationOptions<
+		RolesControllerCreateResponse,
+		AxiosError<DefaultError>,
+		Options<RolesControllerCreateData>
+	> = {
+		mutationFn: async (localOptions) => {
+			const { data } = await rolesControllerCreate({
+				...options,
+				...localOptions,
+				throwOnError: true,
+			})
+			return data
+		},
+	}
+	return mutationOptions
+}
+
+export const rolesControllerGetPermissionsQueryKey = (options?: Options<RolesControllerGetPermissionsData>) =>
+	createQueryKey("rolesControllerGetPermissions", options)
+
+export const rolesControllerGetPermissionsOptions = (options?: Options<RolesControllerGetPermissionsData>) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await rolesControllerGetPermissions({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			})
+			return data
+		},
+		queryKey: rolesControllerGetPermissionsQueryKey(options),
+	})
+}
+
+export const rolesControllerFindOneQueryKey = (options: Options<RolesControllerFindOneData>) =>
+	createQueryKey("rolesControllerFindOne", options)
+
+export const rolesControllerFindOneOptions = (options: Options<RolesControllerFindOneData>) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await rolesControllerFindOne({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			})
+			return data
+		},
+		queryKey: rolesControllerFindOneQueryKey(options),
+	})
+}
+
+export const rolesControllerUpdateMutation = (options?: Partial<Options<RolesControllerUpdateData>>) => {
+	const mutationOptions: UseMutationOptions<
+		RolesControllerUpdateResponse,
+		AxiosError<DefaultError>,
+		Options<RolesControllerUpdateData>
+	> = {
+		mutationFn: async (localOptions) => {
+			const { data } = await rolesControllerUpdate({
+				...options,
+				...localOptions,
+				throwOnError: true,
+			})
+			return data
+		},
+	}
+	return mutationOptions
+}
+
 export const smartLockControllerFindAllQueryKey = (options?: Options<SmartLockControllerFindAllData>) =>
 	createQueryKey("smartLockControllerFindAll", options)
 
@@ -1359,4 +1491,108 @@ export const smartLockEventControllerFindOneOptions = (options: Options<SmartLoc
 		},
 		queryKey: smartLockEventControllerFindOneQueryKey(options),
 	})
+}
+
+export const usersControllerFindAllQueryKey = (options?: Options<UsersControllerFindAllData>) =>
+	createQueryKey("usersControllerFindAll", options)
+
+export const usersControllerFindAllOptions = (options?: Options<UsersControllerFindAllData>) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await usersControllerFindAll({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			})
+			return data
+		},
+		queryKey: usersControllerFindAllQueryKey(options),
+	})
+}
+
+export const usersControllerCreateQueryKey = (options: Options<UsersControllerCreateData>) =>
+	createQueryKey("usersControllerCreate", options)
+
+export const usersControllerCreateOptions = (options: Options<UsersControllerCreateData>) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await usersControllerCreate({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			})
+			return data
+		},
+		queryKey: usersControllerCreateQueryKey(options),
+	})
+}
+
+export const usersControllerCreateMutation = (options?: Partial<Options<UsersControllerCreateData>>) => {
+	const mutationOptions: UseMutationOptions<
+		UsersControllerCreateResponse,
+		AxiosError<DefaultError>,
+		Options<UsersControllerCreateData>
+	> = {
+		mutationFn: async (localOptions) => {
+			const { data } = await usersControllerCreate({
+				...options,
+				...localOptions,
+				throwOnError: true,
+			})
+			return data
+		},
+	}
+	return mutationOptions
+}
+
+export const usersControllerRemoveMutation = (options?: Partial<Options<UsersControllerRemoveData>>) => {
+	const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options<UsersControllerRemoveData>> = {
+		mutationFn: async (localOptions) => {
+			const { data } = await usersControllerRemove({
+				...options,
+				...localOptions,
+				throwOnError: true,
+			})
+			return data
+		},
+	}
+	return mutationOptions
+}
+
+export const usersControllerFindOneQueryKey = (options: Options<UsersControllerFindOneData>) =>
+	createQueryKey("usersControllerFindOne", options)
+
+export const usersControllerFindOneOptions = (options: Options<UsersControllerFindOneData>) => {
+	return queryOptions({
+		queryFn: async ({ queryKey, signal }) => {
+			const { data } = await usersControllerFindOne({
+				...options,
+				...queryKey[0],
+				signal,
+				throwOnError: true,
+			})
+			return data
+		},
+		queryKey: usersControllerFindOneQueryKey(options),
+	})
+}
+
+export const usersControllerUpdateMutation = (options?: Partial<Options<UsersControllerUpdateData>>) => {
+	const mutationOptions: UseMutationOptions<
+		UsersControllerUpdateResponse,
+		AxiosError<DefaultError>,
+		Options<UsersControllerUpdateData>
+	> = {
+		mutationFn: async (localOptions) => {
+			const { data } = await usersControllerUpdate({
+				...options,
+				...localOptions,
+				throwOnError: true,
+			})
+			return data
+		},
+	}
+	return mutationOptions
 }

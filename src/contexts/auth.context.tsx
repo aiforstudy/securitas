@@ -6,12 +6,17 @@ import { STORAGE_KEYS } from "@/constants/storage"
 import { ERole } from "@/enums/permissions"
 import { localS } from "@/utils/storage"
 
+export type IPermissions = {
+	actions: string[]
+	resource: string
+}
+
 export type ICurrentUser = {
 	id: string
 	role: ERole
 	name: string
 	email: string
-	permissions: string[]
+	permissions: IPermissions[]
 	access_token: string
 	company_code: string
 }

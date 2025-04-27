@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query"
 
-import { Engine, EngineControllerFindAllData, EngineControllerFindOneData, type Options } from "@/api-generated"
+import { EngineControllerFindAllData, EngineControllerFindOneData, type Options } from "@/api-generated"
 import {
 	engineControllerCreateMutation,
 	engineControllerFindAllOptions,
@@ -30,47 +30,32 @@ export const useGetEngine = (queryOptions: Options<EngineControllerFindOneData>)
 	}
 }
 
-export const useCreateEngine = (onSuccess?: (data: Engine) => void, onError?: (error: Error) => void) => {
+export const useCreateEngine = () => {
 	const mutationOptions = engineControllerCreateMutation()
-	return useMutation({ ...mutationOptions, onSuccess, onError })
+	return useMutation({ ...mutationOptions })
 }
 
-export const useUpdateEngine = (onSuccess?: (data: Engine) => void, onError?: (error: Error) => void) => {
+export const useUpdateEngine = () => {
 	const mutationOptions = engineControllerUpdateMutation()
-	return useMutation({ ...mutationOptions, onSuccess, onError })
+	return useMutation({ ...mutationOptions })
 }
 
-export const useDeleteEngine = (onSuccess?: (data: void) => void, onError?: (error: Error) => void) => {
+export const useDeleteEngine = () => {
 	const mutationOptions = engineControllerRemoveMutation()
-	return useMutation({ ...mutationOptions, onSuccess, onError })
+	return useMutation({ ...mutationOptions })
 }
 
-type UseCompanyApiOptions = {
-	query?: Options<EngineControllerFindAllData>["query"]
+type UseEngineApiOptions = {
 	path?: Options<EngineControllerFindOneData>["path"]
-	onCreateSuccess?: (data: Engine) => void
-	onCreateError?: (error: Error) => void
-	onUpdateSuccess?: (data: Engine) => void
-	onUpdateError?: (error: Error) => void
-	onDeleteSuccess?: (data: void) => void
-	onDeleteError?: (error: Error) => void
+	query?: Options<EngineControllerFindAllData>["query"]
 }
 
-const useEngineApi = ({
-	query,
-	path,
-	onCreateSuccess,
-	onCreateError,
-	onUpdateSuccess,
-	onUpdateError,
-	onDeleteSuccess,
-	onDeleteError,
-}: UseCompanyApiOptions) => {
-	const engine = useGetEngine({ path: path! })
-	const engines = useGetEngines({ query: query! })
-	const createEngine = useCreateEngine(onCreateSuccess, onCreateError)
-	const updateEngine = useUpdateEngine(onUpdateSuccess, onUpdateError)
-	const deleteEngine = useDeleteEngine(onDeleteSuccess, onDeleteError)
+const useEngineApi = (options: UseEngineApiOptions = {}) => {
+	const engine = useGetEngine({ path: options.path! })
+	const engines = useGetEngines({ query: options.query! })
+	const createEngine = useCreateEngine()
+	const updateEngine = useUpdateEngine()
+	const deleteEngine = useDeleteEngine()
 
 	return {
 		engine,

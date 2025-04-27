@@ -144,12 +144,12 @@ const CamerasPage: React.FC = () => {
 				id: "actions",
 				cell: (info) => (
 					<div className="flex gap-2 relative justify-end text-right">
-						<PermissionCheck allowPermission={PERMISSIONS.MONITOR.EDIT}>
+						<PermissionCheck allowPermission={[PERMISSIONS.MONITOR.UPDATE]}>
 							<Button size="icon" onClick={() => handleOpenEditDialog(info.row.original)} variant="outline">
 								<Edit className="h-4 w-4" />
 							</Button>
 						</PermissionCheck>
-						<PermissionCheck allowPermission={PERMISSIONS.MONITOR.DELETE}>
+						<PermissionCheck allowPermission={[PERMISSIONS.MONITOR.DELETE]}>
 							<Button size="icon" onClick={() => setSelectedDelete(info.row.original)} variant="outline">
 								<Trash2 className="h-4 w-4" />
 							</Button>
@@ -171,7 +171,7 @@ const CamerasPage: React.FC = () => {
 		<div className="p-5 flex flex-col gap-5 h-full">
 			<div className="w-full flex gap-4 items-center justify-between">
 				<h3 className="text-xl text-dark-700 font-semibold">List of cameras</h3>
-				<PermissionCheck allowPermission={PERMISSIONS.MONITOR.CREATE}>
+				<PermissionCheck allowPermission={[PERMISSIONS.MONITOR.CREATE]}>
 					<Button onClick={() => setOpenCreateDialog(true)}>
 						<Plus className="h-4 w-4" /> Add Camera
 					</Button>

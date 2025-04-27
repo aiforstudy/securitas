@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { ControlPosition, Map, MapControl } from "@vis.gl/react-google-maps"
 import { Loader2 } from "lucide-react"
 import moment from "moment"
+import { toast } from "sonner"
 import * as z from "zod"
 
 import { Company, CreateCompanyDto, UpdateCompanyDto } from "@/api-generated/types.gen"
@@ -57,6 +58,7 @@ const CompanyDialog: React.FC<CompanyDialogProps> = ({ open, onSubmit, isLoading
 			: {}),
 	})
 	const [selectedPlace, setSelectedPlace] = useState<google.maps.places.Place | null>(null)
+
 	const handleSubmit = async (values: CompanyDialogFormValues) => {
 		try {
 			if (editCompany) {
@@ -76,8 +78,9 @@ const CompanyDialog: React.FC<CompanyDialogProps> = ({ open, onSubmit, isLoading
 
 				await onSubmit(newCompany)
 			}
-		} catch (error) {
-			console.error("Error in company operation:", error)
+		} catch (e) {
+			const error = e as Error
+			toast.error(`Error in company operation: ${error.message}`)
 		}
 	}
 

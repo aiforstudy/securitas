@@ -132,7 +132,7 @@ const DetectionsPage: React.FC = () => {
 			columnHelper.accessor("created_at", {
 				cell: (info) => (
 					<div className="flex gap-2 relative justify-end text-right">
-						<PermissionCheck allowPermission={PERMISSIONS.DETECTION.DELETE}>
+						<PermissionCheck allowPermission={[PERMISSIONS.DETECTION.DELETE]}>
 							<Button
 								size="icon"
 								onClick={() => setSelectedDelete(info.row.original)}
@@ -212,7 +212,7 @@ const DetectionsPage: React.FC = () => {
 				</div>
 				{selectedDetections.length > 0 && (
 					<div className="w-[200px]">
-						<PermissionCheck allowPermission={PERMISSIONS.DETECTION.EDIT}>
+						<PermissionCheck allowPermission={[PERMISSIONS.DETECTION.UPDATE]}>
 							<Button onClick={() => setOpenApproveDialog(true)}>
 								<CheckCheck /> Approve {selectedDetections.length} detection(s)
 							</Button>

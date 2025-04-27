@@ -14,6 +14,7 @@ import DetectionsPage from "@/pages/Detections/DetectionsPage"
 import ForbiddenPage from "@/pages/Forbidden/ForbiddenPage"
 import LiveViewPage from "@/pages/LiveView/LiveViewPage"
 import NotFoundPage from "@/pages/NotFound/NotFoundPage"
+import RoleSettingsPage from "@/pages/RoleSettings"
 import SmartLocksPage from "@/pages/SmartLocks/SmartLocksPage"
 
 import GuardedProtectedRoute from "./guard/ProtectedRoute/ProtectedRoute"
@@ -126,7 +127,7 @@ const useRouterElements = () => {
 								},
 								{
 									path: PATH.SYSTEM.ROLE_SETTINGS,
-									element: withSuspense(ComingSoonPage),
+									element: <RoleProtectedRoute element={withSuspense(RoleSettingsPage)} allowedRoles={[ERole.ADMIN]} />,
 								},
 								{
 									path: PATH.SYSTEM.COMPANIES,

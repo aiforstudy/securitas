@@ -57,6 +57,16 @@ import type {
 	MonitorControllerStartStreamData,
 	MonitorControllerUpdateData,
 	MonitorControllerUpdateResponse,
+	RolesControllerCreateData,
+	RolesControllerCreateResponse,
+	RolesControllerFindAllData,
+	RolesControllerFindAllResponse,
+	RolesControllerFindOneData,
+	RolesControllerFindOneResponse,
+	RolesControllerGetPermissionsData,
+	RolesControllerGetPermissionsResponse,
+	RolesControllerUpdateData,
+	RolesControllerUpdateResponse,
 	SmartLockControllerCreateData,
 	SmartLockControllerCreateResponse,
 	SmartLockControllerFindAllData,
@@ -76,6 +86,15 @@ import type {
 	SmartLockEventControllerFindAllResponse,
 	SmartLockEventControllerFindOneData,
 	SmartLockEventControllerFindOneResponse,
+	UsersControllerCreateData,
+	UsersControllerCreateResponse,
+	UsersControllerFindAllData,
+	UsersControllerFindAllResponse,
+	UsersControllerFindOneData,
+	UsersControllerFindOneResponse,
+	UsersControllerRemoveData,
+	UsersControllerUpdateData,
+	UsersControllerUpdateResponse,
 } from "./types.gen"
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = ClientOptions<
@@ -503,6 +522,104 @@ export const authControllerGetPermissions = <ThrowOnError extends boolean = fals
 }
 
 /**
+ * Get all roles
+ */
+export const rolesControllerFindAll = <ThrowOnError extends boolean = false>(
+	options?: Options<RolesControllerFindAllData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).get<RolesControllerFindAllResponse, unknown, ThrowOnError>({
+		security: [
+			{
+				scheme: "bearer",
+				type: "http",
+			},
+		],
+		url: "/roles",
+		...options,
+	})
+}
+
+/**
+ * Create a new role
+ */
+export const rolesControllerCreate = <ThrowOnError extends boolean = false>(
+	options: Options<RolesControllerCreateData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).post<RolesControllerCreateResponse, unknown, ThrowOnError>({
+		security: [
+			{
+				scheme: "bearer",
+				type: "http",
+			},
+		],
+		url: "/roles",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options?.headers,
+		},
+	})
+}
+
+/**
+ * Get all permissions
+ */
+export const rolesControllerGetPermissions = <ThrowOnError extends boolean = false>(
+	options?: Options<RolesControllerGetPermissionsData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).get<RolesControllerGetPermissionsResponse, unknown, ThrowOnError>({
+		security: [
+			{
+				scheme: "bearer",
+				type: "http",
+			},
+		],
+		url: "/roles/permissions",
+		...options,
+	})
+}
+
+/**
+ * Get a role by code
+ */
+export const rolesControllerFindOne = <ThrowOnError extends boolean = false>(
+	options: Options<RolesControllerFindOneData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).get<RolesControllerFindOneResponse, unknown, ThrowOnError>({
+		security: [
+			{
+				scheme: "bearer",
+				type: "http",
+			},
+		],
+		url: "/roles/{code}",
+		...options,
+	})
+}
+
+/**
+ * Update a role
+ */
+export const rolesControllerUpdate = <ThrowOnError extends boolean = false>(
+	options: Options<RolesControllerUpdateData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).patch<RolesControllerUpdateResponse, unknown, ThrowOnError>({
+		security: [
+			{
+				scheme: "bearer",
+				type: "http",
+			},
+		],
+		url: "/roles/{code}",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options?.headers,
+		},
+	})
+}
+
+/**
  * Get all smartlocks
  */
 export const smartLockControllerFindAll = <ThrowOnError extends boolean = false>(
@@ -627,5 +744,103 @@ export const smartLockEventControllerFindOne = <ThrowOnError extends boolean = f
 	return (options.client ?? _heyApiClient).get<SmartLockEventControllerFindOneResponse, unknown, ThrowOnError>({
 		url: "/smartlock-events/{id}",
 		...options,
+	})
+}
+
+/**
+ * Get all users
+ */
+export const usersControllerFindAll = <ThrowOnError extends boolean = false>(
+	options?: Options<UsersControllerFindAllData, ThrowOnError>,
+) => {
+	return (options?.client ?? _heyApiClient).get<UsersControllerFindAllResponse, unknown, ThrowOnError>({
+		security: [
+			{
+				scheme: "bearer",
+				type: "http",
+			},
+		],
+		url: "/users",
+		...options,
+	})
+}
+
+/**
+ * Create a new user
+ */
+export const usersControllerCreate = <ThrowOnError extends boolean = false>(
+	options: Options<UsersControllerCreateData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).post<UsersControllerCreateResponse, unknown, ThrowOnError>({
+		security: [
+			{
+				scheme: "bearer",
+				type: "http",
+			},
+		],
+		url: "/users",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options?.headers,
+		},
+	})
+}
+
+/**
+ * Delete a user
+ */
+export const usersControllerRemove = <ThrowOnError extends boolean = false>(
+	options: Options<UsersControllerRemoveData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).delete<unknown, unknown, ThrowOnError>({
+		security: [
+			{
+				scheme: "bearer",
+				type: "http",
+			},
+		],
+		url: "/users/{id}",
+		...options,
+	})
+}
+
+/**
+ * Get a user by ID
+ */
+export const usersControllerFindOne = <ThrowOnError extends boolean = false>(
+	options: Options<UsersControllerFindOneData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).get<UsersControllerFindOneResponse, unknown, ThrowOnError>({
+		security: [
+			{
+				scheme: "bearer",
+				type: "http",
+			},
+		],
+		url: "/users/{id}",
+		...options,
+	})
+}
+
+/**
+ * Update a user
+ */
+export const usersControllerUpdate = <ThrowOnError extends boolean = false>(
+	options: Options<UsersControllerUpdateData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).patch<UsersControllerUpdateResponse, unknown, ThrowOnError>({
+		security: [
+			{
+				scheme: "bearer",
+				type: "http",
+			},
+		],
+		url: "/users/{id}",
+		...options,
+		headers: {
+			"Content-Type": "application/json",
+			...options?.headers,
+		},
 	})
 }

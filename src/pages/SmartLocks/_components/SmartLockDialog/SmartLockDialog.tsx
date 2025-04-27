@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form"
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2 } from "lucide-react"
+import { toast } from "sonner"
 import * as z from "zod"
 
 import { CreateSmartLockDto, SmartLock } from "@/api-generated/types.gen"
@@ -84,8 +85,9 @@ const SmartLockDialog: React.FC<SmartLockDialogProps> = ({
 
 				await onSubmit(newSmartLock)
 			}
-		} catch (error) {
-			console.error("Error in camera operation:", error)
+		} catch (e) {
+			const error = e as Error
+			toast.error(`Error in smart lock operation: ${error.message}`)
 		}
 	}
 

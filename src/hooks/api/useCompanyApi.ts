@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query"
 
-import { Company, CompanyControllerFindAllData, CompanyControllerFindOneData, type Options } from "@/api-generated"
+import { CompanyControllerFindAllData, CompanyControllerFindOneData, type Options } from "@/api-generated"
 import {
 	companyControllerCreateMutation,
 	companyControllerFindAllOptions,
@@ -30,47 +30,32 @@ export const useGetCompany = (queryOptions: Options<CompanyControllerFindOneData
 	}
 }
 
-export const useCreateCompany = (onSuccess?: (data: Company) => void, onError?: (error: Error) => void) => {
+export const useCreateCompany = () => {
 	const mutationOptions = companyControllerCreateMutation()
-	return useMutation({ ...mutationOptions, onSuccess, onError })
+	return useMutation({ ...mutationOptions })
 }
 
-export const useUpdateCompany = (onSuccess?: (data: Company) => void, onError?: (error: Error) => void) => {
+export const useUpdateCompany = () => {
 	const mutationOptions = companyControllerUpdateMutation()
-	return useMutation({ ...mutationOptions, onSuccess, onError })
+	return useMutation({ ...mutationOptions })
 }
 
-export const useDeleteCompany = (onSuccess?: (data: void) => void, onError?: (error: Error) => void) => {
+export const useDeleteCompany = () => {
 	const mutationOptions = companyControllerRemoveMutation()
-	return useMutation({ ...mutationOptions, onSuccess, onError })
+	return useMutation({ ...mutationOptions })
 }
 
 type UseCompanyApiOptions = {
-	query?: Options<CompanyControllerFindAllData>["query"]
 	path?: Options<CompanyControllerFindOneData>["path"]
-	onCreateSuccess?: (data: Company) => void
-	onCreateError?: (error: Error) => void
-	onUpdateSuccess?: (data: Company) => void
-	onUpdateError?: (error: Error) => void
-	onDeleteSuccess?: (data: void) => void
-	onDeleteError?: (error: Error) => void
+	query?: Options<CompanyControllerFindAllData>["query"]
 }
 
-const useCompanyApi = ({
-	query,
-	path,
-	onCreateSuccess,
-	onCreateError,
-	onUpdateSuccess,
-	onUpdateError,
-	onDeleteSuccess,
-	onDeleteError,
-}: UseCompanyApiOptions) => {
-	const company = useGetCompany({ path: path! })
-	const companies = useGetCompanies({ query: query! })
-	const createCompany = useCreateCompany(onCreateSuccess, onCreateError)
-	const updateCompany = useUpdateCompany(onUpdateSuccess, onUpdateError)
-	const deleteCompany = useDeleteCompany(onDeleteSuccess, onDeleteError)
+const useCompanyApi = (options: UseCompanyApiOptions = {}) => {
+	const company = useGetCompany({ path: options.path! })
+	const companies = useGetCompanies({ query: options.query })
+	const createCompany = useCreateCompany()
+	const updateCompany = useUpdateCompany()
+	const deleteCompany = useDeleteCompany()
 
 	return {
 		company,

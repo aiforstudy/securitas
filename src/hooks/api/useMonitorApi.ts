@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query"
 
-import { Monitor, MonitorControllerFindAllData, MonitorControllerFindOneData, type Options } from "@/api-generated"
+import { MonitorControllerFindAllData, MonitorControllerFindOneData, type Options } from "@/api-generated"
 import {
 	monitorControllerCreateMutation,
 	monitorControllerFindAllOptions,
@@ -36,57 +36,39 @@ export const useGetMonitor = (queryOptions: Options<MonitorControllerFindOneData
 	}
 }
 
-export const useCreateMonitor = (onSuccess?: (data: Monitor) => void, onError?: (error: Error) => void) => {
+export const useCreateMonitor = () => {
 	const mutationOptions = monitorControllerCreateMutation()
-	return useMutation({ ...mutationOptions, onSuccess, onError })
+	return useMutation({ ...mutationOptions })
 }
 
-export const useUpdateMonitor = (onSuccess?: (data: Monitor) => void, onError?: (error: Error) => void) => {
+export const useUpdateMonitor = () => {
 	const mutationOptions = monitorControllerUpdateMutation()
-	return useMutation({ ...mutationOptions, onSuccess, onError })
+	return useMutation({ ...mutationOptions })
 }
 
-export const useDeleteMonitor = (onSuccess?: (data: void) => void, onError?: (error: Error) => void) => {
+export const useDeleteMonitor = () => {
 	const mutationOptions = monitorControllerRemoveMutation()
-	return useMutation({ ...mutationOptions, onSuccess, onError })
+	return useMutation({ ...mutationOptions })
 }
 
-export const useStartMonitorsStream = (onSuccess?: (data: unknown) => void, onError?: (error: Error) => void) => {
+export const useStartMonitorsStream = () => {
 	const mutationOptions = monitorControllerStartStreamMutation()
-	return useMutation({ ...mutationOptions, onSuccess, onError })
+	return useMutation({ ...mutationOptions })
 }
 
 type UseMonitorApiOptions = {
-	query?: Options<MonitorControllerFindAllData>["query"]
 	path?: Options<MonitorControllerFindOneData>["path"]
-	onCreateSuccess?: (data: Monitor) => void
-	onCreateError?: (error: Error) => void
-	onUpdateSuccess?: (data: Monitor) => void
-	onUpdateError?: (error: Error) => void
-	onDeleteSuccess?: (data: void) => void
-	onDeleteError?: (error: Error) => void
-	onStartStreamSuccess?: (data: unknown) => void
-	onStartStreamError?: (error: Error) => void
+	query?: Options<MonitorControllerFindAllData>["query"]
 }
 
-const useMonitorApi = ({
-	query,
-	path,
-	onCreateSuccess,
-	onCreateError,
-	onUpdateSuccess,
-	onUpdateError,
-	onDeleteSuccess,
-	onDeleteError,
-	onStartStreamSuccess,
-	onStartStreamError,
-}: UseMonitorApiOptions) => {
-	const monitor = useGetMonitor({ path: path! })
-	const monitors = useGetMonitors({ query: query! }, { enabled: !!query })
-	const createMonitor = useCreateMonitor(onCreateSuccess, onCreateError)
-	const updateMonitor = useUpdateMonitor(onUpdateSuccess, onUpdateError)
-	const deleteMonitor = useDeleteMonitor(onDeleteSuccess, onDeleteError)
-	const startMonitorsStream = useStartMonitorsStream(onStartStreamSuccess, onStartStreamError)
+const useMonitorApi = (options: UseMonitorApiOptions = {}) => {
+	const monitor = useGetMonitor({ path: options.path! })
+	const monitors = useGetMonitors({ query: options.query! }, { enabled: !!options.query })
+	const createMonitor = useCreateMonitor()
+	const updateMonitor = useUpdateMonitor()
+	const deleteMonitor = useDeleteMonitor()
+	const startMonitorsStream = useStartMonitorsStream()
+
 	return {
 		monitor,
 		monitors,

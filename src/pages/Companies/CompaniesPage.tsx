@@ -118,12 +118,12 @@ const CompaniesPage: React.FC = () => {
 				id: "actions",
 				cell: (info) => (
 					<div className="flex gap-2 relative justify-end text-right">
-						<PermissionCheck allowPermission={PERMISSIONS.COMPANY.EDIT}>
+						<PermissionCheck allowPermission={[PERMISSIONS.COMPANY.UPDATE]}>
 							<Button size="icon" onClick={() => handleOpenEditDialog(info.row.original)} variant="outline">
 								<Edit className="h-4 w-4" />
 							</Button>
 						</PermissionCheck>
-						<PermissionCheck allowPermission={PERMISSIONS.COMPANY.DELETE}>
+						<PermissionCheck allowPermission={[PERMISSIONS.COMPANY.DELETE]}>
 							<Button size="icon" onClick={() => setSelectedDelete(info.row.original)} variant="outline">
 								<Trash2 className="h-4 w-4" />
 							</Button>
@@ -159,7 +159,7 @@ const CompaniesPage: React.FC = () => {
 		<div className="p-5 h-full space-y-4">
 			<div className="w-full flex gap-4 items-center justify-between">
 				<h3 className="text-xl text-dark-700 font-semibold">List of companies</h3>
-				<PermissionCheck allowPermission={PERMISSIONS.COMPANY.CREATE}>
+				<PermissionCheck allowPermission={[PERMISSIONS.COMPANY.CREATE]}>
 					<Button onClick={() => setOpenCreateDialog(true)}>
 						<Plus className="h-4 w-4" /> Add Company
 					</Button>
@@ -177,7 +177,6 @@ const CompaniesPage: React.FC = () => {
 					onPaginationChange: setPagination,
 				}}
 				loading={{ spinning: companies.isLoading }}
-				className="h-[calc(100%-44px-69px-16px)]"
 				pagination
 			/>
 

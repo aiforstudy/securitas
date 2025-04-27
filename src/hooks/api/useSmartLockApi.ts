@@ -2,7 +2,6 @@ import { useMutation, useQuery } from "@tanstack/react-query"
 
 import {
 	type Options,
-	SmartLock,
 	SmartLockControllerFindAllData,
 	SmartLockControllerFindOneData,
 	SmartLockControllerSearchAndPaginateData,
@@ -59,51 +58,35 @@ export const useGetSmartLockBySN = (sn?: string) => {
 	}
 }
 
-export const useCreateSmartLock = (onSuccess?: (data: SmartLock) => void, onError?: (error: Error) => void) => {
+export const useCreateSmartLock = () => {
 	const mutationOptions = smartLockControllerCreateMutation()
-	return useMutation({ ...mutationOptions, onSuccess, onError })
+	return useMutation({ ...mutationOptions })
 }
 
-export const useUpdateSmartLock = (onSuccess?: (data: SmartLock) => void, onError?: (error: Error) => void) => {
+export const useUpdateSmartLock = () => {
 	const mutationOptions = smartLockControllerUpdateMutation()
-	return useMutation({ ...mutationOptions, onSuccess, onError })
+	return useMutation({ ...mutationOptions })
 }
 
-export const useDeleteSmartLock = (onSuccess?: (data: unknown) => void, onError?: (error: Error) => void) => {
+export const useDeleteSmartLock = () => {
 	const mutationOptions = smartLockControllerRemoveMutation()
-	return useMutation({ ...mutationOptions, onSuccess, onError })
+	return useMutation({ ...mutationOptions })
 }
 
-type UseCompanyApiOptions = {
-	query?: Options<SmartLockControllerSearchAndPaginateData>["query"]
-	path?: Options<SmartLockControllerFindOneData>["path"]
+type UseSmartLockApiOptions = {
 	sn?: string
-	onCreateSuccess?: (data: SmartLock) => void
-	onCreateError?: (error: Error) => void
-	onUpdateSuccess?: (data: SmartLock) => void
-	onUpdateError?: (error: Error) => void
-	onDeleteSuccess?: (data: unknown) => void
-	onDeleteError?: (error: Error) => void
+	path?: Options<SmartLockControllerFindOneData>["path"]
+	query?: Options<SmartLockControllerSearchAndPaginateData>["query"]
 }
 
-const useSmartLockApi = ({
-	query,
-	path,
-	sn,
-	onCreateSuccess,
-	onCreateError,
-	onUpdateSuccess,
-	onUpdateError,
-	onDeleteSuccess,
-	onDeleteError,
-}: UseCompanyApiOptions) => {
-	const smartLock = useGetSmartLock({ path: path! })
-	const smartLocks = useGetSmartLocks({ query: query! })
-	const smartLockBySn = useGetSmartLockBySN(sn)
-	const allSmartLocks = useGetAllSmartLocks({ query: query! })
-	const createSmartLock = useCreateSmartLock(onCreateSuccess, onCreateError)
-	const updateSmartLock = useUpdateSmartLock(onUpdateSuccess, onUpdateError)
-	const deleteSmartLock = useDeleteSmartLock(onDeleteSuccess, onDeleteError)
+const useSmartLockApi = (options: UseSmartLockApiOptions = {}) => {
+	const smartLock = useGetSmartLock({ path: options.path! })
+	const smartLocks = useGetSmartLocks({ query: options.query! })
+	const smartLockBySn = useGetSmartLockBySN(options.sn)
+	const allSmartLocks = useGetAllSmartLocks({ query: options.query! })
+	const createSmartLock = useCreateSmartLock()
+	const updateSmartLock = useUpdateSmartLock()
+	const deleteSmartLock = useDeleteSmartLock()
 
 	return {
 		smartLock,

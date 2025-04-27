@@ -6,11 +6,12 @@ import { SIDEBAR_WIDTH, SIDEBAR_WIDTH_ICON, useSidebar } from "@/components/ui/s
 import { cn } from "@/lib/utils"
 
 import CompanySelection from "../CompanySelection"
-import { Language } from "../Language"
+// import { Language } from "../Language"
 import { Button } from "../ui/button"
 import Account from "./Account"
-import Notification from "./Notification"
-import Settings from "./Settings"
+
+// import Notification from "./Notification"
+// import Settings from "./Settings"
 
 const Header: React.FC = () => {
 	const { open, toggleSidebar } = useSidebar()
@@ -30,9 +31,9 @@ const Header: React.FC = () => {
 			</div>
 			<div className="px-5">
 				<div className="flex items-center gap-4">
-					<Language isHiddenText className="w-[36px] h-[36px] rounded-md" />
-					<Notification />
-					<Settings />
+					{/* <Language isHiddenText className="w-[36px] h-[36px] rounded-md" /> */}
+					{/* <Notification /> */}
+					{/* <Settings /> */}
 					<Account />
 				</div>
 			</div>

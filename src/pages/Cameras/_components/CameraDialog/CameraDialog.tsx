@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form"
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2 } from "lucide-react"
+import { toast } from "sonner"
 import * as z from "zod"
 
 import { CreateMonitorDto, Engine, Monitor, UpdateMonitorDto } from "@/api-generated/types.gen"
@@ -91,8 +92,9 @@ const CameraDialog: React.FC<CameraDialogProps> = ({
 
 				await onSubmit(newCamera)
 			}
-		} catch (error) {
-			console.error("Error in camera operation:", error)
+		} catch (e) {
+			const error = e as Error
+			toast.error(`Error in camera operation: ${error.message}`)
 		}
 	}
 

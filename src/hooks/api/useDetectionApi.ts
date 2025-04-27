@@ -1,7 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query"
 
 import {
-	Detection,
 	DetectionControllerFindAllData,
 	DetectionControllerFindOneData,
 	DetectionControllerGetStatisticsData,
@@ -76,75 +75,52 @@ export const useGetDetection = (queryOptions: Options<DetectionControllerFindOne
 	}
 }
 
-export const useCreateDetection = (onSuccess?: (data: Detection) => void, onError?: (error: Error) => void) => {
+export const useCreateDetection = () => {
 	const mutationOptions = detectionControllerCreateIncomingDetectionMutation()
-	return useMutation({ ...mutationOptions, onSuccess, onError })
+	return useMutation({ ...mutationOptions })
 }
 
-export const useUpdateDetection = (onSuccess?: (data: Detection) => void, onError?: (error: Error) => void) => {
+export const useUpdateDetection = () => {
 	const mutationOptions = detectionControllerUpdateMutation()
-	return useMutation({ ...mutationOptions, onSuccess, onError })
+	return useMutation({ ...mutationOptions })
 }
 
-export const useDeleteDetection = (onSuccess?: (data: void) => void, onError?: (error: Error) => void) => {
+export const useDeleteDetection = () => {
 	const mutationOptions = detectionControllerRemoveMutation()
-	return useMutation({ ...mutationOptions, onSuccess, onError })
+	return useMutation({ ...mutationOptions })
 }
 
-export const useApproveDetection = (onSuccess?: (data: Detection) => void, onError?: (error: Error) => void) => {
+export const useApproveDetection = () => {
 	const mutationOptions = detectionControllerApproveDetectionMutation()
-	return useMutation({ ...mutationOptions, onSuccess, onError })
+	return useMutation({ ...mutationOptions })
 }
 
-export const useApproveDetections = (onSuccess?: (data: Detection[]) => void, onError?: (error: Error) => void) => {
+export const useApproveDetections = () => {
 	const mutationOptions = detectionControllerBulkApproveDetectionsMutation()
-	return useMutation({ ...mutationOptions, onSuccess, onError })
+	return useMutation({ ...mutationOptions })
 }
 
 type UseDetectionApiOptions = {
+	path?: Options<DetectionControllerFindOneData>["path"]
 	query?: Options<DetectionControllerSearchDetectionsData>["query"]
 	allQuery?: Options<DetectionControllerFindAllData>["query"]
-	path?: Options<DetectionControllerFindOneData>["path"]
 	statisticsQuery?: Options<DetectionControllerGetStatisticsData>["query"]
 	refetchInterval?: number
-	onCreateSuccess?: (data: Detection) => void
-	onCreateError?: (error: Error) => void
-	onUpdateSuccess?: (data: Detection) => void
-	onUpdateError?: (error: Error) => void
-	onDeleteSuccess?: (data: void) => void
-	onDeleteError?: (error: Error) => void
-	onApproveDetectionSuccess?: (data: Detection) => void
-	onApproveDetectionError?: (error: Error) => void
-	onApproveDetectionsSuccess?: (data: Detection[]) => void
-	onApproveDetectionsError?: (error: Error) => void
 }
 
-const useDetectionApi = ({
-	path,
-	query,
-	allQuery,
-	statisticsQuery,
-	refetchInterval,
-	onCreateSuccess,
-	onCreateError,
-	onUpdateSuccess,
-	onUpdateError,
-	onDeleteSuccess,
-	onDeleteError,
-	onApproveDetectionSuccess,
-	onApproveDetectionError,
-	onApproveDetectionsSuccess,
-	onApproveDetectionsError,
-}: UseDetectionApiOptions) => {
-	const detection = useGetDetection({ path: path! })
-	const detections = useGetDetections({ query: query! }, { enabled: !!query, refetchInterval })
-	const allDetections = useGetAllDetections({ query: allQuery! }, { enabled: !!allQuery })
-	const createDetection = useCreateDetection(onCreateSuccess, onCreateError)
-	const updateDetection = useUpdateDetection(onUpdateSuccess, onUpdateError)
-	const deleteDetection = useDeleteDetection(onDeleteSuccess, onDeleteError)
-	const approveDetection = useApproveDetection(onApproveDetectionSuccess, onApproveDetectionError)
-	const approveDetections = useApproveDetections(onApproveDetectionsSuccess, onApproveDetectionsError)
-	const detectionsStatistics = useGetDetectionsStatistics({ query: statisticsQuery! })
+const useDetectionApi = (options: UseDetectionApiOptions = {}) => {
+	const detection = useGetDetection({ path: options.path! })
+	const detections = useGetDetections(
+		{ query: options.query! },
+		{ enabled: !!options.query, refetchInterval: options.refetchInterval },
+	)
+	const allDetections = useGetAllDetections({ query: options.allQuery! }, { enabled: !!options.allQuery })
+	const createDetection = useCreateDetection()
+	const updateDetection = useUpdateDetection()
+	const deleteDetection = useDeleteDetection()
+	const approveDetection = useApproveDetection()
+	const approveDetections = useApproveDetections()
+	const detectionsStatistics = useGetDetectionsStatistics({ query: options.statisticsQuery! })
 
 	return {
 		detection,

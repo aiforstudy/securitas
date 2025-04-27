@@ -1,11 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query"
 
-import {
-	type Options,
-	SmartLockEvent,
-	SmartLockEventControllerFindAllData,
-	SmartLockEventControllerFindOneData,
-} from "@/api-generated"
+import { type Options, SmartLockEventControllerFindAllData, SmartLockEventControllerFindOneData } from "@/api-generated"
 import {
 	smartLockEventControllerCreateMutation,
 	smartLockEventControllerFindAllOptions,
@@ -31,25 +26,20 @@ export const useGetSmartLockEvent = (queryOptions: Options<SmartLockEventControl
 	}
 }
 
-export const useCreateSmartLockEvent = (
-	onSuccess?: (data: SmartLockEvent) => void,
-	onError?: (error: Error) => void,
-) => {
+export const useCreateSmartLockEvent = () => {
 	const mutationOptions = smartLockEventControllerCreateMutation()
-	return useMutation({ ...mutationOptions, onSuccess, onError })
+	return useMutation({ ...mutationOptions })
 }
 
 type UseSmartLockEventApiOptions = {
-	query?: Options<SmartLockEventControllerFindAllData>["query"]
 	path?: Options<SmartLockEventControllerFindOneData>["path"]
-	onCreateSuccess?: (data: SmartLockEvent) => void
-	onCreateError?: (error: Error) => void
+	query?: Options<SmartLockEventControllerFindAllData>["query"]
 }
 
-const useSmartLockEventApi = ({ query, path, onCreateSuccess, onCreateError }: UseSmartLockEventApiOptions) => {
-	const smartLockEvent = useGetSmartLockEvent({ path: path! })
-	const smartLockEvents = useGetSmartLockEvents({ query: query! })
-	const createSmartLockEvent = useCreateSmartLockEvent(onCreateSuccess, onCreateError)
+const useSmartLockEventApi = (options: UseSmartLockEventApiOptions = {}) => {
+	const smartLockEvent = useGetSmartLockEvent({ path: options.path! })
+	const smartLockEvents = useGetSmartLockEvents({ query: options.query! })
+	const createSmartLockEvent = useCreateSmartLockEvent()
 
 	return {
 		smartLockEvent,

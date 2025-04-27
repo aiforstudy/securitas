@@ -5,6 +5,7 @@ import { BrowserRouter as ReactRouterProvider } from "react-router-dom"
 import { QueryClientProvider as ReactQueryProvider } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import { APIProvider as ReactGoogleMapProvider } from "@vis.gl/react-google-maps"
+import { CircleAlertIcon, CircleCheckIcon, CircleXIcon, InfoIcon, LoaderCircleIcon } from "lucide-react"
 
 import ErrorBoundary from "@/components/ErrorBoundary"
 import { Toaster as SonnerToaster } from "@/components/ui/sonner"
@@ -38,7 +39,16 @@ createRoot(document.getElementById("root")!).render(
 							<AuthProvider>
 								<TooltipProvider>
 									<App />
-									<SonnerToaster position="top-right" />
+									<SonnerToaster
+										icons={{
+											info: <InfoIcon color="#3b82f6" className="w-4 h-4" />,
+											error: <CircleXIcon color="#ef4444" className="w-4 h-4" />,
+											success: <CircleCheckIcon color="#10b981" className="w-4 h-4" />,
+											warning: <CircleAlertIcon color="#f59e0b" className="w-4 h-4" />,
+											loading: <LoaderCircleIcon className="w-4 h-4 animate-spin" />,
+										}}
+										position="top-right"
+									/>
 									<ReactQueryDevtools position="bottom" initialIsOpen={false} buttonPosition="bottom-right" />
 								</TooltipProvider>
 							</AuthProvider>

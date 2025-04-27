@@ -2,14 +2,17 @@ import * as React from "react"
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import usePermissions, { IPermission } from "@/hooks/usePermissions"
+import { cn } from "@/lib/utils"
 
 export type PermissionCheckProps = React.PropsWithChildren<{
+	fullWidth?: boolean
 	allowPermission: IPermission
 	hideIfDoNotHavePermission?: boolean
 }>
 
 const PermissionCheck: React.FC<PermissionCheckProps> = ({
 	children,
+	fullWidth = false,
 	allowPermission,
 	hideIfDoNotHavePermission = false,
 }) => {
@@ -24,8 +27,8 @@ const PermissionCheck: React.FC<PermissionCheckProps> = ({
 			<TooltipProvider>
 				<Tooltip>
 					<TooltipTrigger asChild>
-						<div className="w-fit cursor-not-allowed opacity-80">
-							<div className="w-fit pointer-events-none text-gray-400">{children}</div>
+						<div className={cn("w-fit cursor-not-allowed opacity-80", { "w-full": fullWidth })}>
+							<div className={cn("w-fit pointer-events-none text-gray-400", { "w-full": fullWidth })}>{children}</div>
 						</div>
 					</TooltipTrigger>
 					<TooltipContent>

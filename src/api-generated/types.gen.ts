@@ -855,29 +855,91 @@ export type RegisterDto = {
 	company_code?: string
 }
 
+export type PermissionRequirement = {
+	[key: string]: unknown
+}
+
+/**
+ * The role of the user
+ */
+// export enum Role {
+//     ADMIN = 'admin',
+//     USER = 'user',
+//     VIEWER = 'viewer'
+// }
+
 export type UserPermissionsDto = {
 	/**
-	 * User ID
+	 * The unique identifier of the user
 	 */
 	id: string
 	/**
-	 * User email
+	 * The email of the user
 	 */
 	email: string
 	/**
-	 * User name
+	 * The name of the user
 	 */
 	name: string
 	/**
-	 * User role
+	 * The role of the user
 	 */
-	role: string
+	role: "admin" | "user" | "viewer"
 	/**
-	 * Company code associated with the user
+	 * The company code associated with the user
 	 */
 	company_code?: string
 	/**
-	 * List of permissions based on role
+	 * The permissions of the user
+	 */
+	permissions: Array<PermissionRequirement>
+}
+
+export type Role = {
+	/**
+	 * The code of the role
+	 */
+	code: string
+	/**
+	 * The name of the role
+	 */
+	name: string
+	/**
+	 * The permissions of the role
+	 */
+	permissions: Array<string>
+	/**
+	 * The timestamp when the role was created
+	 */
+	created_at: string
+	/**
+	 * The timestamp when the role was last updated
+	 */
+	updated_at: string
+}
+
+export type CreateRoleDto = {
+	/**
+	 * The code of the role
+	 */
+	code: string
+	/**
+	 * The name of the role
+	 */
+	name: string
+	/**
+	 * The permissions of the role
+	 */
+	permissions: Array<string>
+}
+
+export type UpdateRoleDto = {
+	/**
+	 * The name of the role
+	 */
+	name: string
+	/**
+	 * The permissions of the role
 	 */
 	permissions: Array<string>
 }
@@ -1039,6 +1101,83 @@ export type SmartLockEvent = {
 	 * Timestamp when the event was last updated
 	 */
 	updated_at: string
+}
+
+export type UserResponseDto = {
+	/**
+	 * The unique identifier of the user
+	 */
+	id: string
+	/**
+	 * The email of the user
+	 */
+	email: string
+	/**
+	 * The name of the user
+	 */
+	name: string
+	/**
+	 * The role of the user
+	 */
+	role: "admin" | "user" | "viewer"
+	/**
+	 * The company code associated with the user
+	 */
+	company_code?: string
+	/**
+	 * The timestamp when the user was created
+	 */
+	created_at: string
+	/**
+	 * The timestamp when the user was last updated
+	 */
+	updated_at: string
+}
+
+export type CreateUserDto = {
+	/**
+	 * The email of the user
+	 */
+	email: string
+	/**
+	 * The password of the user
+	 */
+	password: string
+	/**
+	 * The name of the user
+	 */
+	name: string
+	/**
+	 * The role of the user
+	 */
+	role: "admin" | "user" | "viewer"
+	/**
+	 * The company code associated with the user
+	 */
+	company_code?: string
+}
+
+export type UpdateUserDto = {
+	/**
+	 * The email of the user
+	 */
+	email?: string
+	/**
+	 * The password of the user
+	 */
+	password?: string
+	/**
+	 * The name of the user
+	 */
+	name?: string
+	/**
+	 * The role of the user
+	 */
+	role?: "admin" | "user" | "viewer"
+	/**
+	 * The company code associated with the user
+	 */
+	company_code?: string
 }
 
 export type AppControllerGetHelloData = {
@@ -1811,6 +1950,123 @@ export type AuthControllerGetPermissionsResponses = {
 export type AuthControllerGetPermissionsResponse =
 	AuthControllerGetPermissionsResponses[keyof AuthControllerGetPermissionsResponses]
 
+export type RolesControllerFindAllData = {
+	body?: never
+	path?: never
+	query?: never
+	url: "/roles"
+}
+
+export type RolesControllerFindAllResponses = {
+	/**
+	 * Returns all roles
+	 */
+	200: Array<Role>
+}
+
+export type RolesControllerFindAllResponse = RolesControllerFindAllResponses[keyof RolesControllerFindAllResponses]
+
+export type RolesControllerCreateData = {
+	body: CreateRoleDto
+	path?: never
+	query?: never
+	url: "/roles"
+}
+
+export type RolesControllerCreateErrors = {
+	/**
+	 * Bad request
+	 */
+	400: unknown
+}
+
+export type RolesControllerCreateResponses = {
+	/**
+	 * Role created successfully
+	 */
+	201: Role
+}
+
+export type RolesControllerCreateResponse = RolesControllerCreateResponses[keyof RolesControllerCreateResponses]
+
+export type RolesControllerGetPermissionsData = {
+	body?: never
+	path?: never
+	query?: never
+	url: "/roles/permissions"
+}
+
+export type RolesControllerGetPermissionsResponses = {
+	/**
+	 * Returns all permissions
+	 */
+	200: Array<{
+		code?: string
+		name?: string
+		desc?: string
+		actions?: Array<string>
+		created_at?: string
+		updated_at?: string
+	}>
+}
+
+export type RolesControllerGetPermissionsResponse =
+	RolesControllerGetPermissionsResponses[keyof RolesControllerGetPermissionsResponses]
+
+export type RolesControllerFindOneData = {
+	body?: never
+	path: {
+		code: string
+	}
+	query?: never
+	url: "/roles/{code}"
+}
+
+export type RolesControllerFindOneErrors = {
+	/**
+	 * Role not found
+	 */
+	404: unknown
+}
+
+export type RolesControllerFindOneResponses = {
+	/**
+	 * Returns the role
+	 */
+	200: Role
+}
+
+export type RolesControllerFindOneResponse = RolesControllerFindOneResponses[keyof RolesControllerFindOneResponses]
+
+export type RolesControllerUpdateData = {
+	body: UpdateRoleDto
+	path: {
+		code: string
+	}
+	query?: never
+	url: "/roles/{code}"
+}
+
+export type RolesControllerUpdateErrors = {
+	/**
+	 * Bad request
+	 */
+	400: unknown
+	/**
+	 * Role not found
+	 */
+	404: unknown
+}
+
+export type RolesControllerUpdateResponses = {
+	/**
+	 * Role updated successfully
+	 */
+	200: Role
+}
+
+export type RolesControllerUpdateResponse = RolesControllerUpdateResponses[keyof RolesControllerUpdateResponses]
+
 export type SmartLockControllerFindAllData = {
 	body?: never
 	path?: never
@@ -2111,6 +2367,122 @@ export type SmartLockEventControllerFindOneResponses = {
 
 export type SmartLockEventControllerFindOneResponse =
 	SmartLockEventControllerFindOneResponses[keyof SmartLockEventControllerFindOneResponses]
+
+export type UsersControllerFindAllData = {
+	body?: never
+	path?: never
+	query?: never
+	url: "/users"
+}
+
+export type UsersControllerFindAllResponses = {
+	/**
+	 * Returns all users
+	 */
+	200: Array<UserResponseDto>
+}
+
+export type UsersControllerFindAllResponse = UsersControllerFindAllResponses[keyof UsersControllerFindAllResponses]
+
+export type UsersControllerCreateData = {
+	body: CreateUserDto
+	path?: never
+	query?: never
+	url: "/users"
+}
+
+export type UsersControllerCreateErrors = {
+	/**
+	 * Bad request
+	 */
+	400: unknown
+}
+
+export type UsersControllerCreateResponses = {
+	/**
+	 * User created successfully
+	 */
+	201: UserResponseDto
+}
+
+export type UsersControllerCreateResponse = UsersControllerCreateResponses[keyof UsersControllerCreateResponses]
+
+export type UsersControllerRemoveData = {
+	body?: never
+	path: {
+		id: string
+	}
+	query?: never
+	url: "/users/{id}"
+}
+
+export type UsersControllerRemoveErrors = {
+	/**
+	 * User not found
+	 */
+	404: unknown
+}
+
+export type UsersControllerRemoveResponses = {
+	/**
+	 * User deleted successfully
+	 */
+	200: unknown
+}
+
+export type UsersControllerFindOneData = {
+	body?: never
+	path: {
+		id: string
+	}
+	query?: never
+	url: "/users/{id}"
+}
+
+export type UsersControllerFindOneErrors = {
+	/**
+	 * User not found
+	 */
+	404: unknown
+}
+
+export type UsersControllerFindOneResponses = {
+	/**
+	 * Returns the user
+	 */
+	200: UserResponseDto
+}
+
+export type UsersControllerFindOneResponse = UsersControllerFindOneResponses[keyof UsersControllerFindOneResponses]
+
+export type UsersControllerUpdateData = {
+	body: UpdateUserDto
+	path: {
+		id: string
+	}
+	query?: never
+	url: "/users/{id}"
+}
+
+export type UsersControllerUpdateErrors = {
+	/**
+	 * Bad request
+	 */
+	400: unknown
+	/**
+	 * User not found
+	 */
+	404: unknown
+}
+
+export type UsersControllerUpdateResponses = {
+	/**
+	 * User updated successfully
+	 */
+	200: UserResponseDto
+}
+
+export type UsersControllerUpdateResponse = UsersControllerUpdateResponses[keyof UsersControllerUpdateResponses]
 
 export type ClientOptions = {
 	baseURL: string

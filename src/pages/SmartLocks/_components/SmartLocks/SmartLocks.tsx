@@ -161,12 +161,12 @@ const SmartLocks: React.FC = () => {
 				id: "actions",
 				cell: (info) => (
 					<div className="flex gap-2 relative justify-end text-right">
-						<PermissionCheck allowPermission={PERMISSIONS.SMART_LOCKS.EDIT}>
+						<PermissionCheck allowPermission={[PERMISSIONS.SMART_LOCK.UPDATE]}>
 							<Button size="icon" onClick={() => handleOpenEditDialog(info.row.original)} variant="outline">
 								<Edit className="h-4 w-4" />
 							</Button>
 						</PermissionCheck>
-						<PermissionCheck allowPermission={PERMISSIONS.SMART_LOCKS.DELETE}>
+						<PermissionCheck allowPermission={[PERMISSIONS.SMART_LOCK.DELETE]}>
 							<Button size="icon" onClick={() => setSelectedDelete(info.row.original)} variant="outline">
 								<Trash2 className="h-4 w-4" />
 							</Button>
@@ -188,7 +188,7 @@ const SmartLocks: React.FC = () => {
 		<div className="w-full h-full pb-5">
 			<div className="w-full mt-3 mb-5 flex gap-4 items-center justify-between">
 				<h3 className="text-xl text-dark-700 font-semibold">List of smart locks</h3>
-				<PermissionCheck allowPermission={PERMISSIONS.SMART_LOCKS.CREATE}>
+				<PermissionCheck allowPermission={[PERMISSIONS.SMART_LOCK.CREATE]}>
 					<Button onClick={() => setOpenCreateDialog(true)}>
 						<Plus className="h-4 w-4" /> Add Smart Lock
 					</Button>

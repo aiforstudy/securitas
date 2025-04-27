@@ -28,8 +28,8 @@ const LoginForm: React.FC = () => {
 			password: "",
 		},
 	})
+	const { login } = useAuthApi()
 	const { login: loginContext } = useAuth()
-	const { login } = useAuthApi({})
 
 	const onSubmit = async (data: LoginFormValues) => {
 		try {
