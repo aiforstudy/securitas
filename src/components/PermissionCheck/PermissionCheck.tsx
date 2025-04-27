@@ -16,7 +16,7 @@ const PermissionCheck: React.FC<PermissionCheckProps> = ({
 	allowPermission,
 	hideIfDoNotHavePermission = false,
 }) => {
-	const hasPermission = usePermissions(allowPermission)
+	const { hasPermission } = usePermissions(allowPermission)
 	const canAccess = !allowPermission || hasPermission
 
 	if (!canAccess) {

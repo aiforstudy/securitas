@@ -10,7 +10,7 @@ interface RoleProtectedRouteProps {
 }
 
 const RoleProtectedRoute: React.FC<RoleProtectedRouteProps> = ({ element, allowPermission }) => {
-	const hasPermission = usePermissions(allowPermission)
+	const { hasPermission } = usePermissions(allowPermission)
 	return hasPermission ? element : <Navigate to={PATH.FORBIDDEN} />
 }
 

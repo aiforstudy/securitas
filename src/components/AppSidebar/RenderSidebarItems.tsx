@@ -2,7 +2,7 @@ import React from "react"
 
 import { ChevronRight } from "lucide-react"
 
-import { useAuth } from "@/contexts/auth.context"
+import usePermissions from "@/hooks/usePermissions"
 import { cn } from "@/lib/utils"
 
 import { Button } from "../ui/button"
@@ -24,13 +24,13 @@ type IRenderSidebarItemsProps = {
 
 const RenderSidebarItems: React.FC<IRenderSidebarItemsProps> = ({ items }) => {
 	const { open } = useSidebar()
-	const { currentUser } = useAuth()
+	const { checkPermission } = usePermissions([])
 
 	return (
 		<SidebarGroup className="py-5 px-5">
 			<SidebarMenu>
 				{items.map((item) => {
-					const canRender = !item.roles || item.roles.includes(currentUser?.role ?? "")
+					const canRender = !item.allowPermission || checkPermission(item.allowPermission ?? [])
 					const hasChildren = item.children && item.children.length > 0
 					return canRender ? (
 						<Collapsible key={item.key || item.label} asChild defaultOpen={true} className="group/collapsible">
@@ -51,7 +51,7 @@ const RenderSidebarItems: React.FC<IRenderSidebarItemsProps> = ({ items }) => {
 								<CollapsibleContent className="my-3">
 									<SidebarMenuSub className="gap-3">
 										{item.children?.map((subItem) => {
-											const canRender = !subItem.roles || subItem.roles.includes(currentUser?.role ?? "")
+											const canRender = !subItem.allowPermission || checkPermission(subItem.allowPermission ?? [])
 											return canRender ? (
 												<SidebarMenuSubItem key={subItem.label}>
 													<RenderButton path={subItem.path} icon={subItem.icon} label={subItem.label} justify="start" />

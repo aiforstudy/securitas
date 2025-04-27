@@ -18,14 +18,14 @@ import {
 } from "lucide-react"
 
 import { PATH } from "@/constants/path"
-import { ERole } from "@/enums/permissions"
+import PERMISSIONS from "@/constants/permissions"
 
 export type ISubmenu = {
 	label: string
 	path?: string
-	roles?: string[]
 	icon?: React.ReactNode
 	isComingSoon?: boolean
+	allowPermission?: string[]
 }
 
 export type ISidebarChildren = ISubmenu & {
@@ -129,12 +129,13 @@ export const useSideBarItems = () => {
 						label: t("sidebar.roleSettings"),
 						icon: <Users className="!w-5 !h-5" />,
 						path: PATH.SYSTEM.ROLE_SETTINGS,
+						allowPermission: [PERMISSIONS.ROLE.READ],
 					},
 					{
 						icon: <Settings2 className="!w-5 !h-5" />,
 						path: PATH.SYSTEM.COMPANIES,
 						label: t("sidebar.companies"),
-						roles: [ERole.ADMIN],
+						allowPermission: [PERMISSIONS.COMPANY.READ],
 					},
 				],
 			},
