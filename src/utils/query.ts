@@ -5,12 +5,10 @@ import { STORAGE_KEYS } from "@/constants/storage"
 
 import { localS } from "./storage"
 
-const initializeClient = async () => {
+export const initializeClient = async () => {
 	const token = await localS.get(STORAGE_KEYS.ACCESS_TOKEN)
 	client.setConfig({
-		headers: {
-			Authorization: `Bearer ${token}`,
-		},
+		headers: { Authorization: `Bearer ${token}` },
 		timeout: 30000,
 	})
 }

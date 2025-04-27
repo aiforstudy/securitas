@@ -2,18 +2,16 @@ import React from "react"
 import { Navigate } from "react-router-dom"
 
 import { PATH } from "@/constants/path"
-import { useAuth } from "@/contexts/auth.context"
-import { ERole } from "@/enums/permissions"
+import usePermissions from "@/hooks/usePermissions"
 
 interface RoleProtectedRouteProps {
 	element: React.ReactNode
-	allowedRoles: ERole[]
+	allowPermission: string[]
 }
 
-const RoleProtectedRoute: React.FC<RoleProtectedRouteProps> = ({ element, allowedRoles }) => {
-	const { currentUser } = useAuth()
-	const hasAccess = currentUser?.role && allowedRoles.includes(currentUser?.role)
-	return hasAccess ? element : <Navigate to={PATH.FORBIDDEN} />
+const RoleProtectedRoute: React.FC<RoleProtectedRouteProps> = ({ element, allowPermission }) => {
+	const hasPermission = usePermissions(allowPermission)
+	return hasPermission ? element : <Navigate to={PATH.FORBIDDEN} />
 }
 
 export default RoleProtectedRoute

@@ -99,12 +99,7 @@ const UserDialog: React.FC<UserDialogProps> = ({ open, onSubmit, isLoading, edit
 					<DialogTitle>{editUser ? "Edit User" : "Add New User"}</DialogTitle>
 				</DialogHeader>
 				<Form {...form}>
-					<form
-						onSubmit={form.handleSubmit(handleSubmit, (errors) => {
-							console.log(errors)
-						})}
-						className="mt-5 space-y-4"
-					>
+					<form onSubmit={form.handleSubmit(handleSubmit)} className="mt-5 space-y-4">
 						<FormField
 							control={form.control}
 							name="name"

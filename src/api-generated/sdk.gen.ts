@@ -65,6 +65,7 @@ import type {
 	RolesControllerFindOneResponse,
 	RolesControllerGetPermissionsData,
 	RolesControllerGetPermissionsResponse,
+	RolesControllerRemoveData,
 	RolesControllerUpdateData,
 	RolesControllerUpdateResponse,
 	SmartLockControllerCreateData,
@@ -575,6 +576,24 @@ export const rolesControllerGetPermissions = <ThrowOnError extends boolean = fal
 			},
 		],
 		url: "/roles/permissions",
+		...options,
+	})
+}
+
+/**
+ * Delete a role
+ */
+export const rolesControllerRemove = <ThrowOnError extends boolean = false>(
+	options: Options<RolesControllerRemoveData, ThrowOnError>,
+) => {
+	return (options.client ?? _heyApiClient).delete<unknown, unknown, ThrowOnError>({
+		security: [
+			{
+				scheme: "bearer",
+				type: "http",
+			},
+		],
+		url: "/roles/{code}",
 		...options,
 	})
 }

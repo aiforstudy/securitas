@@ -12,6 +12,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input"
 import { ICurrentUser, useAuth } from "@/contexts/auth.context"
 import useAuthApi from "@/hooks/api/useAuthApi"
+import { initializeClient } from "@/utils/query"
 
 const loginSchema = z.object({
 	email: z.string().email("Please enter a valid email address"),
@@ -36,6 +37,7 @@ const LoginForm: React.FC = () => {
 			const response = await login.mutateAsync({ body: data })
 			const responseData = response as { user: ICurrentUser; access_token: string }
 			loginContext({ ...responseData.user, access_token: responseData.access_token })
+			initializeClient()
 		} catch (e) {
 			const error = e as AxiosError
 			toast.error((error.response?.data as { message: string }).message ?? error?.message)

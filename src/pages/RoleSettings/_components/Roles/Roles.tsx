@@ -101,14 +101,7 @@ const Roles: React.FC = () => {
 
 	const handleDeleteRole = async (role: Role) => {
 		try {
-			// TODO: Replace with deleteRole.mutateAsync({ path: { code: role.code } })
-			await deleteRole.mutateAsync({
-				path: { code: role.code },
-				body: {
-					name: role.name,
-					permissions: role.permissions,
-				},
-			})
+			await deleteRole.mutateAsync({ path: { code: role.code } })
 			toast.success("Role deleted successfully")
 			queryClient.invalidateQueries({ queryKey: roles.queryKey })
 		} catch (e) {
@@ -142,7 +135,7 @@ const Roles: React.FC = () => {
 							<div className="relative">
 								<RoleHeader
 									data={role}
-									isDefault={role.code === "admin"}
+									isDefault={false}
 									onCloneRole={() => handleOpenCloneDialog(role)}
 									onDeleteRole={() => setSelectedDelete(role)}
 									onSelectRole={() => handleOpenEditDialog(role)}
@@ -205,7 +198,6 @@ const Roles: React.FC = () => {
 							className="bg-red-500 hover:bg-red-600 h-10"
 						>
 							{deleteRole.isPending ? "Deleting..." : "Delete"}
-							Delete
 						</AlertDialogAction>
 					</AlertDialogFooter>
 				</AlertDialogContent>

@@ -44,6 +44,7 @@ import {
 	rolesControllerFindAll,
 	rolesControllerFindOne,
 	rolesControllerGetPermissions,
+	rolesControllerRemove,
 	rolesControllerUpdate,
 	smartLockControllerCreate,
 	smartLockControllerFindAll,
@@ -115,6 +116,7 @@ import type {
 	RolesControllerFindAllData,
 	RolesControllerFindOneData,
 	RolesControllerGetPermissionsData,
+	RolesControllerRemoveData,
 	RolesControllerUpdateData,
 	RolesControllerUpdateResponse,
 	SmartLockControllerCreateData,
@@ -1146,6 +1148,20 @@ export const rolesControllerGetPermissionsOptions = (options?: Options<RolesCont
 		},
 		queryKey: rolesControllerGetPermissionsQueryKey(options),
 	})
+}
+
+export const rolesControllerRemoveMutation = (options?: Partial<Options<RolesControllerRemoveData>>) => {
+	const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options<RolesControllerRemoveData>> = {
+		mutationFn: async (localOptions) => {
+			const { data } = await rolesControllerRemove({
+				...options,
+				...localOptions,
+				throwOnError: true,
+			})
+			return data
+		},
+	}
+	return mutationOptions
 }
 
 export const rolesControllerFindOneQueryKey = (options: Options<RolesControllerFindOneData>) =>

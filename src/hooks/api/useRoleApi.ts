@@ -9,6 +9,7 @@ import {
 	rolesControllerFindOneQueryKey,
 	rolesControllerGetPermissionsOptions,
 	rolesControllerGetPermissionsQueryKey,
+	rolesControllerRemoveMutation,
 	rolesControllerUpdateMutation,
 } from "@/api-generated/@tanstack/react-query.gen"
 
@@ -47,7 +48,7 @@ export const useUpdateRole = () => {
 }
 
 export const useDeleteRole = () => {
-	const mutationOptions = rolesControllerUpdateMutation()
+	const mutationOptions = rolesControllerRemoveMutation()
 	return useMutation({ ...mutationOptions })
 }
 
