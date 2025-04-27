@@ -1,36 +1,36 @@
 const DETECTION_PERMISSION = {
-	READ: "detections.read",
-	CREATE: "detections.create",
-	UPDATE: "detections.edit",
-	DELETE: "detections.delete",
+	READ: "detection.read",
+	CREATE: "detection.create",
+	UPDATE: "detection.edit",
+	DELETE: "detection.delete",
 }
 
 const ENGINE_PERMISSION = {
-	READ: "engines.read",
-	CREATE: "engines.create",
-	UPDATE: "engines.edit",
-	DELETE: "engines.delete",
+	READ: "engine.read",
+	CREATE: "engine.create",
+	UPDATE: "engine.edit",
+	DELETE: "engine.delete",
 }
 
 const COMPANY_PERMISSION = {
-	READ: "companies.read",
-	CREATE: "companies.create",
-	UPDATE: "companies.edit",
-	DELETE: "companies.delete",
+	READ: "company.read",
+	CREATE: "company.create",
+	UPDATE: "company.edit",
+	DELETE: "company.delete",
 }
 
 const SMART_LOCK_PERMISSION = {
-	READ: "smart-locks.read",
-	CREATE: "smart-locks.create",
-	UPDATE: "smart-locks.edit",
-	DELETE: "smart-locks.delete",
+	READ: "smartlock.read",
+	CREATE: "smartlock.create",
+	UPDATE: "smartlock.edit",
+	DELETE: "smartlock.delete",
 }
 
 const MONITOR_PERMISSION = {
-	READ: "monitors.read",
-	CREATE: "monitors.create",
-	UPDATE: "monitors.edit",
-	DELETE: "monitors.delete",
+	READ: "monitor.read",
+	CREATE: "monitor.create",
+	UPDATE: "monitor.edit",
+	DELETE: "monitor.delete",
 }
 
 const DASHBOARD_PERMISSION = {
