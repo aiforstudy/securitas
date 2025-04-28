@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input"
 const userFormSchema = z.object({
 	name: z.string().min(1, "Name is required"),
 	email: z.string().email("Invalid email"),
-	role: z.string().min(1, "Role is required"),
+	role_id: z.string().min(1, "Role is required"),
 	password: z.string(),
 	company_code: z.string(),
 })
@@ -26,7 +26,7 @@ type UserFormValues = z.infer<typeof userFormSchema>
 const defaultValues: Partial<UserFormValues> = {
 	name: "",
 	email: "",
-	role: "",
+	role_id: "",
 	password: "",
 	company_code: "",
 }
@@ -50,7 +50,7 @@ const UserDialog: React.FC<UserDialogProps> = ({ open, onSubmit, isLoading, edit
 					values: {
 						name: editUser.name,
 						email: editUser.email,
-						role: editUser.role,
+						role_id: editUser.role?.id,
 						password: "",
 						company_code: companyCode,
 					},
@@ -68,13 +68,13 @@ const UserDialog: React.FC<UserDialogProps> = ({ open, onSubmit, isLoading, edit
 				await onSubmit({
 					name: values.name,
 					email: values.email,
-					role: values.role,
+					role_id: values.role_id,
 				} as UpdateUserDto)
 			} else {
 				const newUser: CreateUserDto = {
-					role: values.role as CreateUserDto["role"],
 					name: values.name,
 					email: values.email,
+					role_id: values.role_id,
 					password: values.password,
 					company_code: values.company_code ?? companyCode,
 				}
@@ -132,7 +132,7 @@ const UserDialog: React.FC<UserDialogProps> = ({ open, onSubmit, isLoading, edit
 						/>
 						<FormField
 							control={form.control}
-							name="role"
+							name="role_id"
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>Role</FormLabel>

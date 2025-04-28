@@ -1098,7 +1098,7 @@ export type RoleResponseDto = {
 	/**
 	 * The code of the role
 	 */
-	code: string
+	id: string
 	/**
 	 * The name of the role
 	 */

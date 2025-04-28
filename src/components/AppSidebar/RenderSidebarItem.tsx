@@ -5,7 +5,7 @@ import { ChevronRight } from "lucide-react"
 
 import { Menubar, MenubarContent, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar"
 import { PATH } from "@/constants/path"
-import { useAuth } from "@/contexts/auth.context"
+import usePermissions from "@/hooks/usePermissions"
 import { cn } from "@/lib/utils"
 
 import { Button } from "../ui/button"
@@ -20,11 +20,12 @@ type IRenderSidebarItemProps = {
 
 const RenderSidebarItem: React.FC<IRenderSidebarItemProps> = ({ items }) => {
 	const { pathname } = useLocation()
-	const { currentUser } = useAuth()
+	const { checkPermission } = usePermissions([])
+
 	return (
 		<SidebarGroupContent>
 			{items.map((child) => {
-				const canRender = !child.roles || child.roles.includes(currentUser?.role ?? "")
+				const canRender = !child.allowPermission || checkPermission(child.allowPermission ?? [])
 				return (
 					<React.Fragment key={`sidebar-item-${child.label}`}>
 						{canRender ? (

@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom"
 
-import { useAuth } from "@/contexts/auth.context"
+import usePermissions from "@/hooks/usePermissions"
 import { cn } from "@/lib/utils"
 
 import { MenubarItem } from "../ui/menubar"
@@ -28,11 +28,11 @@ const SubmenuItem = ({ label, path }: ISubmenu) => {
 }
 
 const RenderSubmenuItems: React.FC<IRenderSubmenuItemsProps> = ({ submenu }) => {
-	const { currentUser } = useAuth()
+	const { checkPermission } = usePermissions([])
 	return (
 		<>
 			{submenu.map((sub) => {
-				const canRender = !sub.roles || sub.roles.includes(currentUser?.role ?? "")
+				const canRender = !sub.allowPermission || checkPermission(sub.allowPermission ?? [])
 				return canRender ? <SubmenuItem key={`sidebar-submenu-${sub.label}`} {...sub} /> : null
 			})}
 		</>
