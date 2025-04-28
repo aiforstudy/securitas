@@ -21,8 +21,8 @@ const RoleSelection: React.FC<IRoleSelectionProps> = ({ className, selectedRole,
 		<Select
 			value={selectedRole}
 			onValueChange={(value) => {
-				const found = roles?.data?.find((_) => _.code === value)
-				if (found) onSelectRole(found.code)
+				const found = roles?.data?.find((_) => _.id === value)
+				if (found) onSelectRole(found.id)
 			}}
 		>
 			<SelectTrigger className={cn("h-10 w-max px-2", className)}>
@@ -34,7 +34,7 @@ const RoleSelection: React.FC<IRoleSelectionProps> = ({ className, selectedRole,
 			<SelectContent className="!rounded-md">
 				<SelectGroup>
 					{roles?.data?.map((item) => (
-						<SelectItem key={`role-${item.code}`} value={item.code} className="text-sm">
+						<SelectItem key={`role-${item.id}`} value={item.id} className="text-sm">
 							{item.name}
 						</SelectItem>
 					))}

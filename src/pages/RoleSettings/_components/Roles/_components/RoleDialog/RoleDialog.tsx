@@ -16,8 +16,8 @@ import { IPermissions } from "@/contexts/auth.context"
 import PermissionBar from "../PermissionBar"
 
 const roleFormSchema = z.object({
+	id: z.string().min(1, "Id is required"),
 	name: z.string().min(1, "Name is required"),
-	code: z.string().min(1, "Code is required"),
 	permissions: z
 		.array(
 			z.object({
@@ -31,8 +31,8 @@ const roleFormSchema = z.object({
 type RoleFormValues = z.infer<typeof roleFormSchema>
 
 const defaultValues: Partial<RoleFormValues> = {
+	id: "",
 	name: "",
-	code: "",
 	permissions: [],
 }
 
@@ -63,15 +63,15 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
 		...(editRole
 			? {
 					values: {
+						id: editRole.id,
 						name: editRole.name,
-						code: editRole.code,
 						permissions: editRole.permissions,
 					},
 				}
 			: {
 					values: {
+						id: cloneRole?.id ?? "",
 						name: cloneRole?.name ?? "",
-						code: cloneRole?.code ?? "",
 						permissions: cloneRole?.permissions ?? [],
 					},
 				}),
@@ -85,14 +85,14 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
 		try {
 			if (editRole) {
 				await onSubmit({
+					id: values.id,
 					name: values.name,
-					code: values.code,
 					permissions: values.permissions,
 				} as unknown as UpdateRoleDto)
 			} else {
 				const newRole = {
+					id: values.id,
 					name: values.name,
-					code: values.code,
 					permissions: values.permissions,
 				} as unknown as CreateRoleDto
 
@@ -134,14 +134,14 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
 						/>
 						<FormField
 							control={form.control}
-							name="code"
+							name="id"
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>
-										Code<span className="text-red-500">*</span>
+										Id<span className="text-red-500">*</span>
 									</FormLabel>
 									<FormControl>
-										<Input placeholder="Role code" {...field} />
+										<Input placeholder="Role id" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>

@@ -50,7 +50,7 @@ const Roles: React.FC = () => {
 		if (editRole) {
 			try {
 				const response = await updateRole.mutateAsync({
-					path: { code: editRole.code },
+					path: { id: editRole.id },
 					body: values as UpdateRoleDto,
 				})
 				if (response) {
@@ -101,7 +101,7 @@ const Roles: React.FC = () => {
 
 	const handleDeleteRole = async (role: Role) => {
 		try {
-			await deleteRole.mutateAsync({ path: { code: role.code } })
+			await deleteRole.mutateAsync({ path: { id: role.id } })
 			toast.success("Role deleted successfully")
 			queryClient.invalidateQueries({ queryKey: roles.queryKey })
 		} catch (e) {

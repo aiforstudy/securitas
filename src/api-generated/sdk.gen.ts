@@ -593,13 +593,13 @@ export const rolesControllerRemove = <ThrowOnError extends boolean = false>(
 				type: "http",
 			},
 		],
-		url: "/roles/{code}",
+		url: "/roles/{id}",
 		...options,
 	})
 }
 
 /**
- * Get a role by code
+ * Get a role by id
  */
 export const rolesControllerFindOne = <ThrowOnError extends boolean = false>(
 	options: Options<RolesControllerFindOneData, ThrowOnError>,
@@ -611,7 +611,7 @@ export const rolesControllerFindOne = <ThrowOnError extends boolean = false>(
 				type: "http",
 			},
 		],
-		url: "/roles/{code}",
+		url: "/roles/{id}",
 		...options,
 	})
 }
@@ -629,7 +629,7 @@ export const rolesControllerUpdate = <ThrowOnError extends boolean = false>(
 				type: "http",
 			},
 		],
-		url: "/roles/{code}",
+		url: "/roles/{id}",
 		...options,
 		headers: {
 			"Content-Type": "application/json",

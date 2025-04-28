@@ -106,7 +106,7 @@ const Users: React.FC = () => {
 				header: () => <span>Email</span>,
 				footer: (info) => info.column.id,
 			}),
-			columnHelper.accessor("role", {
+			columnHelper.accessor("role.name", {
 				cell: (info) => <div className="relative capitalize">{info.getValue()}</div>,
 				header: () => <span>Role</span>,
 				footer: (info) => info.column.id,
